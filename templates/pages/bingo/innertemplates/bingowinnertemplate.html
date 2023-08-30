@@ -1,0 +1,7 @@
+{% if bingo.get_is_over %}
+    <div class="text-center text-success fs-3 mb-3">
+        <a href="{% url 'bingo:bingo_home_page' bingo.pk %}" class="text-success">
+            {{ bingo.get_winner.team_name }} has won the bingo!!!
+        </a>
+    </div>
+{% endif %}

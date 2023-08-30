@@ -1,0 +1,202 @@
+{% extends 'layouts/base.html' %}
+{#{% load static %}#}
+{% load bingo_extras %}
+
+{% block content %}
+    {% include 'pages/bingo/innertemplates/bingowinnertemplate.html' with bingo=teamtile.team.bingo%}
+    <div class="d-flex flex-column">
+        <div class="d-flex flex-wrap w-100 mb-3">
+            <img class="col col-md-6 col-lg-3 order-1 order-lg-0"
+                 src="{{ teamtile.get_url }}"/>
+
+            <div class="col col-lg-6 ps-md-3 ps-0 pe-0 pe-md-3 mb-3 mb-lg-0 order-0 order-lg-1">
+                <h5>{{ teamtile.tile.name }}</h5>
+                <p>{{ teamtile.tile.description }}</p>
+            </div>
+
+            <div class="d-flex flex-column col col-md-6 col-lg-3 border rounded-3 p-3 text-center order-2">
+                {% if user|is_moderator:teamtile.team.bingo.pk %}
+                    {% if teamtile.is_complete %}
+                        <div class="h4 text-success">Tile is complete</div>
+                        <button type="button" class="btn btn-dark mb-3" style="opacity: .8;" data-bs-toggle="modal"
+                                data-bs-target="#complete_modal_id">Uncomplete
+                        </button>
+                    {% else %}
+                        <div class="h4 text-danger">Tile is not complete</div>
+                        <button type="button" class="btn btn-dark mb-3" data-bs-toggle="modal"
+                                data-bs-target="#complete_modal_id">Complete Tile
+                        </button>
+                    {% endif %}
+
+
+                    {% if teamtile.is_mod_approved %}
+                        <div class="h4 text-success">Tile is approved by mods</div>
+                        <button type="button" class="btn btn-dark" data-bs-toggle="modal"
+                                data-bs-target="#approve_modal_id">Disapprove tile
+                        </button>
+                    {% else %}
+                        <div class="h4 text-warning">Waiting for mod to approve</div>
+                        <button type="button" class="btn btn-dark" data-bs-toggle="modal"
+                                data-bs-target="#approve_modal_id">Approve tile
+                        </button>
+                    {% endif %}
+
+
+                {% else %}
+                    {% if teamtile.is_complete %}
+                        <div class="h4 text-success">Tile is complete</div>
+                        {% if teamtile.is_mod_approved %}
+                            <div class="h4 text-success">Tile is approved by mods</div>
+                        {% else %}
+                            <div class="h4 text-warning">Waiting for mod to approve</div>
+                        {% endif %}
+                    {% else %}
+                        <div class="h4 text-danger">Tile is not complete</div>
+                        <button type="button" class="btn btn-dark mb-3" data-bs-toggle="modal"
+                                data-bs-target="#complete_modal_id">
+                            Complete Tile
+                        </button>
+                        <div class="h4 text-danger">Waiting for mod to approve</div>
+                    {% endif %}
+
+                {% endif %}
+            </div>
+        </div>
+
+        <form class="d-flex flex-wrap mb-3 py-3 border rounded-4 justify-content-around" method="post"
+              enctype="multipart/form-data">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="d-flex me-3 align-items-center">
+                    {% include 'pages/bingo/innertemplates/fieldtemplate.html' %}
+{#                    {{ field.errors }}#}
+{#                    <label for="" class="form-label pe-2">{{ field.label }}</label>#}
+{#                    {{ field }}#}
+                </div>
+            {% endfor %}
+
+            <input type="submit" class="btn btn-outline-dark" value="Submit">
+        </form>
+
+        <div class="d-flex flex-wrap gap-3 justify-content-around">
+            {% for submission in submissions %}
+                <div class="col col-md-4 col-lg-3">
+                    {#                    <div class="d-flex">#}
+                    {#                        <div class="col me-2">#}
+                    {#                            <button type="button" data-bs-toggle="modal" data-bs-target="#image_modal_id"#}
+                    {#                                    onclick="expand_image(this)">#}
+                    {#                                <img id="submission_image_id" src="{{ submission.img.url }}" alt=""#}
+                    {#                                     class="img-thumbnail">#}
+                    {#                            </button>#}
+                    {#                        </div>#}
+                    {#                        <div class="col">#}
+                    {#                            <p id="submission_comment_id">{{ submission.comment }}</p>#}
+                    {#                            <p>By <b id="submission_player_id">{{ submission.player.user.username }}</b></p>#}
+                    {#                            <p>@{{ submission.date }}</p>#}
+                    {#                        </div>#}
+                    <div class="card h-100">
+
+                        <button type="button" data-bs-toggle="modal" data-bs-target="#image_modal_id"
+                                onclick="expand_image(this)" class="border-0">
+                            <img id="submission_image_id" src="{{ submission.img.url }}" alt=""
+                                 class="card-img-top">
+                        </button>
+
+                        <div class="card-body">
+                            <p id="submission_comment_id" class="card-text bingo-card-text">{{ submission.comment }}</p>
+                        </div>
+
+                        <div class="d-flex card-footer align-items-center justify-content-between">
+                            <p class="m-0">By <b id="submission_player_id">{{ submission.player.user.username }}</b></p>
+                            <p class="text-secondary m-0" style="font-size: 9px">@{{ submission.date }}</p>
+                        </div>
+
+                    </div>
+                    {#                    </div>#}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="image_modal_id" aria-hidden="true" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header" id="modal_head_id">
+                    -------------
+                </div>
+                <div class="modal-body" id="modal_body_id">
+                    ...
+                </div>
+                <div class="modal-footer" id="modal_footer_id">
+                    -----------
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="complete_modal_id" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Is the tile complete?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                {#                <div class="modal-body">#}
+                {#                    Only a moderator can revert this#}
+                {#                </div>#}
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <form action="{% url 'tile:complete_tile' teamtile.id %}" method="post">
+                        {% csrf_token %}
+                        <input type="submit" class="btn btn-primary" value="Confirm Tile Completion"/>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="approve_modal_id" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Is the tile complete?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <form action="{% url 'tile:approve_tile' teamtile.id %}" method="post">
+                        {% csrf_token %}
+                        <input type="submit" class="btn btn-primary" value="Confirm Tile Completion"/>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script>
+        function expand_image(e) {
+            let parent = e.parentElement.parentElement
+
+            let image = document.createElement("img")
+            image.classList.add('img-fluid')
+            image.src = parent.querySelector("#submission_image_id").getAttribute('src')
+
+            let exit_button = `<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>`
+
+            document.getElementById("modal_head_id").innerHTML = parent.querySelector("#submission_comment_id").innerHTML + exit_button
+            document.getElementById("modal_body_id").innerHTML = ''
+            document.getElementById("modal_body_id").appendChild(image)
+            document.getElementById("modal_footer_id").innerText = `Submitted by ${parent.querySelector("#submission_player_id").innerHTML}`
+        }
+
+        {#    Set the back button   #}
+        show_back_button("{% url 'bingo:play_bingo' teamtile.team.bingo.pk teamtile.team.pk %}");
+        show_header_name("{{ teamtile.team.bingo.name }}")
+    </script>
+
+{% endblock %}

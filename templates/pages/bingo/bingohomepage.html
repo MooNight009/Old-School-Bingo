@@ -1,0 +1,152 @@
+{% extends 'layouts/base.html' %}
+{#{% load static %}#}
+{% load bingo_extras %}
+
+{% block content %}
+    <div class="d-flex flex-column">
+        <div class="d-flex mb-3">
+            <div class="d-flex flex-column col col-md-8 col-lg-9 ">
+                <div class="h1 mb-2">{{ object.name }}</div>
+                {% if object.get_is_over %}
+                    <div class="text-center text-success fs-3 mb-3">Winner is {{ object.get_winner.team_name }}</div>
+                    <a href="{% url 'bingo:play_bingo_general' object.pk %}" class="btn btn-outline-success align-self-center p-3 px-5 mb-3">View board</a>
+                {% elif object.get_is_started %}
+                    <div class="text-center text-success fs-3 mb-3">Bingo has started</div>
+                    <a href="{% url 'bingo:play_bingo' bingo.id user|get_user_bingo_team:bingo %}"
+                                   class="align-self-center btn btn-outline-dark mb-3 px-5">Play</a>
+                {% else %}
+                    <div class="fs-1 mb-3 text-center" id="time_left"></div>
+                {% endif %}
+
+                <p class="me-md-3">{{ object.description }}</p>
+            </div>
+            <div class="d-flex flex-column text-center align-self-center border rounded-3 col col-md-4 col-lg-3">
+                <div class="h3">Teams</div>
+                <table class="table mb-0">
+                    <thead>
+                    <tr>
+                        <th>Team</th>
+                        <th>Score</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for team in teams %}
+                        <tr>
+                            <td>{{ team.team_name }}</td>
+                            <td>{{ team.score }}</td>
+                        </tr>
+                    {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        {% if is_in_bingo %}
+            <div class="d-flex flex-wrap justify-content-center border rounded-3 gap-5 mb-3">
+                <form action="{% url 'bingo:change_team' object.id %}" method="post"
+                      class="d-flex align-items-baseline gap-3">
+                    {% csrf_token %}
+                    <select name="selected_team_id" id="" class="form-select">
+                        {% for team in teams %}
+                            <option value="{{ team.id }}" {{ user|is_user_in_team:team }}>{{ team.team_name }}</option>
+                        {% endfor %}
+                    </select>
+                    <div class="d-flex justify-content-center mt-3">
+                        <input class="btn btn-outline-dark" type="submit" value="Change Team">
+                    </div>
+                </form>
+                {% if bingo.can_players_create_team %}
+                    <form action="{% url 'bingo:create_team' object.id %}" method="post"
+                          class="d-flex align-items-baseline gap-3">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <input type="text" class="form-control" name="new_team_name"
+                                   placeholder="Enter desired name...">
+                        </div>
+                        <div class="d-flex justify-content-center mt-3">
+                            <input class="btn btn-outline-dark" type="submit" value="Create Team">
+                        </div>
+                    </form>
+                {% endif %}
+            </div>
+        {% else %}
+            <a href="{% url 'bingo:join_bingo' object.pk %}" class="btn btn-outline-dark mx-auto mb-3">Join
+                Bingo</a>
+        {% endif %}
+
+
+        <div class="border text-center rounded-3 mb-3">
+            <div class="h3 my-3">Players in bingo</div>
+            <table class="table mb-0">
+                <thead>
+                <tr>
+                    <th>Player</th>
+                    <th class="border-end">team</th>
+                    <th>Player</th>
+                    <th>team</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    {% for player in players %}
+                        {% if forloop.counter0|divisibleby:2 %}
+                            </tr>
+                            <tr>
+                        {% endif %}
+                        <td>{{ player.user.username }}</td>
+                        <td class="border-end">{{ player|get_player_bingo_team_name:bingo.pk }}</td>
+                    {% endfor %}
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block js %}
+    <script>
+        let start_date = new Date({{ bingo.start_date|date:"U" }} * 1000
+        )
+        ;
+        start_date = (Date.parse(start_date) / 1000)
+        countdown()
+
+        function countdown() {
+            let now = new Date()
+            now = (Date.parse(now) / 1000)
+            let time_left = start_date - now
+
+            let days = Math.floor(time_left / 86400);
+            let hours = Math.floor((time_left - (days * 86400)) / 3600);
+            let minutes = Math.floor((time_left - (days * 86400) - (hours * 3600)) / 60);
+            let seconds = Math.floor((time_left - (days * 86400) - (hours * 3600) - (minutes * 60)));
+
+            if (hours < "10") {
+                hours = "0" + hours;
+            }
+            if (minutes < "10") {
+                minutes = "0" + minutes;
+            }
+            if (seconds < "10") {
+                seconds = "0" + seconds;
+            }
+
+            document.getElementById('time_left').innerHTML = days + "D : " + hours + "H : " + minutes + "M : " + seconds + "S";
+
+            if (time_left <= 0) {
+                clearInterval()
+                document.getElementById('time_left').innerHTML = 'Started'
+            }
+        }
+
+        setInterval(function () {
+            countdown()
+        }, 1000)
+
+        {#Set Details on header#}
+        show_back_button("{% url 'defaults:main' %}");
+    </script>
+{% endblock %}

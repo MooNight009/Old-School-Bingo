@@ -1,0 +1,35 @@
+{% extends 'layouts/base.html' %}
+{#{% load static %}#}
+
+{% block content %}
+    <div class="d-flex flex-column align-items-center">
+        <div class="h3">Register</div>
+
+        <form method="post" action="">
+            {% csrf_token %}
+            {#        <div class="input-group mb-3">#}
+            {#            <input type="text" name="username" placeholder="Username..." class="form-control">#}
+            {#        </div>#}
+            {#        <div class="input-group mb-2">#}
+            {#            <input type="password" name="password" placeholder="Password..." class="form-control">#}
+            {#        </div>#}
+            {% for field in form %}
+                <div class="pb-2">
+                    {{ field.errors }}
+                    <label for="" class="form-label pe-2">{{ field.label }}</label>
+                    {{ field }}
+                </div>
+            {% endfor %}
+
+            <div class="d-flex justify-content-center mt-3">
+                <input class="btn btn-outline-dark" type="submit" value="Register">
+            </div>
+        </form>
+    </div>
+
+    {#    {% for message in messages %}#}
+    {#        <p>{{ message }}</p>#}
+    {#    {% endfor %}#}
+
+
+{% endblock %}

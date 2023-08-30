@@ -1,0 +1,89 @@
+{% extends 'layouts/base.html' %}
+{% load bingo_extras %}
+
+{% block content %}
+    {% include 'pages/bingo/innertemplates/bingowinnertemplate.html' %}
+
+    <div class="d-flex flex-wrap row-cols-1 row-cols-lg-2 p-0 m-0">
+        <div id="canvas_id" class="d-flex flex-column col col-lg-8 p-0 pe-lg-3 mb-3 mb-lg-0">
+            <div id="canvas_board_id" class="overflow-x-auto overflow-y-hidden">
+                <div class="row h-100 p-0 m-0" style="min-width: {{ bingo.get_div_width }}px">
+                    {% for team_tile in team_tiles %}
+                        {% include 'pages/bingo/innertemplates/generaltiletemplate.html' %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div id="board_id" class="d-flex flex-column border col col-lg-4">
+            <div class="d-flex mb-3">
+                <button id="achievement_btn_id"
+                        class="btn bg-secondary-subtle rounded-top-0 rounded-start-0 w-100 active">Completions
+                </button>
+                <button id="submission_btn_id" class="btn bg-secondary-subtle rounded-top-0 rounded-end-0 w-100">
+                    Submissions
+                </button>
+            </div>
+
+            <div id="achievement_div_id" class="h-100 overflow-y-auto px-3">
+                {% for achievement in achievements %}
+                    {% include 'pages/bingo/innertemplates/achievementtemplate.html' %}
+                {% endfor %}
+            </div>
+            <div id="submission_div_id" class="h-100 overflow-y-auto px-3 d-none">
+                {% for submission in submissions %}
+                    {% include 'pages/bingo/innertemplates/submissiontemplate.html' %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block js %}
+    <script>
+        let board = document.getElementById('board_id');
+        let canvas_board = document.getElementById('canvas_board_id');
+        board.style.height = `${canvas_board.offsetHeight}px`
+
+        {#Switch between achievements and submissions tabs#}
+        document.getElementById('submission_btn_id').addEventListener('click', function () {
+            document.getElementById('submission_btn_id').classList.add('active')
+            document.getElementById('achievement_btn_id').classList.remove('active')
+            document.getElementById('submission_div_id').classList.remove('d-none')
+            document.getElementById('achievement_div_id').classList.add('d-none')
+        })
+        document.getElementById('achievement_btn_id').addEventListener('click', function () {
+            document.getElementById('submission_btn_id').classList.remove('active')
+            document.getElementById('achievement_btn_id').classList.add('active')
+            document.getElementById('submission_div_id').classList.add('d-none')
+            document.getElementById('achievement_div_id').classList.remove('d-none')
+        })
+
+        {#Set Details on header#}
+        show_back_button("{% url 'bingo:bingo_home_page' bingo.pk %}");
+        show_header_name("{{ bingo.name }}")
+        show_header_div(`<div class="dropdown">
+                    <button class="btn border dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        {{ current_team.team_name }}
+                    </button>
+                    <ul class="dropdown-menu">
+                        {% for team in teams %}
+                            {% if team.team_name == 'General' %}
+                                <li><a href="{% url 'bingo:play_bingo_general' bingo.id %}"
+                                       class="dropdown-item {% if current_team == team %}active{% endif %}
+            {{ user|user_access_check:team.pk }}">
+                                    {{ team.team_name }}</a>
+                                </li>
+                            {% else %}
+                                <li><a href="{% url 'bingo:play_bingo' bingo.id team.id %}"
+                                       class="dropdown-item {% if current_team == team %}active{% endif %}
+            {{ user|user_access_check:team.pk }}">
+                                    {{ team.team_name }}</a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>`)
+    </script>
+{% endblock %}

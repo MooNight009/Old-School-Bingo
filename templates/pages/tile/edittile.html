@@ -1,0 +1,21 @@
+{% extends 'layouts/base.html' %}
+{#{% load static %}#}
+
+{% block content %}
+    <h1>Edit Tile </h1>
+
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Update">
+    </form>
+
+{% endblock %}
+
+{% block js %}
+    <script>
+        {#    Set the back button   #}
+        show_back_button("{% url 'bingo:edit_bingo_board' object.bingo.id %}");
+    </script>
+{% endblock %}

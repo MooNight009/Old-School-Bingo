@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+{#<html lang="en" class="h-100 html-body">#}
+<html lang="en" class="">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>OSRSPG</title>
+
+    {% include 'layouts/includes/css.html' %}
+
+    {#    {% block head_extras %} {% endblock %}#}
+</head>
+
+{#<body class="d-flex flex-column h-100 html-body">#}
+<body class="d-flex flex-column">
+    {% include 'layouts/header.html' %}
+
+    <div id="content" class="container p-0">
+        {% block content %}{% endblock %}
+    </div>
+
+
+    {#    </div>#}
+    {#        {% include 'layouts/footer.html' %}#}
+
+    {% include 'layouts/includes/js.html' %}
+
+    {% block js %}
+    {% endblock %}
+</body>
+</html>

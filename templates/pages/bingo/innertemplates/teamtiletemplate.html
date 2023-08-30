@@ -1,0 +1,10 @@
+<div class="col tile p-2"
+     style="--width_perc: {{ bingo.get_column_width }}%; aspect-ratio: 1/1!important;">
+    <a class="card h-100 border-4 rounded-0 text-decoration-none {{ team_tile.get_tile_border }}"
+       href={% url 'tile:play_tile' team_tile.id %}>
+        <div class="bg-light fs-4 overflow-hidden text-center text-nowrap px-2 pb-2">{{ team_tile.tile.name }}</div>
+        <div class="d-flex h-100"
+             style=" background-image: url('{{ team_tile.get_url }}'); background-size: contain">
+        </div>
+    </a>
+</div>
