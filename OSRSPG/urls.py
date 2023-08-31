@@ -20,16 +20,20 @@ from django.views.static import serve
 
 from OSRSPG import settings
 
+# Django urls
 urlpatterns = [
     path('admin/', admin.site.urls),
 ]
 
+# Implemented urls
 urlpatterns += [
     path('', include('applications.player.urls', namespace='player')),
     path('', include('applications.defaults.urls', namespace='defaults')),
     path('', include('applications.bingo.urls', namespace='bingo')),
     path('', include('applications.tile.urls', namespace='tile')),
 ]
+
+# Media url
 urlpatterns += [
         re_path(
             r"^media/(?P<path>.*)$",
@@ -39,3 +43,6 @@ urlpatterns += [
             },
         ),
     ]
+
+# Statis url
+urlpatterns += static(settings.STATIC_URL)
