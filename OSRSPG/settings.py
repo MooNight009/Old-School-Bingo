@@ -24,7 +24,7 @@ SECRET_KEY = '***REMOVED***'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['oldschoolbingo-test.***REMOVED***.elasticbeanstalk.com/', 'localhost']
+ALLOWED_HOSTS = ['oldschoolbingo-test.***REMOVED***.elasticbeanstalk.com', 'localhost']
 
 # Application definition
 
