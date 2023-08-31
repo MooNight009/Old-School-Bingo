@@ -11,9 +11,9 @@ idna==3.4
 jmespath==1.0.1
 pathspec==0.10.1
 Pillow==9.4.0
-pypiwin32==223;platform_system == "Windows"
+pypiwin32==223;sys_platform == "Windows"
 python-dateutil==2.8.2
-pywin32==306;platform_system == "Windows"
+pywin32==306;sys_platform == "Windows"
 PyYAML==6.0.1
 requests==2.31.0
 semantic-version==2.8.5
