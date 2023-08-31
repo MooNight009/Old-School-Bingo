@@ -10,7 +10,7 @@ class BingoForm(forms.ModelForm):
     class Meta:
         model = Bingo
         fields = ['name', 'description', 'start_date', 'end_date', 'board_type', 'board_size', 'is_public',
-                  'is_team_public', 'can_players_create_team', 'max_players_in_team']
+                  'is_team_public', 'can_players_create_team', 'max_players_in_team', 'img']
         widgets = {
             'start_date': forms.SelectDateWidget(),
             'end_date': forms.SelectDateWidget()
