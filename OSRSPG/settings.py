@@ -24,7 +24,10 @@ SECRET_KEY = '***REMOVED***'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['oldschoolbingo-test.***REMOVED***.elasticbeanstalk.com', 'localhost']
+ALLOWED_HOSTS = [
+    'oldschoolbingo-test.***REMOVED***.elasticbeanstalk.com',
+    'localhost'
+]
 
 # Application definition
 
@@ -78,11 +81,22 @@ WSGI_APPLICATION = 'OSRSPG.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
-
+# Older database
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+# PostgreSQL database
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': '***REMOVED***',
+        'USER': 'postgres',
+        'PASSWORD': '***REMOVED***',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
