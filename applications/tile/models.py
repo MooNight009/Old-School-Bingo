@@ -20,7 +20,7 @@ class Tile(models.Model):
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        if self.img is not None:
+        if self.img is not None and self.img.name is not None:
             img = Image.open(self.img.path)
             img.thumbnail((270, 200))
             img = img.convert('RGB')
