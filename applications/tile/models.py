@@ -24,7 +24,7 @@ class Tile(models.Model):
             img = Image.open(self.img.path)
             img.thumbnail((270, 200))
             img = img.convert('RGB')
-            img.save(self.img.path, format='JPEG', quality=60, optimize=True)
+            img.save(self.img.path, format='PNG', quality=60, optimize=True)
 
         # Make board ready if all tiles are ready
         if not Tile.objects.filter(bingo=self.bingo, is_ready=False).exists():
@@ -95,11 +95,11 @@ class TeamTile(models.Model):
     def get_tile_border(self):
         color = ''
         if self.is_mod_approved:
-            color = 'border-success'
+            color = 'border-green3'
         elif self.is_complete:
             color = 'border-warning'
         else:
-            color = 'border-danger'
+            color = 'border-red3'
 
         return color
 

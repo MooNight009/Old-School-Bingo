@@ -329,7 +329,7 @@ class PlayBingo(PlayerAccessMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         team = Team.objects.filter(pk=self.kwargs['team_pk']).get()
-        team_tiles = TeamTile.objects.filter(team=team)
+        team_tiles = TeamTile.objects.filter(team=team).order_by('tile__bingo_location')
         context['team_tiles'] = team_tiles
         context['teams'] = Team.objects.filter(bingo=self.object).all()
         context['current_team'] = team

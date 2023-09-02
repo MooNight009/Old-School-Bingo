@@ -1,7 +1,7 @@
 {#{% load i18n %}#}
 {#{% load tag_extras %}#}
 {% load static %}
-<header class="navbar navbar-expand-lg navbar-light bg-light mb-3">
+<header class="navbar navbar-expand-lg navbar-light mb-3 mt-2">
     <div class="container-fluid">
         {#        <a href="{% url 'page:home' %}" class="navbar-brand">#}
         <a href="" class="d-none" id="back_button"><i class="fas fa-arrow-left"></i></a>
@@ -13,7 +13,7 @@
             <img src="{% static 'logo.png' %}" alt="" style="height: 50px;">
         </a>
 
-        <div class="" id="navbarSupportedContent">
+        <div class="bg-alabaster rounded-3" id="navbarSupportedContent">
             <ul class="navbar-nav mb-2 mb-lg-0">
                 {% if request.user.is_anonymous %}
                     <li class="nav-item">

@@ -1,12 +1,72 @@
+:root {
+    --khaki-color : #C0A886; /* */
+    --fern-green-color : #52783C; /* */
+    --alabaster-color : #F0EAE1; /* */
+    --dark-green-color : #1C2915; /* */
+    --fire-brick-color : #AD3527; /* */
+    --cal-poly-green-color :#375129; /*green4*/
+}
+
+.bg-khaki {
+    background-color: var(--khaki-color)!important;;
+}
+
+.bg-dark-green {
+    background-color: var(--dark-green-color)!important;;
+}
+
+.bg-green4 {
+    background-color: var(--cal-poly-green-color)!important;;
+}
+
+.fern-green-bg {
+    background-color: var(--fern-green-color)!important;;
+}
+
+.bg-alabaster {
+    background-color: var(--alabaster-color)!important;;
+}
+
+.bg-none {
+    background: none!important;
+}
+
+.border-dark-green {
+    border-color: var(--dark-green-color)!important;;
+}
+
+.border-red3 {
+    border-color: var(--fire-brick-color)!important;;
+}
+
+.border-green3 {
+    border-color: var(--fern-green-color)!important;;
+}
+.border-green4 {
+    border-color: var(--cal-poly-green-color)!important;
+}
+
+
+.dropdown-item {
+    --bs-dropdown-link-active-bg : var(--cal-poly-green-color)
+}
+
+
+
+
+
+
+
+
+
+
 
 .tile {
     width: var(--width_perc) !important;
     flex: 0 0 auto;
     aspect-ratio: 1/.69;
     min-width: 100px;
-    /*align-self: center!important;*/
     padding: .3rem !important;
-    /*max-height: 15%;*/
     min-width: 150px;
     min-height: 150px;
 }
@@ -29,3 +89,5 @@
     left: 50%;
     transform: translate(-50%, 0);
 }
+
+
