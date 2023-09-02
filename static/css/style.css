@@ -46,6 +46,18 @@
     border-color: var(--cal-poly-green-color)!important;
 }
 
+.color-red3 {
+    color: var(--fire-brick-color)!important;;
+}
+
+.color-green3 {
+    color: var(--fern-green-color)!important;;
+}
+
+.color-green4 {
+    color : var(--cal-poly-green-color)
+}
+
 
 .dropdown-item {
     --bs-dropdown-link-active-bg : var(--cal-poly-green-color)
