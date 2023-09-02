@@ -15,14 +15,10 @@
             </div>
         </div>
 
-        <div id="board_id" class="d-flex flex-column border col col-lg-4">
-            <div class="d-flex mb-3">
-                <button id="achievement_btn_id"
-                        class="btn bg-secondary-subtle rounded-top-0 rounded-start-0 w-100 active">Completions
-                </button>
-                <button id="submission_btn_id" class="btn bg-secondary-subtle rounded-top-0 rounded-end-0 w-100">
-                    Submissions
-                </button>
+        <div id="board_id" class="d-flex flex-column border-0 col col-lg-4 rounded-3 bg-alabaster">
+            <div class="d-flex text-center mb-3">
+                <button id="achievement_btn_id" class="rounded-3 p-2 border border-green4 rounded-top-0 rounded-start-3 w-100 bg-green4 text-white">Completions</button>
+                <button id="submission_btn_id" class="rounded-3 p-2 border border-green4 rounded-top-0 rounded-end-3 w-100 bg-none">Submissions</button>
             </div>
 
             <div id="achievement_div_id" class="h-100 overflow-y-auto px-3">
@@ -47,15 +43,21 @@
         board.style.height = `${canvas_board.offsetHeight}px`
 
         {#Switch between achievements and submissions tabs#}
-        document.getElementById('submission_btn_id').addEventListener('click', function () {
-            document.getElementById('submission_btn_id').classList.add('active')
-            document.getElementById('achievement_btn_id').classList.remove('active')
+        document.getElementById('submission_btn_id').addEventListener('click', function (){
+            document.getElementById('submission_btn_id').classList.remove('bg-none')
+            document.getElementById('submission_btn_id').classList.add('bg-green4','text-white')
+            document.getElementById('achievement_btn_id').classList.remove('bg-green4','text-white')
+            document.getElementById('achievement_btn_id').classList.add('bg-none')
+
             document.getElementById('submission_div_id').classList.remove('d-none')
             document.getElementById('achievement_div_id').classList.add('d-none')
         })
-        document.getElementById('achievement_btn_id').addEventListener('click', function () {
-            document.getElementById('submission_btn_id').classList.remove('active')
-            document.getElementById('achievement_btn_id').classList.add('active')
+        document.getElementById('achievement_btn_id').addEventListener('click', function (){
+            document.getElementById('submission_btn_id').classList.add('bg-none')
+            document.getElementById('submission_btn_id').classList.remove('bg-green4','text-white')
+            document.getElementById('achievement_btn_id').classList.add('bg-green4','text-white')
+            document.getElementById('achievement_btn_id').classList.remove('bg-none')
+
             document.getElementById('submission_div_id').classList.add('d-none')
             document.getElementById('achievement_div_id').classList.remove('d-none')
         })
@@ -64,20 +66,20 @@
         show_back_button("{% url 'bingo:bingo_home_page' bingo.pk %}");
         show_header_name("{{ bingo.name }}")
         show_header_div(`<div class="dropdown">
-                    <button class="btn border dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                    <button class="btn border-0 bg-alabaster dropdown-toggle" type="button" data-bs-toggle="dropdown">
                         {{ current_team.team_name }}
                     </button>
                     <ul class="dropdown-menu">
                         {% for team in teams %}
                             {% if team.team_name == 'General' %}
                                 <li><a href="{% url 'bingo:play_bingo_general' bingo.id %}"
-                                       class="dropdown-item {% if current_team == team %}active{% endif %}
+                                       class="dropdown-item {% if current_team == team %}bg-green4 text-white{% endif %}
             {{ user|user_access_check:team.pk }}">
                                     {{ team.team_name }}</a>
                                 </li>
                             {% else %}
                                 <li><a href="{% url 'bingo:play_bingo' bingo.id team.id %}"
-                                       class="dropdown-item {% if current_team == team %}active{% endif %}
+                                       class="dropdown-item {% if current_team == team %}bg-green4 text-white{% endif %}
             {{ user|user_access_check:team.pk }}">
                                     {{ team.team_name }}</a>
                                 </li>
