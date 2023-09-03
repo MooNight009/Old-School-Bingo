@@ -68,6 +68,10 @@
 .table > :not(caption) > * > * {
     background-color: var(--alabaster-color) !important;
 }
+.dropdown-menu {
+    background-color: var(--alabaster-color) !important;
+}
+
 
 
 /* Create sand animation */
@@ -89,7 +93,7 @@ body {
     animation: sandAnimation 200s linear infinite;
     background-image: url("https://images.unsplash.com/photo-1542822223-606661cf0a48?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80");
     /*background-image: url("/static/background.png");*/
-    background-size: cover;
+    /*background-size: cover;*/
 }
 
 /*Tile class for times in Play*/
@@ -108,6 +112,7 @@ body {
 }
 
 .bingo-card-text {
+    min-height: 100px;
     max-height: 100px;
     overflow: hidden;
 }

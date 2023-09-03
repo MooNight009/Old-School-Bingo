@@ -43,7 +43,6 @@ class Bingo(models.Model):
         if self.img is not None:
             img = Image.open(self.img.path)
             img.thumbnail((270, 200))
-            # img = img.convert('RGB')
             img.save(self.img.path, format='PNG', quality=60, optimize=True)
 
     # TODO: Actually implement method

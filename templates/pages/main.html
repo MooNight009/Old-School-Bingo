@@ -4,10 +4,13 @@
 
 {% block content %}
 
-    <div class="d-flex mb-3 border-bottom border-black pb-1 h3">
+    <div class="d-flex mb-3 bg-alabaster rounded-3 p-2 h3">
         Your Bingos
     </div>
-    <div class="d-flex flex-wrap gap-3 mb-4">
+    <div class="d-flex flex-wrap gap-3 mb-5">
+        {% if  moderating_bingos|length == 0 %}
+            <div class="ps-2 fs-3">You are not running any bingo...</div>
+        {% endif %}
         {% for bingo in moderating_bingos %}
             <div class="col-lg-3 col-md-4 col"> {#  me-3 mb-3 #}
                 <div class="card h-100 bg-alabaster">
@@ -32,8 +35,11 @@
         {% endfor %}
     </div>
 
-    <div class="d-flex mb-3 border-bottom border-black pb-1 h3">Joined Bingos</div>
-    <div class="d-flex flex-wrap gap-3 mb-4">
+    <div class="d-flex mb-3 bg-alabaster rounded-3 p-2 h3">Joined Bingos</div>
+    <div class="d-flex flex-wrap gap-3 mb-5">
+        {% if  joined_bingos|length == 0 %}
+            <div class="ps-2 fs-3">You have not joined any bingo...</div>
+        {% endif %}
         {% for bingo in joined_bingos %}
             <div class="col-lg-3 col-md-4 col"> {#  me-3 mb-3 #}
                 <div class="card h-100 bg-alabaster">
@@ -78,8 +84,11 @@
         {% endfor %}
     </div>
 
-    <div class="d-flex mb-3 border-bottom border-black pb-1 h3">Public Bingos</div>
+    <div class="d-flex mb-3 bg-alabaster rounded-3 p-2 h3">Public Bingos</div>
     <div class="d-flex flex-wrap gap-3 mb-4">
+        {% if  public_bingos|length == 0 %}
+            <div class="ps-2 fs-3">No public bingo is available...</div>
+        {% endif %}
         {% for bingo in public_bingos %}
             <div class="col-lg-3 col-md-4 col"> {#  me-3 mb-3 #}
                 <div class="card h-100 bg-alabaster">

@@ -23,7 +23,6 @@ class Tile(models.Model):
         if self.img is not None and self.img.name is not None:
             img = Image.open(self.img.path)
             img.thumbnail((270, 200))
-            img = img.convert('RGB')
             img.save(self.img.path, format='PNG', quality=60, optimize=True)
 
         # Make board ready if all tiles are ready
