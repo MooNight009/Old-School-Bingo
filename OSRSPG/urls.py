@@ -47,7 +47,7 @@ urlpatterns += [
 ]
 
 # Statis url
-urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+urlpatterns += static(settings.STATIC_URL)
 
 # Add favicon url
 urlpatterns += [
