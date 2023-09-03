@@ -9,9 +9,9 @@
         <p class="mb-3">{{ object.description }}</p>
 
         {% if is_in_bingo %}
-            <a href="{% url 'bingo:bingo_home_page' object.pk %}" class="btn btn-outline-dark mx-auto">View Bingo Home Page</a>
+            <a href="{% url 'bingo:bingo_home_page' object.pk %}" class="btn btn-outline-dark mx-auto">Bingo Home Page</a>
         {% else %}
-            <a href="{% url 'bingo:bingo_home_page' object.pk %}" class="btn btn-outline-dark mx-auto">Join Bingo</a>
+            <a href="{% url 'bingo:actually_join_bingo' object.pk %}" class="btn btn-outline-dark mx-auto">Join Bingo</a>
         {% endif %}
     </div>
 
