@@ -1,12 +1,108 @@
+:root {
+    --khaki-color: #C0A886; /* */
+    --fern-green-color: #52783C; /* */
+    --alabaster-color: #F0EAE1; /* */
+    --dark-green-color: #1C2915; /* */
+    --fire-brick-color: #AD3527; /* */
+    --cal-poly-green-color: #375129; /*green4*/
+}
 
+.bg-khaki {
+    background-color: var(--khaki-color) !important;;
+}
+
+.bg-dark-green {
+    background-color: var(--dark-green-color) !important;;
+}
+
+.bg-green4 {
+    background-color: var(--cal-poly-green-color) !important;;
+}
+
+.fern-green-bg {
+    background-color: var(--fern-green-color) !important;;
+}
+
+.bg-alabaster {
+    background-color: var(--alabaster-color) !important;;
+}
+
+.bg-none {
+    background: none !important;
+}
+
+.border-dark-green {
+    border-color: var(--dark-green-color) !important;;
+}
+
+.border-red3 {
+    border-color: var(--fire-brick-color) !important;;
+}
+
+.border-green3 {
+    border-color: var(--fern-green-color) !important;;
+}
+
+.border-green4 {
+    border-color: var(--cal-poly-green-color) !important;
+}
+
+.color-red3 {
+    color: var(--fire-brick-color) !important;;
+}
+
+.color-green3 {
+    color: var(--fern-green-color) !important;;
+}
+
+.color-green4 {
+    color: var(--cal-poly-green-color)
+}
+
+
+/*Changing some default values*/
+.dropdown-item {
+    --bs-dropdown-link-active-bg: var(--cal-poly-green-color)
+}
+
+.table > :not(caption) > * > * {
+    background-color: var(--alabaster-color) !important;
+}
+.dropdown-menu {
+    background-color: var(--alabaster-color) !important;
+}
+
+
+
+/* Create sand animation */
+@keyframes sandAnimation {
+    0% {
+        background-position: 0 0;
+    }
+
+    50% {
+        background-position: 100% 0%;
+    }
+
+    100% {
+        background-position: 0% 0;
+    }
+}
+
+body {
+    animation: sandAnimation 200s linear infinite;
+    background-image: url("https://images.unsplash.com/photo-1542822223-606661cf0a48?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80");
+    /*background-image: url("/static/background.png");*/
+    /*background-size: cover;*/
+}
+
+/*Tile class for times in Play*/
 .tile {
     width: var(--width_perc) !important;
     flex: 0 0 auto;
     aspect-ratio: 1/.69;
     min-width: 100px;
-    /*align-self: center!important;*/
     padding: .3rem !important;
-    /*max-height: 15%;*/
     min-width: 150px;
     min-height: 150px;
 }
@@ -16,6 +112,7 @@
 }
 
 .bingo-card-text {
+    min-height: 100px;
     max-height: 100px;
     overflow: hidden;
 }
@@ -29,3 +126,5 @@
     left: 50%;
     transform: translate(-50%, 0);
 }
+
+

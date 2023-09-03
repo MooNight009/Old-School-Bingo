@@ -16,8 +16,7 @@ class Submission(models.Model):
         if self.img is not None:
             img = Image.open(self.img.path)
             img.thumbnail((1000,1000))
-            img = img.convert('RGB')
-            img.save(self.img.path, format='JPEG', quality=60, optimize=True)
+            img.save(self.img.path, format='PNG', quality=60, optimize=True)
 
 
 class Reaction(models.Model):
