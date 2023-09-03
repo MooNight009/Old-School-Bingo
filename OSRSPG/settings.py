@@ -145,8 +145,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-print(os.environ)
-if 'USE_S3' in os.environ:
+# if 'USE_S3' in os.environ:
+if True:
     # aws settings
     # AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
     AWS_ACCESS_KEY_ID = 'AKIA5KMXZIWSDRUL2XNK'
