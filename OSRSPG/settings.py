@@ -91,15 +91,16 @@ WSGI_APPLICATION = 'OSRSPG.wsgi.application'
 #     }
 # }
 # PostgreSQL database
-if 'RDS_DB_NAME' in os.environ:
+# if 'RDS_DB_NAME' in os.environ:
+if True:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': os.environ['RDS_DB_NAME'],
-            'USER': os.environ['RDS_USERNAME'],
-            'PASSWORD': os.environ['RDS_PASSWORD'],
-            'HOST': os.environ['RDS_HOSTNAME'],
-            'PORT': os.environ['RDS_PORT'],
+            'NAME': 'database-osbingo',
+            'USER': 'postgres',
+            'PASSWORD': 'R(!v8UQmh5R9f~m',
+            'HOST': 'database-osbingo.cbtbhlpghtni.***REMOVED***.rds.amazonaws.com',
+            'PORT': 5432,
         }
     }
 else:
