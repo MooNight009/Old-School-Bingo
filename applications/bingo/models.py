@@ -1,9 +1,12 @@
 import datetime
 
+from io import BytesIO
 from PIL import Image
+from django.core.files.storage import default_storage
 from django.db import models
 from django.urls import reverse
 
+from applications.defaults.storage_backends import PublicMediaStorage
 from applications.team.models import Team
 from applications.tile.models import Tile
 
@@ -18,7 +21,7 @@ class Bingo(models.Model):
 
     name = models.CharField(max_length=64)
     description = models.CharField(max_length=1024)
-    img = models.ImageField(null=True, blank=True) # TODO: SET PROPER PATH FOR STORAGE
+    img = models.ImageField(null=True, blank=True, storage=PublicMediaStorage()) # TODO: SET PROPER PATH FOR STORAGE
 
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
@@ -41,9 +44,13 @@ class Bingo(models.Model):
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         if self.img is not None:
-            img = Image.open(self.img.path)
+            memfile = BytesIO()
+            img = Image.open(self.img.url)
             img.thumbnail((270, 200))
-            img.save(self.img.path, format='PNG', quality=60, optimize=True)
+            img.save(memfile, format='PNG', quality=60, optimize=True)
+            default_storage.save(self.img.name, memfile)
+            memfile.close()
+            img.close()
 
     # TODO: Actually implement method
     def get_is_started(self):

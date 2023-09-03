@@ -2,14 +2,17 @@ import sys
 from io import BytesIO
 
 from PIL import Image
+from django.core.files.storage import default_storage
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.db import models
+
+from applications.defaults.storage_backends import PublicMediaStorage
 
 
 class Tile(models.Model):
     name = models.CharField(max_length=64, default="Tile Name")
     description = models.CharField(max_length=256, default="Description")
-    img = models.ImageField(null=True, blank=True) # TODO: SET PROPER PATH FOR STORAGE
+    img = models.ImageField(null=True, blank=True, storage=PublicMediaStorage()) # TODO: SET PROPER PATH FOR STORAGE
 
     bingo_location = models.IntegerField()
     score = models.IntegerField(default=1)
@@ -21,9 +24,13 @@ class Tile(models.Model):
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         if self.img is not None and self.img.name is not None:
-            img = Image.open(self.img.path)
+            memfile = BytesIO()
+            img = Image.open(self.img)
             img.thumbnail((270, 200))
-            img.save(self.img.path, format='PNG', quality=60, optimize=True)
+            img.save(memfile, format='PNG', quality=60, optimize=True)
+            default_storage.save(self.img.name, memfile)
+            memfile.close()
+            img.close()
 
         # Make board ready if all tiles are ready
         if not Tile.objects.filter(bingo=self.bingo, is_ready=False).exists():
