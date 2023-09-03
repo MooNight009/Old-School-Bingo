@@ -59,7 +59,7 @@ class Bingo(models.Model):
         return self.is_over
 
     def get_tiles(self):
-        return Tile.objects.filter(bingo=self).all()
+        return Tile.objects.filter(bingo=self).order_by('bingo_location').all()
 
     def get_column_width(self):
         return 100 / self.board_size
