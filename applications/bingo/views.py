@@ -209,8 +209,11 @@ class JoinBingo(DetailView):
         context['teams'] = teams
 
         user = self.request.user
-        player = Player.objects.filter(user=user).get()
-        context['is_in_bingo'] = player.bingos.contains(self.object)
+        if not user.is_anonymous:
+            player = Player.objects.get(user=user)
+            context['is_in_bingo'] = player.bingos.contains(self.object)
+        else :
+            context['is_in_bingo'] = False
 
         return context
 
