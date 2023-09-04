@@ -315,9 +315,9 @@ class CreateTeam(LoginRequiredMixin, RedirectView):
 
         # Create TeamTiles for team
         # TODO: Move to a better place
-        for tile in bingo.get_tiles():
-            team_tile = TeamTile(team=team, tile=tile)
-            team_tile.save()
+        # for tile in bingo.get_tiles():
+        #     team_tile = TeamTile(team=team, tile=tile)
+        #     team_tile.save()
 
         return reverse('bingo:bingo_home_page', kwargs={'pk': bingo.id})
 
