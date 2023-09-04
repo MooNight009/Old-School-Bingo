@@ -54,8 +54,10 @@ class Bingo(models.Model):
 
     def get_is_over(self):
         if not self.is_over:
-            self.is_over = self.end_date <= datetime.datetime.now(datetime.timezone.utc)
-            self.save()
+            change = self.end_date <= datetime.datetime.now(datetime.timezone.utc)
+            if change != self.is_over:
+                self.is_over = change
+                self.save()
         return self.is_over
 
     def get_tiles(self):
