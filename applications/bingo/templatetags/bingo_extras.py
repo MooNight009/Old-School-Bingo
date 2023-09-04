@@ -99,7 +99,7 @@ def is_moderator(user, bingo_pk):
 
 @register.filter(name='get_player_bingo_team_name')
 def get_player_bingo_team_name(player, bingo_pk):
-    team_name = player.teams.get(bingo=bingo_pk).team_name
+    team_name = player.teams.get(bingo_id=bingo_pk).team_name
 
     return team_name if team_name!= 'General' else 'No team'
 
