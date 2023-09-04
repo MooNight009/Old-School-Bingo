@@ -45,7 +45,7 @@ class Bingo(models.Model):
         super().save(*args, **kwargs)
         if self.img is not None:
             memfile = BytesIO()
-            img = Image.open(self.img.url)
+            img = Image.open(self.img)
             img.thumbnail((270, 200))
             img.save(memfile, format='PNG', quality=60, optimize=True)
             default_storage.save(self.img.name, memfile)

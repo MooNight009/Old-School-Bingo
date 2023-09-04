@@ -20,7 +20,7 @@ class Submission(models.Model):
         super().save(*args, **kwargs)
         if self.img is not None:
             memfile = BytesIO()
-            img = Image.open(self.img.path)
+            img = Image.open(self.img)
             img.thumbnail((1000, 1000))
             img.save(self.img.path, format='PNG', quality=60, optimize=True)
             img.save(memfile, format='PNG', quality=60, optimize=True)
