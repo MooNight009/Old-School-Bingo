@@ -21,3 +21,10 @@ class Team(models.Model):
             for tile in self.bingo.get_tiles():
                 team_tile = TeamTile(team=self, tile=tile)
                 team_tile.save()
+
+    def delete(self, *args, **kwargs):
+        for player in self.player_set.all():
+            player.teams.remove(self)
+            player.teams.add(Team.objects.get(bingo=self.bingo, team_name='General'))
+            player.save()
+        return super().delete(*args, **kwargs)
