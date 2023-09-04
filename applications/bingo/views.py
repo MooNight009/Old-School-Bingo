@@ -242,7 +242,8 @@ class ActuallyJoinBingo(LoginRequiredMixin, RedirectView):
         player = Player.objects.filter(user=user).get()
         if not player.bingos.contains(bingo):
             player.bingos.add(bingo)
-            player.teams.add(bingo.team_set.get(team_name='General'))
+
+        player.teams.add(bingo.team_set.get(team_name='General'))
 
         url = reverse("bingo:bingo_home_page", kwargs={'pk': bingo.id})
         return url

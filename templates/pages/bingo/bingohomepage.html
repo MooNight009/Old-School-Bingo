@@ -6,17 +6,17 @@
     <div class="d-flex flex-column">
         <div class="d-flex mb-3">
             <div class="d-flex flex-column col col-md-8 col-lg-9 ">
-                <div class="bg-alabaster rounded-3 p-2 me-md-3">
+                <div class="d-flex flex-column bg-alabaster rounded-3 p-2 me-md-3">
                     <div class="h1 mb-2">{{ object.name }}</div>
                     {% if object.get_is_over %}
-                        <div class="text-center text-success fs-3 mb-3">Winner
+                        <div class="text-center text-success fs-3 mb-3 my-auto">Winner
                             is {{ object.get_winner.team_name }}</div>
                         <a href="{% url 'bingo:play_bingo_general' object.pk %}"
-                           class="btn btn-outline-success align-self-center p-3 px-5 mb-3">View board</a>
+                           class="btn btn-outline-success align-self-center p-3 px-5 mb-3 my-auto">View board</a>
                     {% elif object.get_is_started %}
-                        <div class="text-center text-success fs-3 mb-3">Bingo has started</div>
+                        <div class="text-center text-success fs-3 mb-3 my-auto">Bingo has started</div>
                         <a href="{% url 'bingo:play_bingo' bingo.id user|get_user_bingo_team:bingo %}"
-                           class="align-self-center btn btn-outline-dark mb-3 px-5">Play</a>
+                           class="align-self-center btn btn-outline-dark mb-3 px-5 my-auto">Play</a>
                     {% else %}
                         <div class="fs-1 mb-2 text-center" id="time_left"></div>
                     {% endif %}
