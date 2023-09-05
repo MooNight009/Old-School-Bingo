@@ -20,8 +20,12 @@ BINGO_TYPES = (
 class Bingo(models.Model):
 
     name = models.CharField(max_length=64)
+<<<<<<< HEAD
     description = models.CharField(max_length=1024)
     img = models.ImageField(null=True, blank=True, storage=PublicMediaStorage()) # TODO: SET PROPER PATH FOR STORAGE
+=======
+    description = models.TextField(max_length=1024)
+>>>>>>> b52ead3c66768e79d59fe3418ad5b80173b1406c
 
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()

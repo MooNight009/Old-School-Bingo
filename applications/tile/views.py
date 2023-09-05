@@ -9,13 +9,14 @@ from applications.common.mixins import UserIsModeratorMixin, PlayerAccessMixin
 from applications.player.models import Player, Moderator
 from applications.submission.forms import SubmissionForm
 from applications.submission.models import Submission, Achievement
+from applications.tile.forms import EditTileForm
 from applications.tile.models import Tile, TeamTile
 
 
 class EditTile(LoginRequiredMixin, UserIsModeratorMixin, UpdateView):
     template_name = 'pages/tile/edittile.html'
     model = Tile
-    fields = ['name', 'description', 'img', 'score']
+    form_class = EditTileForm
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

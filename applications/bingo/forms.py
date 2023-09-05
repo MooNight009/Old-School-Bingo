@@ -38,18 +38,27 @@ class EditBingoForm2(forms.Form):
     can_players_create_team = forms.BooleanField(label='can_players_create_bingo', required=False)
     max_players_in_team = forms.IntegerField()
 
+
 class EditBingoForm(forms.ModelForm):
     """
         Form used for editting the bingo
     """
+
     class Meta:
         model = Bingo
-        exclude = ['is_ready', 'board_type', 'board_size', 'max_score'] # , 'is_over'
+        exclude = ['is_ready', 'board_type', 'board_size', 'max_score']  # , 'is_over'
 
         widgets = {
             'start_date': forms.SelectDateWidget(),
-            'end_date': forms.SelectDateWidget()
+            'end_date': forms.SelectDateWidget(),
+            'description': forms.Textarea(attrs={'class':'form-control2'})
         }
 
+    def __init__(self, *args, **kwargs):
+        super(EditBingoForm, self).__init__(*args, **kwargs)
+        for field in self.fields:
+            self.fields[field].widget.attrs.update({'class':'form-control'})
+
+
 class ModeratorForm(forms.Form):
-    player_name = forms.CharField(max_length=32, required=True, widget= forms.TextInput(attrs={'class':'form-control'}))
+    player_name = forms.CharField(max_length=32, required=True, widget=forms.TextInput(attrs={'class': 'form-control'}))
