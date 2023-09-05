@@ -2,14 +2,22 @@
 {#{% load static %}#}
 
 {% block content %}
-    <h1>Edit Tile </h1>
+    <div class="bg-alabaster rounded-3 p-2">
+
+        <div class="h1">Edit Tile </div>
 
 
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="Update">
-    </form>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="d-flex pb-2">
+                    {% include 'pages/bingo/innertemplates/fieldtemplate.html' %}
+                </div>
+            {% endfor %}
+
+            <input type="submit" class="btn border-green4" value="Update">
+        </form>
+    </div>
 
 {% endblock %}
 
