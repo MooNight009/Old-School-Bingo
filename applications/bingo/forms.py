@@ -50,8 +50,14 @@ class EditBingoForm(forms.ModelForm):
 
         widgets = {
             'start_date': forms.SelectDateWidget(),
-            'end_date': forms.SelectDateWidget()
+            'end_date': forms.SelectDateWidget(),
+            'description': forms.Textarea(attrs={'class':'form-control2'})
         }
+
+    def __init__(self, *args, **kwargs):
+        super(EditBingoForm, self).__init__(*args, **kwargs)
+        for field in self.fields:
+            self.fields[field].widget.attrs.update({'class':'form-control'})
 
 
 class ModeratorForm(forms.Form):

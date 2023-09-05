@@ -8,7 +8,7 @@ from django.db import models
 
 class Tile(models.Model):
     name = models.CharField(max_length=64, default="Tile Name")
-    description = models.CharField(max_length=256, default="Description")
+    description = models.TextField(max_length=256, default="Description")
     img = models.ImageField(null=True, blank=True) # TODO: SET PROPER PATH FOR STORAGE
 
     bingo_location = models.IntegerField()
