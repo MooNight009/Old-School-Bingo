@@ -3,7 +3,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse
 from django.views.generic import FormView, RedirectView, DetailView, ListView, UpdateView
 
-from applications.bingo.forms import BingoForm, EditBingoForm
+from applications.bingo.forms import *
 from applications.bingo.models import Bingo
 from applications.common.mixins import UserIsModeratorMixin, PlayerAccessMixin
 from applications.player.models import Player, Moderator
@@ -29,77 +29,6 @@ class CreateBingo(LoginRequiredMixin, FormView):
             tile.save()
         Team(team_name='General', bingo=bingo).save()
         return super().form_valid(form)
-
-
-# class EditBingo(LoginRequiredMixin, UserIsModeratorMixin, FormView):
-#     """
-#         Page to edit the details of bingo
-#         TODO: Switch to ModelForm or UpdateView
-#         TODO: Split teams to another tab
-#         TODO: Split settings to another tab
-#     """
-#     template_name = 'pages/bingo/edit/editbingo.html'
-#     form_class = EditBingoForm
-#     success_url = '/'
-#
-#     # Set the initial detail for the form
-#     def get_initial(self):
-#         initial = {'team_names': 'Bakasdojn'}
-#         pk = self.kwargs.get('pk')
-#         bingo = Bingo.objects.filter(pk=pk).get()
-#         initial['is_public'] = bingo.is_public
-#         initial['is_team_public'] = bingo.is_team_public
-#         initial['start_date'] = bingo.start_date
-#         initial['end_date'] = bingo.end_date
-#         initial['can_players_create_team'] = bingo.can_players_create_team
-#         initial['max_players_in_team'] = bingo.max_players_in_team
-#         return initial
-#
-#     # Get the bingo object
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data()
-#         pk = self.kwargs.get('pk')
-#         bingo = Bingo.objects.filter(pk=pk).get()
-#         teams = Team.objects.filter(bingo=bingo)
-#         context['bingo'] = bingo
-#         context['teams'] = teams
-#         return context
-#
-#     # Don't leave page after saving
-#     def form_valid(self, form):
-#         pk = self.kwargs.get('pk')
-#         bingo = Bingo.objects.filter(pk=pk).get()
-#         bingo.is_team_public = form.cleaned_data.get('is_team_public')
-#         bingo.is_public = form.cleaned_data.get('is_public')
-#         bingo.start_date = form.cleaned_data.get('start_date')
-#         bingo.end_date = form.cleaned_data.get('end_date')
-#
-#         bingo.max_players_in_team = form.cleaned_data.get('max_players_in_team')
-#         bingo.can_players_create_team = form.cleaned_data.get('can_players_create_team')
-#
-#         for l in self.request.POST.lists():
-#             # Update existing teams
-#             if "update_team_name" in l[0]:
-#                 team_id = l[0].split("update_team_name_")[1]
-#                 team = Team.objects.filter(id=team_id).get()
-#                 if team.team_name != l[1][0]:
-#                     team.team_name = l[1][0]
-#                     team.save()
-#             # We have new teams
-#             elif l[0] == 'team_name_new':
-#                 new_teams = l[1]
-#                 for new_team in new_teams:
-#                     team = Team(team_name=new_team, bingo=bingo)
-#                     team.save()
-#
-#                     # Create TeamTiles for team
-#                     # TODO: Move to a better place
-#                     for tile in bingo.get_tiles():
-#                         team_tile = TeamTile(team=team, tile=tile)
-#                         team_tile.save()
-#
-#         bingo.save()
-#         return self.render_to_response(self.get_context_data(form=form))
 
 
 class EditBingoBoard(LoginRequiredMixin, UserIsModeratorMixin, DetailView):
@@ -159,6 +88,29 @@ class EditBingoPlayers(LoginRequiredMixin, UserIsModeratorMixin, ListView):
         context['bingo'] = Bingo.objects.filter(pk=self.kwargs['pk']).get()
         return context
 
+class EditBingoModerators(LoginRequiredMixin, UserIsModeratorMixin, FormView):
+    form_class = ModeratorForm
+    template_name = 'pages/bingo/edit/editbingomoderators.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        print(self.kwargs['pk'])
+        context['bingo'] = Bingo.objects.get(pk=self.kwargs['pk'])
+        context['mods'] = Moderator.objects.filter(bingo_id=self.kwargs['pk'])
+
+
+        return context
+
+    def form_valid(self, form):
+        player = Player.objects.filter(user__username=form.cleaned_data['player_name'])
+        print(player)
+        if player.exists():
+            if not Moderator.objects.filter(player=player.get()).exists():
+                mod = Moderator.objects.create(player=player.get(), bingo_id=self.kwargs['pk'])
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('bingo:edit_bingo_moderators', kwargs={'pk': self.kwargs['pk']})
 
 class EditBingoSetting(LoginRequiredMixin, UserIsModeratorMixin, UpdateView):
     """
