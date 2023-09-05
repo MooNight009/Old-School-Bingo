@@ -15,7 +15,7 @@
                     <a href="{% url 'bingo:edit_bingo_players' bingo.pk %}" class="nav-link">Players</a>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link">Moderators</a>
+                    <a href="{% url 'bingo:edit_bingo_moderators' bingo.pk %}" class="nav-link">Moderators</a>
                 </li>
                 <li class="nav-item">
                     <a href="{% url 'bingo:edit_bingo_setting' bingo.pk %}" class="nav-link">Setting</a>

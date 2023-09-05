@@ -51,3 +51,5 @@ class EditBingoForm(forms.ModelForm):
             'end_date': forms.SelectDateWidget()
         }
 
+class ModeratorForm(forms.Form):
+    player_name = forms.CharField(max_length=32, required=True, widget= forms.TextInput(attrs={'class':'form-control'}))
