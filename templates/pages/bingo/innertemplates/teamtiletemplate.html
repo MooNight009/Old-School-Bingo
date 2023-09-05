@@ -4,7 +4,7 @@
        href={% url 'tile:play_tile' team_tile.id %}>
         <div class="fs-4 overflow-hidden text-center text-nowrap px-2 pb-2">{{ team_tile.tile.name }}</div>
         <div class="d-flex h-100"
-             style=" background-image: url('{{ team_tile.get_url }}'); background-size: contain">
+             style=" background-image: url('{{ team_tile.get_url }}'); background-size: cover">
         </div>
     </a>
 </div>
