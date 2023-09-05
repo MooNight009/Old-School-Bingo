@@ -11,10 +11,8 @@ from applications.defaults.storage_backends import PublicMediaStorage
 
 class Tile(models.Model):
     name = models.CharField(max_length=64, default="Tile Name")
-
-    description = models.CharField(max_length=256, default="Description")
     img = models.ImageField(null=True, blank=True, storage=PublicMediaStorage()) # TODO: SET PROPER PATH FOR STORAGE
-    description = models.TextField(max_length=256, default="Description")
+    description = models.TextField(max_length=512, default="Description")
 
     bingo_location = models.IntegerField()
     score = models.IntegerField(default=1)
