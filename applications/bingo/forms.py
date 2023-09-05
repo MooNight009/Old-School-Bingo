@@ -54,10 +54,10 @@ class EditBingoForm(forms.ModelForm):
             'description': forms.Textarea(attrs={'class':'form-control2'})
         }
 
-    def __init__(self, *args, **kwargs):
-        super(EditBingoForm, self).__init__(*args, **kwargs)
-        for field in self.fields:
-            self.fields[field].widget.attrs.update({'class':'form-control'})
+    # def __init__(self, *args, **kwargs):
+    #     super(EditBingoForm, self).__init__(*args, **kwargs)
+    #     for field in self.fields:
+    #         self.fields[field].widget.attrs.update({'class':'form-control'})
 
 
 class ModeratorForm(forms.Form):
