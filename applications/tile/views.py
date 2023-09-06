@@ -95,7 +95,7 @@ class CompleteTile(LoginRequiredMixin, PlayerAccessMixin, RedirectView):
 
         team_tile.is_complete = not team_tile.is_complete
         if team_tile.is_complete:
-            team_tile.completion_date = datetime.datetime.utcnow()
+            team_tile.completion_date = datetime.datetime.now(datetime.timezone.utc)
         team_tile.save()
 
         return reverse('tile:play_tile', kwargs={'pk': team_tile.id})
@@ -114,7 +114,7 @@ class ApproveTile(LoginRequiredMixin, RedirectView):
         if team_tile.is_mod_approved:
             team_tile.team.score += team_tile.tile.score  # Add a point for finishing the tile
 
-            team_tile.mod_approval_date = datetime.datetime.utcnow()
+            team_tile.mod_approval_date = datetime.datetime.now(datetime.timezone.utc)
             achievement = Achievement(team_tile=team_tile)
             achievement.save()
         else:
