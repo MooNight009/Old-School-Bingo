@@ -25,10 +25,10 @@
                     <div class="card-footer d-flex justify-content-around p-0">
                         <a href="{% url 'bingo:edit_bingo_board' bingo.id %}"
                            class="btn flex-fill py-2">Edit</a>
-                        {% if user|get_user_bingo_team:bingo != -1 %}
-                            <a href="{% url 'bingo:play_bingo_general' bingo.id %}"
-                               class="btn flex-fill py-2 border-start">View</a>
-                        {% endif %}
+{#                        {% if user|get_user_bingo_team:bingo != -1 %}#}
+                        <a href="{% url 'bingo:play_bingo_general' bingo.id %}"
+                           class="btn flex-fill py-2 border-start">View</a>
+{#                        {% endif %}#}
                     </div>
                 </div>
             </div>

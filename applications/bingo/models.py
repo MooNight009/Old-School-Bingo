@@ -54,8 +54,10 @@ class Bingo(models.Model):
     # TODO: Actually implement method
     def get_is_started(self):
         if not self.is_started:
-            self.is_started = self.start_date <= datetime.datetime.now(datetime.timezone.utc)
-            self.save()
+            change = self.start_date <= datetime.datetime.now(datetime.timezone.utc)
+            if change!= self.is_started :
+                self.is_started = change
+                self.save()
         return self.is_started
 
     def get_is_over(self):

@@ -82,8 +82,8 @@ class EditBingoPlayers(LoginRequiredMixin, UserIsModeratorMixin, ListView):
         players = Player.objects.filter(bingos__in=Bingo.objects.filter(pk=self.kwargs['pk']))
         return players
 
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super(EditBingoPlayers, self).get_context_data(object_list=None, **kwargs)
+    def get_context_data(self, *args, object_list=None, **kwargs):
+        context = super().get_context_data(*args, object_list=None, **kwargs)
         context['teams'] = Team.objects.filter(bingo_id=self.kwargs['pk'])
         context['bingo'] = Bingo.objects.filter(pk=self.kwargs['pk']).get()
         return context
@@ -255,22 +255,16 @@ class CreateTeam(LoginRequiredMixin, RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         bingo = Bingo.objects.filter(pk=kwargs['pk']).get()
         new_team_name = self.request.POST['new_team_name']
+        if not Team.objects.filter(bingo=bingo, team_name=new_team_name).exists():
+            # Create new team
+            team = Team(team_name=new_team_name, bingo=bingo)
+            team.save()
 
-        # Create new team
-        team = Team(team_name=new_team_name, bingo=bingo)
-        team.save()
-
-        # Add user to team
-        user = self.request.user
-        player = Player.objects.filter(user=user).get()
-        player.teams.remove(player.teams.get(bingo=bingo))
-        player.teams.add(team)
-
-        # Create TeamTiles for team
-        # TODO: Move to a better place
-        # for tile in bingo.get_tiles():
-        #     team_tile = TeamTile(team=team, tile=tile)
-        #     team_tile.save()
+            # Add user to team
+            user = self.request.user
+            player = Player.objects.filter(user=user).get()
+            player.teams.remove(player.teams.get(bingo=bingo))
+            player.teams.add(team)
 
         return reverse('bingo:bingo_home_page', kwargs={'pk': bingo.id})
 

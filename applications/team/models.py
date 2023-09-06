@@ -1,6 +1,7 @@
 from django.db import models
-
 # from applications.player.models import Player
+from django.db.models import Count
+
 from applications.tile.models import TeamTile
 
 
@@ -28,3 +29,7 @@ class Team(models.Model):
             player.teams.add(Team.objects.get(bingo=self.bingo, team_name='General'))
             player.save()
         return super().delete(*args, **kwargs)
+
+    def get_ranking(self):
+        ss = Team.objects.filter(bingo=self.bingo, score__gte=self.score).exclude(team_name='General').values('score')
+        return ss.distinct().count()
