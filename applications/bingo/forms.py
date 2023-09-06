@@ -3,9 +3,6 @@ from django import forms
 from applications.bingo.models import Bingo
 
 
-# TODO: Write clean methods for each part
-
-
 class BingoForm(forms.ModelForm):
     class Meta:
         model = Bingo
@@ -14,7 +11,7 @@ class BingoForm(forms.ModelForm):
         widgets = {
             'start_date': forms.DateTimeInput(),
             'end_date': forms.DateTimeInput(),
-            'description': forms.Textarea(attrs={'class':'form-control'})
+            'description': forms.Textarea(attrs={'class': 'form-control'})
         }
 
     def clean(self):
@@ -25,24 +22,9 @@ class BingoForm(forms.ModelForm):
         return is_valid
 
 
-class EditBingoForm2(forms.Form):
-    """
-        A form to edit the bingo after creating it
-        TODO: Fill the information here
-        TODO: Use ModelForm
-    """
-    is_public = forms.BooleanField(label='is_public', required=False)
-    is_team_public = forms.BooleanField(label='is_team_public', required=False)
-    start_date = forms.DateTimeField(label='start_date', widget=forms.SelectDateWidget())
-    end_date = forms.DateTimeField(label='end_date', widget=forms.SelectDateWidget())
-
-    can_players_create_team = forms.BooleanField(label='can_players_create_bingo', required=False)
-    max_players_in_team = forms.IntegerField()
-
-
 class EditBingoForm(forms.ModelForm):
     """
-        Form used for editting the bingo
+        Form used for editing the bingo
     """
 
     class Meta:
@@ -52,14 +34,11 @@ class EditBingoForm(forms.ModelForm):
         widgets = {
             'start_date': forms.DateTimeInput(),
             'end_date': forms.DateTimeInput(),
-            'description': forms.Textarea(attrs={'class':'form-control'})
+            'description': forms.Textarea(attrs={'class': 'form-control'})
         }
-
-    # def __init__(self, *args, **kwargs):
-    #     super(EditBingoForm, self).__init__(*args, **kwargs)
-    #     for field in self.fields:
-    #         self.fields[field].widget.attrs.update({'class':'form-control'})
 
 
 class ModeratorForm(forms.Form):
-    player_name = forms.CharField(max_length=32, required=True, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    player_name = forms.CharField(
+        max_length=32, required=True, widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
