@@ -12,8 +12,9 @@ class BingoForm(forms.ModelForm):
         fields = ['name', 'description', 'start_date', 'end_date', 'board_type', 'board_size', 'is_public',
                   'is_team_public', 'can_players_create_team', 'max_players_in_team', 'img']
         widgets = {
-            'start_date': forms.SelectDateWidget(),
-            'end_date': forms.SelectDateWidget()
+            'start_date': forms.DateTimeInput(),
+            'end_date': forms.DateTimeInput(),
+            'description': forms.Textarea(attrs={'class':'form-control'})
         }
 
     def clean(self):
@@ -49,9 +50,9 @@ class EditBingoForm(forms.ModelForm):
         exclude = ['is_ready', 'board_type', 'board_size', 'max_score']  # , 'is_over'
 
         widgets = {
-            'start_date': forms.SelectDateWidget(),
-            'end_date': forms.SelectDateWidget(),
-            'description': forms.Textarea(attrs={'class':'form-control2'})
+            'start_date': forms.DateTimeInput(),
+            'end_date': forms.DateTimeInput(),
+            'description': forms.Textarea(attrs={'class':'form-control'})
         }
 
     # def __init__(self, *args, **kwargs):
