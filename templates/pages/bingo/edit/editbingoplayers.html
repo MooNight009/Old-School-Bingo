@@ -48,8 +48,6 @@
                               class="d-flex" nams="{{ player|get_player_bingo_team:bingo }}">
                             {% csrf_token %}
                             <select name="team_id" id="" class="form-select">
-{#                            {{ view.kwargs.pk }}#}
-
                                 {% if player.user|get_user_bingo_team:bingo == -1 %}
                                     <option value="-1" disabled selected>No Team Selected</option>
                                 {% endif %}

@@ -82,8 +82,8 @@ class EditBingoPlayers(LoginRequiredMixin, UserIsModeratorMixin, ListView):
         players = Player.objects.filter(bingos__in=Bingo.objects.filter(pk=self.kwargs['pk']))
         return players
 
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super(EditBingoPlayers, self).get_context_data(object_list=None, **kwargs)
+    def get_context_data(self, *args, object_list=None, **kwargs):
+        context = super().get_context_data(*args, object_list=None, **kwargs)
         context['teams'] = Team.objects.filter(bingo_id=self.kwargs['pk'])
         context['bingo'] = Bingo.objects.filter(pk=self.kwargs['pk']).get()
         return context

@@ -103,49 +103,55 @@ class CompleteTile(LoginRequiredMixin, PlayerAccessMixin, RedirectView):
 
 class ApproveTile(LoginRequiredMixin, RedirectView):
     def get_redirect_url(self, *args, **kwargs):
-        self.team_tile = TeamTile.objects.filter(pk=kwargs['pk']).get()
-        if self.team_tile.tile.bingo.get_is_over():
-            return reverse('tile:play_tile', kwargs={'pk': self.team_tile.id})
+        team_tile = TeamTile.objects.filter(pk=kwargs['pk']).get()
+        if team_tile.tile.bingo.get_is_over():
+            return reverse('tile:play_tile', kwargs={'pk': team_tile.id})
 
         # self.team_tile = team_tile
-        if not Moderator.objects.filter(bingo=self.team_tile.team.bingo, player__user=self.request.user).exists():
-            return reverse('tile:play_tile', kwargs={'pk': self.team_tile.id})
-        self.team_tile.is_mod_approved = not self.team_tile.is_mod_approved
-        if self.team_tile.is_mod_approved:
-            self.team_tile.team.score += self.team_tile.tile.score  # Add a point for finishing the tile
+        if not Moderator.objects.filter(bingo=team_tile.team.bingo, player__user=self.request.user).exists():
+            return reverse('tile:play_tile', kwargs={'pk': team_tile.id})
+        team_tile.is_mod_approved = not team_tile.is_mod_approved
+        if team_tile.is_mod_approved:
+            team_tile.team.score += team_tile.tile.score  # Add a point for finishing the tile
 
-            self.team_tile.mod_approval_date = datetime.datetime.utcnow()
-            achievement = Achievement(team_tile=self.team_tile)
+            team_tile.mod_approval_date = datetime.datetime.utcnow()
+            achievement = Achievement(team_tile=team_tile)
             achievement.save()
         else:
-            self.team_tile.team.score -= self.team_tile.tile.score  # Remove a point for unfinishing the tile
+            team_tile.team.score -= team_tile.tile.score  # Remove a point for unfinishing the tile
 
-            achievement = Achievement.objects.filter(team_tile=self.team_tile)
+            achievement = Achievement.objects.filter(team_tile=team_tile)
             if achievement.exists():
                 achievement.delete()
 
-        self.row_col_completion()
-        self.team_tile.save()
-        self.team_tile.team.save()
+        team_tile.save()
+        self.row_col_completion(team_tile)
+        team_tile.team.save()
 
-        return reverse('tile:play_tile', kwargs={'pk': self.team_tile.pk})
+        return reverse('tile:play_tile', kwargs={'pk': team_tile.pk})
 
-    def row_col_completion(self):
+    def row_col_completion(self, team_tile):
         # If a row or column is completed add extra point
-        board_size = self.team_tile.tile.bingo.board_size
+        board_size = team_tile.tile.bingo.board_size
         # Row
-        starting_i = int(self.team_tile.tile.bingo_location / board_size) + 1
+        starting_i = int((team_tile.tile.bingo_location - 1) / board_size)*board_size + 1
         row_range = [*range(starting_i, starting_i + board_size)]
-        row_tiles = TeamTile.objects.filter(team=self.team_tile.team, tile__bingo=self.team_tile.team.bingo,
-                                            tile__bingo_location__in=row_range).exclude(pk=self.team_tile.pk)
+        row_tiles = TeamTile.objects.filter(team=team_tile.team, tile__bingo=team_tile.team.bingo,
+                                            tile__bingo_location__in=row_range).exclude(pk=team_tile.pk)
         # Col
-        starting_j = int((self.team_tile.tile.bingo_location - 1) % board_size) + 1
+        starting_j = int((team_tile.tile.bingo_location - 1) % board_size) + 1
         col_range = [*range(starting_j, board_size * board_size + 1, board_size)]
-        col_tiles = TeamTile.objects.filter(team=self.team_tile.team, tile__bingo=self.team_tile.team.bingo,
-                                            tile__bingo_location__in=col_range).exclude(pk=self.team_tile.pk)
+        col_tiles = TeamTile.objects.filter(team=team_tile.team, tile__bingo=team_tile.team.bingo,
+                                            tile__bingo_location__in=col_range).exclude(pk=team_tile.pk)
 
-        if not row_tiles.filter(is_mod_approved=False).exists() or not col_tiles.filter(is_mod_approved=False).exists():
-            if self.team_tile.is_mod_approved:
-                self.team_tile.team.score += 1;
+        if not row_tiles.filter(is_mod_approved=False).exists():
+            if team_tile.is_mod_approved:
+                team_tile.team.score += 1;
             else:
-                self.team_tile.team.score -= 1;
+                team_tile.team.score -= 1;
+
+        if not col_tiles.filter(is_mod_approved=False).exists():
+            if team_tile.is_mod_approved:
+                team_tile.team.score += 1;
+            else:
+                team_tile.team.score -= 1;
