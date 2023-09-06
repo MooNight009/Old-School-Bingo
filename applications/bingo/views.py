@@ -255,6 +255,9 @@ class CreateTeam(LoginRequiredMixin, RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         bingo = Bingo.objects.filter(pk=kwargs['pk']).get()
         new_team_name = self.request.POST['new_team_name']
+        if bingo.get_is_started():
+            return reverse('bingo:bingo_home_page', kwargs={'pk': bingo.id})
+
         if not Team.objects.filter(bingo=bingo, team_name=new_team_name).exists():
             # Create new team
             team = Team(team_name=new_team_name, bingo=bingo)
@@ -271,7 +274,7 @@ class CreateTeam(LoginRequiredMixin, RedirectView):
 
 # View to see the actual bingo game
 # TODO: Fix team selection
-class PlayBingo(PlayerAccessMixin, DetailView):
+class PlayBingo(LoginRequiredMixin, PlayerAccessMixin, DetailView):
     model = Bingo
     access_object = 'bingo'
     template_name_field = 'bingo'
@@ -289,7 +292,7 @@ class PlayBingo(PlayerAccessMixin, DetailView):
         return context
 
 
-class PlayBingoGeneral(UserPassesTestMixin, DetailView):
+class PlayBingoGeneral(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     model = Bingo
     template_name_field = 'bingo'
     template_name = 'pages/bingo/playbingogeneral.html'

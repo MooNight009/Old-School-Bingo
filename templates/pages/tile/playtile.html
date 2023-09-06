@@ -21,14 +21,12 @@
                     {% if teamtile.is_complete %}
                         <div class="h4 color-green3">Tile is complete</div>
                         <button type="button" class="bg-green4 border-0 mb-3 p-2 rounded-3 text-white"
-                                style="opacity: .8;" data-bs-toggle="modal"
-                                data-bs-target="#complete_modal_id">Uncomplete
+                                data-bs-toggle="modal" data-bs-target="#complete_modal_id">Uncomplete
                         </button>
                     {% else %}
                         <div class="h4 color-red3">Tile is not complete</div>
                         <button type="button" class="bg-green4 border-0 mb-3 p-2 rounded-3 text-white"
-                                data-bs-toggle="modal"
-                                data-bs-target="#complete_modal_id">Complete Tile
+                                data-bs-toggle="modal" data-bs-target="#complete_modal_id">Complete Tile
                         </button>
                     {% endif %}
 
@@ -50,9 +48,9 @@
 
                 {% else %}
                     {% if teamtile.is_complete %}
-                        <div class="h4 text-success">Tile is complete</div>
+                        <div class="h4 color-green4">Tile is complete</div>
                         {% if teamtile.is_mod_approved %}
-                            <div class="h4 color-green3">Tile is approved by mods</div>
+                            <div class="h4 color-green4">Tile is approved by mods</div>
                         {% else %}
                             <div class="h4 text-warning">Waiting for mod to approve</div>
                         {% endif %}
@@ -63,7 +61,6 @@
                                 data-bs-target="#complete_modal_id">
                             Complete Tile
                         </button>
-                        <div class="h4 color-red3">Waiting for mod to approve</div>
                     {% endif %}
 
                 {% endif %}
