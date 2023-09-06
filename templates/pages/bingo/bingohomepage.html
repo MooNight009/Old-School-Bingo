@@ -12,11 +12,16 @@
                         <div class="text-center text-success fs-3 mb-3 my-auto">Winner
                             is {{ object.get_winner.team_name }}</div>
                         <a href="{% url 'bingo:play_bingo_general' object.pk %}"
-                           class="btn btn-outline-success align-self-center p-3 px-5 mb-3 my-auto">View board</a>
+                           class="btn bg-green4 text-white align-self-center p-3 px-5 mb-3 my-auto">View board</a>
                     {% elif object.get_is_started %}
                         <div class="text-center text-success fs-3 mb-3 my-auto">Bingo has started</div>
-                        <a href="{% url 'bingo:play_bingo' bingo.id user|get_user_bingo_team:bingo %}"
-                           class="align-self-center btn btn-outline-dark mb-3 px-5 my-auto">Play</a>
+                        {% if user|get_user_bingo_team:bingo != -1 %}
+                            <a href="{% url 'bingo:play_bingo' bingo.id user|get_user_bingo_team:bingo %}"
+                               class="align-self-center btn bg-green4 text-white mb-3 px-5 my-auto">Play</a>
+                        {% else %}
+                            <div class="text-center text-danger fs-4 mb-3 my-auto">Contact a moderator to join a team
+                            </div>
+                        {% endif %}
                     {% endif %}
                     <div class="fs-1 mb-2 text-center" id="time_left"></div>
 
@@ -48,30 +53,38 @@
 
         {% if is_in_bingo %}
             <div class="d-flex flex-wrap justify-content-center bg-alabaster rounded-3 gap-5 mb-3">
-                <form action="{% url 'bingo:change_team' object.id %}" method="post"
-                      class="d-flex align-items-baseline gap-3">
-                    {% csrf_token %}
-                    <select name="selected_team_id" id="" class="form-select bg-alabaster border-green4">
-                        {% for team in teams %}
-                            <option value="{{ team.id }}" {{ user|is_user_in_team:team }}>{{ team.team_name }}</option>
-                        {% endfor %}
-                    </select>
-                    <div class="d-flex justify-content-center mt-3">
-                        <input class="btn bg-green4 text-white" type="submit" value="Change Team">
-                    </div>
-                </form>
-                {% if bingo.can_players_create_team %}
-                    <form action="{% url 'bingo:create_team' object.id %}" method="post"
-                          class="d-flex align-items-baseline gap-3">
-                        {% csrf_token %}
-                        <div class="mb-3">
-                            <input type="text" class="form-control bg-alabaster border-green4" name="new_team_name"
-                                   placeholder="Enter desired name...">
-                        </div>
-                        <div class="d-flex justify-content-center mt-3">
-                            <input class="btn bg-green4 text-white" type="submit" value="Create Team">
-                        </div>
-                    </form>
+                {% if bingo.get_is_started and not bingo.get_is_over %}
+                    <div class="align-self-center p-3">Bingo has started... To join or change teams contact a moderator</div>
+                {% elif not bingo.get_is_over %}
+                    {% if teams|length != 0 %}
+                        <form action="{% url 'bingo:change_team' object.id %}" method="post"
+                              class="d-flex align-items-baseline gap-3">
+                            {% csrf_token %}
+                            <select name="selected_team_id" id="" class="form-select bg-alabaster border-green4">
+                                {% for team in teams %}
+                                    <option value="{{ team.id }}" {{ user|is_user_in_team:team }}>{{ team.team_name }}</option>
+                                {% endfor %}
+                            </select>
+                            <div class="d-flex justify-content-center mt-3">
+                                <input class="btn bg-green4 text-white" type="submit" value="Change Team">
+                            </div>
+                        </form>
+                    {% else %}
+                        <div class="align-self-center">No team available yet!</div>
+                    {% endif %}
+                    {% if bingo.can_players_create_team %}
+                        <form action="{% url 'bingo:create_team' object.id %}" method="post"
+                              class="d-flex align-items-baseline gap-3">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <input type="text" class="form-control bg-alabaster border-green4" name="new_team_name"
+                                       placeholder="Enter desired name...">
+                            </div>
+                            <div class="d-flex justify-content-center mt-3">
+                                <input class="btn bg-green4 text-white" type="submit" value="Create Team">
+                            </div>
+                        </form>
+                    {% endif %}
                 {% endif %}
             </div>
         {% else %}

@@ -67,7 +67,7 @@ class PlayTile(LoginRequiredMixin, PlayerAccessMixin, CreateView):
         if not (player.bingos.contains(team_tile.team.bingo) and player.teams.contains(
                 team_tile.team)) and not Moderator.objects.filter(bingo=team_tile.team.bingo, player=player).exists():
             return super(PlayTile, self).form_invalid(form)
-        if team_tile.tile.bingo.get_is_over():
+        if team_tile.tile.bingo.get_is_over() and not team_tile.tile.bingo.get_is_started():
             return super(PlayTile, self).form_invalid(form)
 
         return super(PlayTile, self).form_valid(form)
@@ -82,7 +82,7 @@ class CompleteTile(LoginRequiredMixin, PlayerAccessMixin, RedirectView):
 
     def get_redirect_url(self, *args, **kwargs):
         team_tile = TeamTile.objects.get(pk=kwargs['pk'])
-        if team_tile.tile.bingo.get_is_over():
+        if team_tile.tile.bingo.get_is_over() and not team_tile.tile.bingo.get_is_started():
             return reverse('tile:play_tile', kwargs={'pk': team_tile.id})
 
         # Make the player is mod or part of team
@@ -104,7 +104,7 @@ class CompleteTile(LoginRequiredMixin, PlayerAccessMixin, RedirectView):
 class ApproveTile(LoginRequiredMixin, RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         team_tile = TeamTile.objects.filter(pk=kwargs['pk']).get()
-        if team_tile.tile.bingo.get_is_over():
+        if team_tile.tile.bingo.get_is_over() and not team_tile.tile.bingo.get_is_started():
             return reverse('tile:play_tile', kwargs={'pk': team_tile.id})
 
         # self.team_tile = team_tile
