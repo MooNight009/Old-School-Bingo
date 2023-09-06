@@ -18,7 +18,7 @@
                         <a href="{% url 'bingo:play_bingo' bingo.id user|get_user_bingo_team:bingo %}"
                            class="align-self-center btn btn-outline-dark mb-3 px-5 my-auto">Play</a>
                     {% endif %}
-                        <div class="fs-1 mb-2 text-center" id="time_left"></div>
+                    <div class="fs-1 mb-2 text-center" id="time_left"></div>
 
                     <p class="">{{ object.description|linebreaks }}</p>
                 </div>
@@ -112,9 +112,13 @@
 
 {% block js %}
     <script>
-        let start_date = new Date({{ bingo.start_date|date:"U" }} * 1000);
+        let start_date = new Date({{ bingo.start_date|date:"U" }} * 1000
+        )
+        ;
         start_date = (Date.parse(start_date) / 1000)
-        let end_date = new Date({{ bingo.end_date|date:"U" }} * 1000);
+        let end_date = new Date({{ bingo.end_date|date:"U" }} * 1000
+        )
+        ;
         end_date = (Date.parse(end_date) / 1000)
 
         let interval = setInterval(function () {
@@ -132,7 +136,7 @@
                 time_left = end_date - now
                 tag = 'Ending in '
             }
-            if ((end_date - now)<= 0 && time_left <= 0) {
+            if ((end_date - now) <= 0 && time_left <= 0) {
                 console.log('got here')
                 document.getElementById('time_left').innerHTML = ''
                 return clearInterval(interval)
