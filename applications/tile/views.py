@@ -9,6 +9,7 @@ from applications.common.mixins import UserIsModeratorMixin, PlayerAccessMixin
 from applications.player.models import Player, Moderator
 from applications.submission.forms import SubmissionForm
 from applications.submission.models import Submission, Achievement
+from applications.team.models import Team
 from applications.tile.forms import EditTileForm
 from applications.tile.models import Tile, TeamTile
 
@@ -127,6 +128,7 @@ class ApproveTile(LoginRequiredMixin, RedirectView):
         team_tile.save()
         self.row_col_completion(team_tile)
         team_tile.team.save()
+        self.calculate_ranking(team_tile.team.bingo)
 
         return reverse('tile:play_tile', kwargs={'pk': team_tile.pk})
 
@@ -134,7 +136,7 @@ class ApproveTile(LoginRequiredMixin, RedirectView):
         # If a row or column is completed add extra point
         board_size = team_tile.tile.bingo.board_size
         # Row
-        starting_i = int((team_tile.tile.bingo_location - 1) / board_size)*board_size + 1
+        starting_i = int((team_tile.tile.bingo_location - 1) / board_size) * board_size + 1
         row_range = [*range(starting_i, starting_i + board_size)]
         row_tiles = TeamTile.objects.filter(team=team_tile.team, tile__bingo=team_tile.team.bingo,
                                             tile__bingo_location__in=row_range).exclude(pk=team_tile.pk)
@@ -155,3 +157,14 @@ class ApproveTile(LoginRequiredMixin, RedirectView):
                 team_tile.team.score += 1;
             else:
                 team_tile.team.score -= 1;
+
+    def calculate_ranking(self, bingo):
+        teams = Team.objects.filter(bingo=bingo).exclude(team_name='General').all()
+        scores = teams.values('score').distinct().order_by('-score')
+        current_rank = 1
+        for score in scores:
+            tmp_teams = teams.filter(score=score['score'])
+            for team in tmp_teams:
+                team.ranking = current_rank
+                team.save()
+            current_rank += tmp_teams.count()
