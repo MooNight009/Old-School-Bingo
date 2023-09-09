@@ -1,14 +1,15 @@
 from django.db import models
-# from applications.player.models import Player
-from django.db.models import Count
 
 from applications.tile.models import TeamTile
+
+
+# from applications.player.models import Player
 
 
 class Team(models.Model):
     team_name = models.CharField(max_length=64)
     score = models.IntegerField(default=0)
-    ranking = models.IntegerField(default=-1)
+    ranking = models.IntegerField(default=1)
 
     bingo = models.ForeignKey('bingo.Bingo', on_delete=models.CASCADE)
 
@@ -16,6 +17,7 @@ class Team(models.Model):
         is_new = False
         if not self.pk:
             is_new = True
+            self.ranking = Team.objects.filter(bingo=self.bingo).order_by('-ranking').first().ranking+1
         super().save(force_insert=force_insert, force_update=force_update, using=using, update_fields=update_fields)
 
         if is_new:
@@ -31,5 +33,6 @@ class Team(models.Model):
         return super().delete(*args, **kwargs)
 
     def get_ranking(self):
-        ss = Team.objects.filter(bingo=self.bingo, score__gte=self.score).exclude(team_name='General').values('score')
-        return ss.distinct().count()
+        # ss = Team.objects.filter(bingo=self.bingo, score__gte=self.score).exclude(team_name='General').values('score')
+        # return ss.distinct().count()
+        return self.ranking

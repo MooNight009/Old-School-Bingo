@@ -123,9 +123,7 @@ class EditBingoSetting(LoginRequiredMixin, UserIsModeratorMixin, UpdateView):
     template_name = 'pages/bingo/edit/editbingosetting.html'
 
     def get_context_data(self, **kwargs):
-
         context = super().get_context_data(**kwargs)
-        print(context['bingo'].start_date)
         return context
 
     def get_success_url(self):
