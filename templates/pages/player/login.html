@@ -2,31 +2,27 @@
 {#{% load static %}#}
 
 {% block content %}
-    <div class="d-flex flex-column align-items-center">
-        <div class="h3">Login</div>
+    <div class="d-flex">
+        <div class="d-flex flex-column bg-alabaster rounded-3 mx-auto p-3">
+            <div class="h3 mb-2">Login</div>
 
-        <form method="post" action="">
-            {% csrf_token %}
-            {#        <div class="input-group mb-3">#}
-            {#            <input type="text" name="username" placeholder="Username..." class="form-control">#}
-            {#        </div>#}
-            {#        <div class="input-group mb-2">#}
-            {#            <input type="password" name="password" placeholder="Password..." class="form-control">#}
-            {#        </div>#}
-            {#        {{ form.as_p }}#}
-            {% for field in form %}
-                <div class="pb-2">
-                {{ field.errors }}
-                <label for="" class="form-label pe-2">{{ field.label }}</label>
-                {{ field }}
+            <form method="post" action="" class="mb-3">
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="pb-2">
+                        {{ field.errors }}
+                        <label for="" class="form-label pe-2">{{ field.label }}</label>
+                        {{ field }}
+                    </div>
+                {% endfor %}
+
+
+                <div class="d-flex justify-content-center mt-3 gap-3">
+                    <input class="btn bg-green4 text-white" type="submit" value="Login">
                 </div>
-            {% endfor %}
-
-
-            <div class="d-flex justify-content-center mt-3">
-                <input class="btn btn-outline-dark" type="submit" value="Login">
-            </div>
-        </form>
+            </form>
+            <a href="{% url 'player:register' %}" class="btn bg-green4 text-white">Create new account</a>
+        </div>
     </div>
 
     {% for message in messages %}
