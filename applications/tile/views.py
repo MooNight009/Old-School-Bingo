@@ -105,7 +105,7 @@ class CompleteTile(LoginRequiredMixin, PlayerAccessMixin, RedirectView):
 class ApproveTile(LoginRequiredMixin, RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         team_tile = TeamTile.objects.filter(pk=kwargs['pk']).get()
-        if team_tile.tile.bingo.get_is_over() and not team_tile.tile.bingo.get_is_started():
+        if team_tile.tile.bingo.get_is_over() or not team_tile.tile.bingo.get_is_started():
             return reverse('tile:play_tile', kwargs={'pk': team_tile.id})
 
         # self.team_tile = team_tile
