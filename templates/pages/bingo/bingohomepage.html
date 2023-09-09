@@ -34,6 +34,7 @@
                 <table class="table mb-0">
                     <thead>
                     <tr>
+                        <th>Rank</th>
                         <th>Team</th>
                         <th>Score</th>
                     </tr>
@@ -41,6 +42,7 @@
                     <tbody>
                     {% for team in teams %}
                         <tr>
+                            <td>{{ team.get_ranking }}</td>
                             <td>{{ team.team_name }}</td>
                             <td>{{ team.score }}</td>
                         </tr>
