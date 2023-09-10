@@ -26,7 +26,9 @@ DEBUG = False
 
 ALLOWED_HOSTS = [
     'oldschoolbingo-test.***REMOVED***.elasticbeanstalk.com',
-    'localhost'
+    'localhost',
+    'oldschoolbingo.com',
+    'www.oldschoolbingo.com'
 ]
 
 # Application definition
@@ -83,6 +85,8 @@ WSGI_APPLICATION = 'OSRSPG.wsgi.application'
 
 # PostgreSQL Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
+print('os.environ')
+print(os.environ)
 if 'RDS_DB_NAME' in os.environ:
     DATABASES = {
         'default': {
