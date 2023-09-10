@@ -7,6 +7,7 @@
             <div class="h3">Register</div>
 
             <form method="post" action="">
+            {% csrf_token %}
                 {% for field in form %}
                     <div class="pb-2">
                         {{ field.errors }}
