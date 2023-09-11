@@ -1,0 +1,41 @@
+:root {
+    --primary-1-color: #242423;
+    --primary-2-color: #333533;
+    --secondary-1-color: #E8EDDF;
+    --secondary-2-color: #CFDBD5;
+    --accent-color: #FCA311;
+}
+
+/*Background*/
+.bg-primary-1 {
+    background-color: var(--primary-1-color);
+}
+.bg-primary-2 {
+    background-color: var(--primary-2-color);
+}
+.bg-secondary-1 {
+    background-color: var(--secondary-1-color);
+}
+.bg-secondary-2 {
+    background-color: var(--secondary-2-color);
+}
+.bg-accent {
+    background-color: var(--accent-color);
+}
+
+
+/*Border*/
+
+.border-accent {
+    border-color: var(--accent-color) !important;
+}
+
+/*Color*/
+
+.color-secondary-1 {
+    color: var(--secondary-1-color) !important;
+}
+
+.color-secondary-2 {
+    color: var(--secondary-2-color) !important;
+}

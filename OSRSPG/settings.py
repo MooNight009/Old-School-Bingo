@@ -26,7 +26,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     'oldschoolbingo-test.***REMOVED***.elasticbeanstalk.com',
-    'localhost'
+    'localhost',
+    '192.168.0.158'
 ]
 
 # Application definition

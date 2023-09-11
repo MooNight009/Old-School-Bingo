@@ -1,48 +1,46 @@
 {#{% load i18n %}#}
 {#{% load tag_extras %}#}
 {% load static %}
-<header class="navbar navbar-expand-lg navbar-light mb-3 py-3 bg-alabaster rounded-5 rounded-top-0">
+<header class="navbar navbar-expand-lg navbar-light mb-3 py-3 bg-primary-2 rounded-5 rounded-top-0">
     <div class="container-fluid">
-        {#        <a href="{% url 'page:home' %}" class="navbar-brand">#}
-        <a href="" class="d-none" id="back_button"><i class="fas fa-arrow-left color-green4"></i></a>
+        <a href="" class="d-none" id="back_button"><i class="fas fa-arrow-left color-secondary-1"></i></a>
         <p class="d-none navbar-brand my-auto ms-3 fs-4 rounded-5" id="header_name_p"></p>
 
         <a href="/" class="navbar-brand custom-logo">
-{#            OldSchoolBingo#}
             <img src="{% static 'logo.png' %}" alt="" style="height: 50px;">
         </a>
 
         <div class="my-auto me-3 ms-auto" id="header_details_div"></div>
 
-        <div class="bg-alabaster border border-green4 rounded-3" id="navbarSupportedContent">
+        <div class="border border-accent rounded-3" id="navbarSupportedContent">
             <ul class="navbar-nav mb-2 mb-lg-0">
                 {% if request.user.is_anonymous %}
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                        <a class="nav-link dropdown-toggle color-secondary-1" href="#" id="navbarDropdown" role="button"
                            data-bs-toggle="dropdown" aria-expanded="false">
                             Login/Register
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                             <li>
-                                <a class="nav-link " aria-current="page" href="{% url 'player:login' %}">Login</a>
+                                <a class="nav-link dropdown-item" href="{% url 'player:login' %}">Login</a>
                             </li>
                             <li>
-                                <a class="nav-link " aria-current="page" href="{% url 'player:register' %}">Register</a>
+                                <a class="nav-link dropdown-item" href="{% url 'player:register' %}">Register</a>
                             </li>
                         </ul>
                     </li>
                 {% else %}
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                        <a class="nav-link dropdown-toggle color-secondary-1" href="#" id="navbarDropdown" role="button"
                            data-bs-toggle="dropdown" aria-expanded="false">
                             {{ request.user }}
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                        <ul class="dropdown-menu dropdown-menu-end">
                             <li>
-                                <a class="dropdown-item" href="#">My Account</a>
+                                <a class="nav-link dropdown-item" href="#">My Account</a>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="{% url 'player:logout' %}">Logout</a>
+                                <a class="nav-link dropdown-item" href="{% url 'player:logout' %}">Logout</a>
                             </li>
                         </ul>
                     </li>

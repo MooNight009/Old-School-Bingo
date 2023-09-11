@@ -5,7 +5,9 @@
     --dark-green-color: #1C2915; /* */
     --fire-brick-color: #AD3527; /* */
     --cal-poly-green-color: #375129; /*green4*/
+
 }
+
 
 .bg-khaki {
     background-color: var(--khaki-color) !important;;
@@ -60,40 +62,27 @@
 }
 
 
-/*Changing some default values*/
+/*Changing some default values of bootstrap*/
 .dropdown-item {
-    --bs-dropdown-link-active-bg: var(--cal-poly-green-color)
+    --bs-dropdown-link-active-bg: var(--accent-color);
+    color: var(--secondary-1-color)!important;
+}
+.dropdown-item:hover {
+    background-color: var(--accent-color)!important;
 }
 
 .table > :not(caption) > * > * {
     background-color: var(--alabaster-color) !important;
 }
+
 .dropdown-menu {
-    background-color: var(--alabaster-color) !important;
+    background-color: var(--primary-2-color) !important;
 }
 
-
-
-/* Create sand animation */
-@keyframes sandAnimation {
-    0% {
-        background-position: 0 0;
-    }
-
-    50% {
-        background-position: 100% 0%;
-    }
-
-    100% {
-        background-position: 0% 0;
-    }
-}
-
+/*Setting body details*/
 body {
-    /*animation: sandAnimation 200s linear infinite;*/
-    background-image: url("https://images.unsplash.com/photo-1542822223-606661cf0a48?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80");
-    /*background-image: url("/static/background.png");*/
-    background-size: cover;
+    background-color: var(--primary-1-color);
+    color: var(--secondary-1-color)
 }
 
 /*Tile class for times in Play*/
@@ -114,26 +103,38 @@ body {
     transform-style: preserve-3d;
 }
 
-
-
-.html-body {
-    overflow-x: hidden;
-}
-
+/*Setting a limit to card body of bingo*/
 .bingo-card-text {
     min-height: 100px;
     max-height: 150px;
     overflow: hidden;
 }
 
-.bg-opacity-6 {
-    --bs-bg-opacity: .6;
-}
-
+/*Class for logo*/
 .custom-logo {
     position: absolute;
     left: 50%;
     transform: translate(-50%, 0);
 }
 
+/*Overwriting color detail for card*/
+.card {
+    color: var(--secondary-1-color)
+}
 
+/*Default button details*/
+.btn-default {
+    color: var(--secondary-1-color) !important;
+    border: var(--bs-border-width) var(--bs-border-style) var(--accent-color) !important; /*Replace with custom variables*/
+
+    padding-top: 0.5rem!important;
+    padding-bottom: 0.5rem!important;
+
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.5s;
+}
+
+.btn-default:hover {
+    background-color: var(--accent-color);
+}
