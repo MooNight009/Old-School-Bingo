@@ -124,6 +124,7 @@ body {
 
 /*Default button details*/
 .btn-default {
+    background-color: var(--primary-2-color);
     color: var(--secondary-1-color) !important;
     border: var(--bs-border-width) var(--bs-border-style) var(--accent-color) !important; /*Replace with custom variables*/
 
