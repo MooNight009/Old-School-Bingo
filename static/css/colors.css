@@ -20,7 +20,7 @@
     background-color: var(--secondary-2-color);
 }
 .bg-accent {
-    background-color: var(--accent-color);
+    background-color: var(--accent-color)!important;
 }
 
 

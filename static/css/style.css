@@ -139,3 +139,10 @@ body {
 .btn-default:hover {
     background-color: var(--accent-color);
 }
+
+
+
+/*Generic stuff*/
+.text-ellipsis {
+    text-overflow: ellipsis;
+}
