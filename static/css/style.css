@@ -72,7 +72,8 @@
 }
 
 .table > :not(caption) > * > * {
-    background-color: var(--alabaster-color) !important;
+    background-color: var(--primary-2-color) !important;
+    color: var(--secondary-1-color)!important;
 }
 
 .dropdown-menu {
@@ -128,8 +129,7 @@ body {
     color: var(--secondary-1-color) !important;
     border: var(--bs-border-width) var(--bs-border-style) var(--accent-color) !important; /*Replace with custom variables*/
 
-    padding-top: 0.5rem!important;
-    padding-bottom: 0.5rem!important;
+    padding: 0.5rem;
 
     text-align: center;
     text-decoration: none;

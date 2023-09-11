@@ -3,17 +3,17 @@
 {% load bingo_extras %}
 
 {% block content %}
-    <div class="d-flex flex-column bg-alabaster rounded-3 p-2 pb-3">
+    <div class="d-flex flex-column bg-primary-2 rounded-3 p-2 pb-3">
         <div class="h1 mb-2">{{ object.name }}</div>
         <div class="fs-1 mb-3 text-center" id="status"></div>
         <div class="fs-1 mb-3 text-center" id="time_left"></div>
         <p class="mb-3">{{ object.description|linebreaks }}</p>
 
         {% if is_in_bingo %}
-            <a href="{% url 'bingo:bingo_home_page' object.pk %}" class="btn bg-green4 text-white mx-auto">Bingo Home
+            <a href="{% url 'bingo:bingo_home_page' object.pk %}" class="btn-default rounded-3 mx-auto">Bingo Home
                 Page</a>
         {% else %}
-            <a href="{% url 'bingo:actually_join_bingo' object.pk %}" class="btn bg-green4 text-white mx-auto">Join
+            <a href="{% url 'bingo:actually_join_bingo' object.pk %}" class="btn-default rounded-3 mx-auto">Join
                 Bingo</a>
         {% endif %}
     </div>
