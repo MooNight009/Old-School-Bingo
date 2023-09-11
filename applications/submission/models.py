@@ -22,7 +22,6 @@ class Submission(models.Model):
             memfile = BytesIO()
             img = Image.open(self.img)
             img.thumbnail((1000, 1000))
-            img.save(self.img.path, format='PNG', quality=60, optimize=True)
             img.save(memfile, format='PNG', quality=60, optimize=True)
             default_storage.save(self.img.name, memfile)
             memfile.close()
