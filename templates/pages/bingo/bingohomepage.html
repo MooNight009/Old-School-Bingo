@@ -6,18 +6,18 @@
     <div class="d-flex flex-column">
         <div class="d-flex mb-3">
             <div class="d-flex flex-column col col-md-8 col-lg-9 ">
-                <div class="d-flex flex-column bg-alabaster rounded-3 p-2 me-md-3">
+                <div class="d-flex flex-column bg-primary-2 rounded-3 p-2 me-md-3">
                     <div class="h1 mb-2">{{ object.name }}</div>
                     {% if object.get_is_over %}
                         <div class="text-center text-success fs-3 mb-3 my-auto">Winner
                             is {{ object.get_winner.team_name }}</div>
                         <a href="{% url 'bingo:play_bingo_general' object.pk %}"
-                           class="btn bg-green4 text-white align-self-center p-3 px-5 mb-3 my-auto">View board</a>
+                           class="btn-default rounded-3 align-self-center px-5 mb-3 my-auto">View board</a>
                     {% elif object.get_is_started %}
                         <div class="text-center text-success fs-3 mb-3 my-auto">Bingo has started</div>
                         {% if user|get_user_bingo_team:bingo != -1 %}
                             <a href="{% url 'bingo:play_bingo' bingo.id user|get_user_bingo_team:bingo %}"
-                               class="align-self-center btn bg-green4 text-white mb-3 px-5 my-auto">Play</a>
+                               class="btn-default rounded-3 align-self-center px-5 mb-3 my-auto">Play</a>
                         {% else %}
                             <div class="text-center text-danger fs-4 mb-3 my-auto">Contact a moderator to join a team
                             </div>
@@ -29,7 +29,7 @@
                 </div>
             </div>
 
-            <div class="d-flex flex-column text-center align-self-center bg-alabaster rounded-3 col col-md-4 col-lg-3 pb-3">
+            <div class="d-flex flex-column text-center align-self-center bg-primary-2 rounded-3 col col-md-4 col-lg-3 pb-3">
                 <div class="h3">Teams</div>
                 <table class="table mb-0">
                     <thead>
@@ -54,7 +54,7 @@
         </div>
 
         {% if is_in_bingo %}
-            <div class="d-flex flex-wrap justify-content-center bg-alabaster rounded-3 gap-5 mb-3">
+            <div class="d-flex flex-wrap justify-content-center bg-primary-2 rounded-3 gap-5 mb-3">
                 {% if bingo.get_is_started and not bingo.get_is_over %}
                     <div class="align-self-center p-3">Bingo has started... To join or change teams contact a moderator</div>
                 {% elif not bingo.get_is_over %}
@@ -68,7 +68,7 @@
                                 {% endfor %}
                             </select>
                             <div class="d-flex justify-content-center mt-3">
-                                <input class="btn bg-green4 text-white" type="submit" value="Change Team">
+                                <input class="btn-default rounded-3" type="submit" value="Change Team">
                             </div>
                         </form>
                     {% else %}
@@ -83,19 +83,19 @@
                                        placeholder="Enter desired name...">
                             </div>
                             <div class="d-flex justify-content-center mt-3">
-                                <input class="btn bg-green4 text-white" type="submit" value="Create Team">
+                                <input class="btn-default rounded-3" type="submit" value="Create Team">
                             </div>
                         </form>
                     {% endif %}
                 {% endif %}
             </div>
         {% else %}
-            <a href="{% url 'bingo:join_bingo' object.pk %}" class="btn btn-outline-dark mx-auto mb-3">Join
+            <a href="{% url 'bingo:join_bingo' object.pk %}" class="btn-default rounded-3 mx-auto mb-3">Join
                 Bingo</a>
         {% endif %}
 
 
-        <div class="border text-center rounded-3 pb-3 mb-3 bg-alabaster">
+        <div class="text-center rounded-3 pb-3 mb-3 bg-primary-2">
             <div class="h3 my-3">Players in bingo</div>
             <table class="table mb-0">
                 <thead>

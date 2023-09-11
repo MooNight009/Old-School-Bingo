@@ -3,7 +3,7 @@
 
 {% block content %}
     <div class="d-flex">
-        <div class="d-flex flex-column bg-alabaster rounded-3 mx-auto p-3">
+        <div class="d-flex flex-column bg-primary-2 rounded-3 mx-auto p-3">
             <div class="h3 mb-2">Login</div>
 
             <form method="post" action="" class="mb-3">
@@ -18,10 +18,10 @@
 
 
                 <div class="d-flex justify-content-center mt-3 gap-3">
-                    <input class="btn bg-green4 text-white" type="submit" value="Login">
+                    <input class="btn-default rounded-3" type="submit" value="Login">
                 </div>
             </form>
-            <a href="{% url 'player:register' %}" class="btn bg-green4 text-white">Create new account</a>
+            <a href="{% url 'player:register' %}" class="btn-default rounded-3">Create new account</a>
         </div>
     </div>
 

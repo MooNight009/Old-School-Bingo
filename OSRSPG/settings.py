@@ -26,7 +26,6 @@ DEBUG = False
 
 ALLOWED_HOSTS = [
     'oldschoolbingo-test.***REMOVED***.elasticbeanstalk.com',
-    'localhost',
     'oldschoolbingo.com',
     'www.oldschoolbingo.com'
 ]

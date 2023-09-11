@@ -5,15 +5,15 @@
 {% block content %}
 
     {% if  moderating_bingos|length != 0 %}
-        <div class="d-flex mb-3 bg-alabaster rounded-3 p-2 h3">
+        <div class="d-flex mb-3 bg-primary-2 color-secondary-1 rounded-3 p-2 h3">
             Your Bingos
         </div>
         <div class="d-flex flex-wrap gap-3 mb-5">
             {% for bingo in moderating_bingos %}
                 <div class="col-lg-3 col-md-4 col"> {#  me-3 mb-3 #}
-                    <div class="card h-100 bg-alabaster">
+                    <div class="card h-100 bg-primary-2">
                         <img src="{{ bingo.get_img_url }}"
-                             class="card-img-top" alt="">
+                             class="card-img-top bg-secondary-1" alt="">
 
                         <div class="card-body d-flex flex-column">
                             <h5 class="card-title">{{ bingo.name }}</h5>
@@ -22,11 +22,9 @@
 
                         <div class="card-footer d-flex justify-content-around p-0">
                             <a href="{% url 'bingo:edit_bingo_board' bingo.id %}"
-                               class="btn flex-fill py-2">Edit</a>
-                            {#                        {% if user|get_user_bingo_team:bingo != -1 %}#}
+                               class="btn-default border flex-fill rounded-start-bottom-3">Edit</a>
                             <a href="{% url 'bingo:play_bingo_general' bingo.id %}"
-                               class="btn flex-fill py-2 border-start">View</a>
-                            {#                        {% endif %}#}
+                               class="btn-default border flex-fill rounded-end-bottom-3">View</a>
                         </div>
                     </div>
                 </div>
@@ -34,16 +32,16 @@
         </div>
     {% endif %}
 
-    <div class="d-flex mb-3 bg-alabaster rounded-3 p-2 h3">Joined Bingos</div>
+    <div class="d-flex mb-3 bg-primary-2 rounded-3 p-2 h3">Joined Bingos</div>
     <div class="d-flex flex-wrap gap-3 mb-5">
         {% if  joined_bingos|length == 0 %}
             <div class="ps-2 fs-3">You have not joined any bingo...</div>
         {% endif %}
         {% for bingo in joined_bingos %}
             <div class="col-lg-3 col-md-4 col"> {#  me-3 mb-3 #}
-                <div class="card h-100 bg-alabaster">
+                <div class="card h-100 bg-primary-2">
                     <img src="{{ bingo.get_img_url }}"
-                         class="card-img-top" alt="">
+                         class="card-img-top bg-secondary-1" alt="">
                     <div class="card-body d-flex flex-column">
                         <div class="card-title h5">{{ bingo.name }}</div>
                         <div class="card-text bingo-card-text">
@@ -67,16 +65,16 @@
                         {% if user|get_user_bingo_team:bingo != -1 %}
                             {% if bingo.get_is_started %}
                                 <a href="{% url 'bingo:bingo_home_page' bingo.id %}"
-                                   class="btn flex-fill py-2 border-end">Home Page</a>
+                                   class="btn-default border flex-fill rounded-start-bottom-3">Home Page</a>
                                 <a href="{% url 'bingo:play_bingo' bingo.id user|get_user_bingo_team:bingo %}"
-                                   class="btn flex-fill py-2">Play</a>
+                                   class="btn-default border flex-fill rounded-end-bottom-3">Play</a>
                             {% else %}
                                 <a href="{% url 'bingo:bingo_home_page' bingo.id %}"
-                                   class="btn flex-fill py-2">Home Page</a>
+                                   class="btn-default border flex-fill rounded-bottom-3">Home Page</a>
                             {% endif %}
                         {% else %}
-                            <a href="{% url 'bingo:bingo_home_page' bingo.id %}" class="btn flex-fill py-2">Select
-                                Team</a>
+                            <a href="{% url 'bingo:bingo_home_page' bingo.id %}"
+                               class="btn-default border flex-fill rounded-bottom-3">Select Team</a>
                         {% endif %}
                     </div>
                 </div>
@@ -84,16 +82,16 @@
         {% endfor %}
     </div>
 
-    <div class="d-flex mb-3 bg-alabaster rounded-3 p-2 h3">Public Bingos</div>
+    <div class="d-flex mb-3 bg-primary-2 rounded-3 p-2 h3">Public Bingos</div>
     <div class="d-flex flex-wrap gap-3 mb-4">
         {% if  public_bingos|length == 0 %}
             <div class="ps-2 fs-3">No public bingo is available...</div>
         {% endif %}
         {% for bingo in public_bingos %}
             <div class="col-lg-3 col-md-4 col"> {#  me-3 mb-3 #}
-                <div class="card h-100 bg-alabaster">
+                <div class="card h-100 bg-primary-2">
                     <img src="{{ bingo.get_img_url }}"
-                         class="card-img-top " alt="">
+                         class="card-img-top bg-secondary-1 " alt="">
                     <div class="card-body d-flex flex-column">
                         <h5 class="card-title">{{ bingo.name }}</h5>
                         <p class="card-text bingo-card-text">{{ bingo.description }}</p>
@@ -101,7 +99,8 @@
                     </div>
 
                     <div class="card-footer d-flex justify-content-around p-0">
-                        <a href="{% url 'bingo:join_bingo' bingo.id %}" class="btn flex-fill py-2">Join</a>
+                        <a href="{% url 'bingo:join_bingo' bingo.id %}"
+                           class="btn-default border rounded-bottom-3 flex-fill">Join</a>
                     </div>
                 </div>
             </div>

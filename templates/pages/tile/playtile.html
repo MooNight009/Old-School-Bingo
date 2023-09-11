@@ -6,26 +6,26 @@
     {% include 'pages/bingo/innertemplates/bingowinnertemplate.html' with bingo=teamtile.team.bingo %}
     <div class="d-flex flex-column">
         <div class="d-flex flex-wrap w-100 mb-3">
-            <img class="col col-md-6 col-lg-3 bg-alabaster border border-green4 rounded-3 order-1 order-lg-0 p-2"
+            <img class="col col-md-6 col-lg-3 bg-secondary-1 rounded-3 order-1 order-lg-0 p-2"
                  src="{{ teamtile.get_url }}"/>
 
             <div class="col col-lg-6mb-3 mb-lg-0 order-0 order-lg-1">
-                <div class=" mx-md-3 mx-0 p-2 bg-alabaster h-100 rounded-3">
+                <div class=" mx-md-3 mx-0 p-2 bg-primary-2 h-100 rounded-3">
                     <h5>{{ teamtile.tile.name }}</h5>
                     <p>{{ teamtile.tile.description|linebreaks }}</p>
                 </div>
             </div>
 
-            <div class="d-flex flex-column col col-md-6 col-lg-3 border rounded-3 p-3 bg-alabaster text-center order-2">
+            <div class="d-flex flex-column col col-md-6 col-lg-3 rounded-3 p-3 bg-primary-2 text-center order-2">
                 {% if user|is_moderator:teamtile.team.bingo.pk %}
                     {% if teamtile.is_complete %}
                         <div class="h4 color-green3">Tile is complete</div>
-                        <button type="button" class="bg-green4 border-0 mb-3 p-2 rounded-3 text-white"
+                        <button type="button" class="btn-default rounded-3 mb-3"
                                 data-bs-toggle="modal" data-bs-target="#complete_modal_id">Uncomplete
                         </button>
                     {% else %}
                         <div class="h4 color-red3">Tile is not complete</div>
-                        <button type="button" class="bg-green4 border-0 mb-3 p-2 rounded-3 text-white"
+                        <button type="button" class="btn-default rounded mb-3"
                                 data-bs-toggle="modal" data-bs-target="#complete_modal_id">Complete Tile
                         </button>
                     {% endif %}
@@ -33,13 +33,13 @@
 
                     {% if teamtile.is_mod_approved %}
                         <div class="h4 color-green3">Tile is approved by mods</div>
-                        <button type="button" class="bg-green4 border-0 mb-3 p-2 rounded-3 text-white"
+                        <button type="button" class="btn-default rounded mb-3"
                                 data-bs-toggle="modal"
                                 data-bs-target="#approve_modal_id">Disapprove tile
                         </button>
                     {% else %}
                         <div class="h4 text-warning">Waiting for mod to approve</div>
-                        <button type="button" class="bg-green4 border-0 mb-3 p-2 rounded-3 text-white"
+                        <button type="button" class="btn-default rounded mb-3"
                                 data-bs-toggle="modal"
                                 data-bs-target="#approve_modal_id">Approve tile
                         </button>
@@ -56,7 +56,7 @@
                         {% endif %}
                     {% else %}
                         <div class="h4 color-red3">Tile is not complete</div>
-                        <button type="button" class="bg-green4 border-0 mb-3 p-2 rounded-3 text-white"
+                        <button type="button" class="btn-default rounded mb-3"
                                 data-bs-toggle="modal"
                                 data-bs-target="#complete_modal_id">
                             Complete Tile
@@ -67,7 +67,7 @@
             </div>
         </div>
 
-        <form class="d-flex flex-wrap mb-3 py-3 border rounded-4 bg-alabaster justify-content-around" method="post"
+        <form class="d-flex flex-wrap mb-3 py-3 rounded-4 bg-primary-2 justify-content-around" method="post"
               enctype="multipart/form-data">
             {% csrf_token %}
             {% for field in form %}
@@ -76,14 +76,13 @@
                 </div>
             {% endfor %}
 
-            <input type="submit" class="btn bg-green4 text-white" value="Submit">
+            <input type="submit" class="btn-default rounded" value="Submit">
         </form>
 
         <div class="d-flex flex-wrap gap-3 justify-content-around">
             {% for submission in submissions %}
                 <div class="col col-md-4 col-lg-3">
-                    <div class="card rounded-3 h-100 bg-alabaster">
-
+                    <div class="card rounded-3 h-100 bg-primary-2">
                         <button type="button" data-bs-toggle="modal" data-bs-target="#image_modal_id"
                                 onclick="expand_image(this)" class="border-0 rounded-3 bg-none">
                             <img id="submission_image_id" src="{{ submission.img.url }}" alt=""
@@ -96,7 +95,7 @@
 
                         <div class="d-flex card-footer align-items-center justify-content-between">
                             <p class="m-0">By <b id="submission_player_id">{{ submission.player.user.username }}</b></p>
-                            <p class="text-secondary m-0" style="font-size: 9px">@{{ submission.date }}</p>
+                            <p class="color-secondary-2 m-0" style="font-size: 9px">@{{ submission.date }}</p>
                         </div>
 
                     </div>
@@ -108,7 +107,7 @@
 
     <div class="modal fade" id="image_modal_id" aria-hidden="true" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content bg-alabaster">
+            <div class="modal-content bg-primary-2">
                 <div class="modal-header" id="modal_head_id">
                     -------------
                 </div>
@@ -124,7 +123,7 @@
 
     <div class="modal fade" id="complete_modal_id" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">
-            <div class="modal-content bg-alabaster">
+            <div class="modal-content bg-primary-2">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Is the tile complete?</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -133,7 +132,7 @@
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <form action="{% url 'tile:complete_tile' teamtile.id %}" method="post">
                         {% csrf_token %}
-                        <input type="submit" class="btn  bg-green4 text-white" value="Confirm Tile Completion"/>
+                        <input type="submit" class="btn-default rounded-3" value="Confirm Tile Completion"/>
                     </form>
 
                 </div>
@@ -143,7 +142,7 @@
 
     <div class="modal fade" id="approve_modal_id" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">
-            <div class="modal-content bg-alabaster">
+            <div class="modal-content bg-primary-2">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Is the tile complete?</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -152,7 +151,7 @@
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <form action="{% url 'tile:approve_tile' teamtile.id %}" method="post">
                         {% csrf_token %}
-                        <input type="submit" class="btn bg-green4 text-white" value="Confirm Tile Completion"/>
+                        <input type="submit" class="btn-default rounded-3" value="Confirm Tile Completion"/>
                     </form>
 
                 </div>

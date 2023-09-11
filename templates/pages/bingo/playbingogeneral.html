@@ -16,9 +16,9 @@
         </div>
 
         <div class="d-flex flex-column border-0 col col-lg-4 ">
-            <div id="info_id" class="rounded-3 bg-alabaster mb-2">
+            <div id="info_id" class="rounded-3 bg-primary-2 mb-2">
                 <div class="dropdown">
-                    <button class="btn fs-3 w-100 border-0 rounded-3 rounded-bottom-0 bg-green4 text-white dropdown-toggle"
+                    <button class="btn-default fs-3 w-100 border-0 rounded-3 rounded-bottom-0 dropdown-toggle"
                             type="button"
                             data-bs-toggle="dropdown">
                         {{ current_team.team_name }}
@@ -27,12 +27,12 @@
                         {% for team in teams %}
                             {% if team.team_name == 'General' %}
                                 <li><a href="{% url 'bingo:play_bingo_general' bingo.id %}"
-                                       class="dropdown-item {% if current_team == team %}bg-green4 text-white{% endif %}{{ user|user_access_check:team.pk }}">
+                                       class="dropdown-item {% if current_team == team %}bg-accent{% endif %}{{ user|user_access_check:team.pk }}">
                                     {{ team.team_name }}</a>
                                 </li>
                             {% else %}
                                 <li><a href="{% url 'bingo:play_bingo' bingo.id team.id %}"
-                                       class="dropdown-item {% if current_team == team %}bg-green4 text-white{% endif %}{{ user|user_access_check:team.pk }}">
+                                       class="dropdown-item {% if current_team == team %}bg-accent{% endif %}{{ user|user_access_check:team.pk }}">
                                     {{ team.team_name }}</a>
                                 </li>
                             {% endif %}
@@ -64,14 +64,14 @@
                     </table>
                 </div>
             </div>
-            <div id="board_id" class="d-flex flex-column rounded-3 bg-alabaster ">
+            <div id="board_id" class="d-flex flex-column rounded-3 bg-primary-2 ">
                 <div class="d-flex text-center mb-3">
                     <button id="achievement_btn_id" style="border-bottom-left-radius: 0!important;"
-                            class="rounded-3 p-2 border border-top-0 border-start-0 border-green4 rounded-top-0 rounded-start-3 w-100 bg-green4 text-white">
+                            class="btn-default rounded-3 p-2 border border-top-0 border-start-0 rounded-top-0 rounded-start-3 w-100 bg-accent">
                         Completions
                     </button>
                     <button id="submission_btn_id" style="border-bottom-right-radius: 0!important;"
-                            class="rounded-3 p-2 border border-top-0 border-end-0 border-green4 rounded-top-0 rounded-end-3 w-100 bg-none">
+                            class="btn-default rounded-3 p-2 border border-top-0 border-end-0 rounded-top-0 rounded-end-3 w-100">
                         Submissions
                     </button>
                 </div>
@@ -102,19 +102,15 @@
 
         {#Switch between achievements and submissions tabs#}
         document.getElementById('submission_btn_id').addEventListener('click', function () {
-            document.getElementById('submission_btn_id').classList.remove('bg-none')
-            document.getElementById('submission_btn_id').classList.add('bg-green4', 'text-white')
-            document.getElementById('achievement_btn_id').classList.remove('bg-green4', 'text-white')
-            document.getElementById('achievement_btn_id').classList.add('bg-none')
+            document.getElementById('submission_btn_id').classList.add('bg-accent')
+            document.getElementById('achievement_btn_id').classList.remove('bg-accent')
 
             document.getElementById('submission_div_id').classList.remove('d-none')
             document.getElementById('achievement_div_id').classList.add('d-none')
         })
         document.getElementById('achievement_btn_id').addEventListener('click', function () {
-            document.getElementById('submission_btn_id').classList.add('bg-none')
-            document.getElementById('submission_btn_id').classList.remove('bg-green4', 'text-white')
-            document.getElementById('achievement_btn_id').classList.add('bg-green4', 'text-white')
-            document.getElementById('achievement_btn_id').classList.remove('bg-none')
+            document.getElementById('submission_btn_id').classList.remove('bg-accent')
+            document.getElementById('achievement_btn_id').classList.add('bg-accent')
 
             document.getElementById('submission_div_id').classList.add('d-none')
             document.getElementById('achievement_div_id').classList.remove('d-none')
