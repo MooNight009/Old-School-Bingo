@@ -4,32 +4,7 @@
 
 {% block content %}
     <div class="flex-column">
-        <div class="mb-3">
-            <ul class="nav nav-tabs">
-                <li class="nav-item">
-                    <a href="{% url 'bingo:edit_bingo_board' bingo.pk %}" class="nav-link">Board</a>
-                </li>
-                <li class="nav-item">
-                    <a href="{% url 'bingo:edit_bingo_teams' bingo.pk %}" class="nav-link">Teams</a>
-                </li>
-                <li class="nav-item">
-                    <a href="{% url 'bingo:edit_bingo_players' bingo.pk %}" class="nav-link active">Players</a>
-                </li>
-                <li class="nav-item">
-                    <a href="{% url 'bingo:edit_bingo_moderators' bingo.pk %}" class="nav-link">Moderators</a>
-                </li>
-                <li class="nav-item">
-                    <a href="{% url 'bingo:edit_bingo_setting' bingo.pk %}" class="nav-link">Setting</a>
-                </li>
-                <li class="nav-item ms-auto">
-                    {% if bingo.is_ready %}
-                        <a href="" class="nav-link text-success disabled">Status : Bingo is ready</a>
-                    {% else %}
-                        <a href="" class="nav-link text-danger disabled">Status : Some tiles still have default values</a>
-                    {% endif %}
-                </li>
-            </ul>
-        </div>
+        {% include 'pages/bingo/edit/innertemplates/editmenu_template.html' %}
 
         <table class="table">
             <thead>
@@ -41,7 +16,7 @@
             </thead>
             <tbody>
             {% for player in players %}
-                <tr>
+                <tr class="align-middle">
                     <td>{{ player.user.username }}</td>
                     <td>
                         <form action="{% url 'bingo:change_team_moderator' view.kwargs.pk player.id %}" method="post"
@@ -57,15 +32,13 @@
                                     {% endif %}
                                 {% endfor %}
                             </select>
-                            <input type="submit" class="btn btn-primary" value="Change">
+                            <input type="submit" class="btn-default rounded-3 ms-3" value="Change">
                         </form>
                     </td>
-                    <td><a href="{% url 'bingo:kick_bingo_player' view.kwargs.pk player.id %}" class="btn btn-danger">Kick
+                    <td><a href="{% url 'bingo:kick_bingo_player' view.kwargs.pk player.id %}" class="btn-default rounded-3">Kick
                         player</a></td>
                 </tr>
             {% endfor %}
-
-
             </tbody>
         </table>
     </div>
@@ -76,5 +49,7 @@
     <script>
         {#    Set the back button   #}
         show_back_button("{% url 'defaults:main' %}");
+
+        set_edit_bingo_active_tab('players_id');
     </script>
 {% endblock %}

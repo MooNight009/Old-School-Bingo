@@ -3,52 +3,27 @@
 
 {% block content %}
     <div class="flex-column">
-        <div class="mb-3">
-            <ul class="nav nav-tabs">
-                <li class="nav-item">
-                    <a href="{% url 'bingo:edit_bingo_board' bingo.pk %}" class="nav-link">Board</a>
-                </li>
-                <li class="nav-item">
-                    <a href="{% url 'bingo:edit_bingo_teams' bingo.pk %}" class="nav-link">Teams</a>
-                </li>
-                <li class="nav-item">
-                    <a href="{% url 'bingo:edit_bingo_players' bingo.pk %}" class="nav-link">Players</a>
-                </li>
-                <li class="nav-item">
-                    <a href="{% url 'bingo:edit_bingo_moderators' bingo.pk %}" class="nav-link">Moderators</a>
-                </li>
-                <li class="nav-item">
-                    <a href="{% url 'bingo:edit_bingo_setting' bingo.pk %}" class="nav-link active">Setting</a>
-                </li>
-                <li class="nav-item ms-auto">
-                    {% if bingo.is_ready %}
-                        <a href="" class="nav-link text-success disabled">Status : Bingo is ready</a>
-                    {% else %}
-                        <a href="" class="nav-link text-danger disabled">Status : Some tiles still have default
-                            values</a>
-                    {% endif %}
-                </li>
-            </ul>
-        </div>
+        {% include 'pages/bingo/edit/innertemplates/editmenu_template.html' %}
 
-        <div>
+        <div class="bg-primary-2 rounded-3 mb-3 p-2">
             <form action="" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
-                {#                {{ form.as_p }}#}
                 {% for field in form %}
                     <div class="d-flex pb-2">
                         {% include 'pages/bingo/innertemplates/fieldtemplate.html' %}
                     </div>
                 {% endfor %}
 
-                <input type="submit" class="btn border-green4" value="Save">
+                <input type="submit" class="btn-default rounded-3" value="Save">
             </form>
         </div>
-        <button type="button" class="btn-default rounded-3"
-                data-bs-toggle="modal" data-bs-target="#delete_modal_id">Delete
-        </button>
-        <a href="{% url 'bingo:launch_bingo' bingo.id %}" class="btn-default rounded-3">LAUNCH Bingo</a>
-        <input type="text" value="{{ bingo.get_join_link }}" disabled>
+
+        <div class="d-flex bg-primary-2 rounded-3 mb-3 p-2 justify-content-around">
+            <button type="button" class="btn-default rounded-3"
+                    data-bs-toggle="modal" data-bs-target="#delete_modal_id">Delete
+            </button>
+            <a href="{% url 'bingo:launch_bingo' bingo.id %}" class="btn-default rounded-3">LAUNCH Bingo</a>
+        </div>
     </div>
 
     <div class="modal fade" id="delete_modal_id" aria-hidden="true" tabindex="-1">
@@ -71,5 +46,7 @@
     <script>
         {#    Set the back button   #}
         show_back_button("{% url 'defaults:main' %}");
+
+        set_edit_bingo_active_tab('settings_id');
     </script>
 {% endblock %}

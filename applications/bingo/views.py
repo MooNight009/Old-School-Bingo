@@ -94,7 +94,6 @@ class EditBingoModerators(LoginRequiredMixin, UserIsModeratorMixin, FormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        print(self.kwargs['pk'])
         context['bingo'] = Bingo.objects.get(pk=self.kwargs['pk'])
         context['mods'] = Moderator.objects.filter(bingo_id=self.kwargs['pk'])
 
@@ -103,7 +102,6 @@ class EditBingoModerators(LoginRequiredMixin, UserIsModeratorMixin, FormView):
 
     def form_valid(self, form):
         player = Player.objects.filter(user__username=form.cleaned_data['player_name'])
-        print(player)
         if player.exists():
             if not Moderator.objects.filter(player=player.get()).exists():
                 mod = Moderator.objects.create(player=player.get(), bingo_id=self.kwargs['pk'])

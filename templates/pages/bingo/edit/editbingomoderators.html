@@ -4,38 +4,12 @@
 
 {% block content %}
     <div class="flex-column">
-        <div class="mb-3">
-            <ul class="nav nav-tabs">
-                <li class="nav-item">
-                    <a href="{% url 'bingo:edit_bingo_board' bingo.pk %}" class="nav-link">Board</a>
-                </li>
-                <li class="nav-item">
-                    <a href="{% url 'bingo:edit_bingo_teams' bingo.pk %}" class="nav-link">Teams</a>
-                </li>
-                <li class="nav-item">
-                    <a href="{% url 'bingo:edit_bingo_players' bingo.pk %}" class="nav-link">Players</a>
-                </li>
-                <li class="nav-item">
-                    <a href="{% url 'bingo:edit_bingo_moderators' bingo.pk %}" class="nav-link active">Moderators</a>
-                </li>
-                <li class="nav-item">
-                    <a href="{% url 'bingo:edit_bingo_setting' bingo.pk %}" class="nav-link">Setting</a>
-                </li>
-                <li class="nav-item ms-auto">
-                    {% if bingo.is_ready %}
-                        <a href="" class="nav-link text-success disabled">Status : Bingo is ready</a>
-                    {% else %}
-                        <a href="" class="nav-link text-danger disabled">Status : Some tiles still have default
-                            values</a>
-                    {% endif %}
-                </li>
-            </ul>
-        </div>
+        {% include 'pages/bingo/edit/innertemplates/editmenu_template.html' %}
 
         <table class="table text-center">
             <thead>
             <tr>
-                <th scope="col">Moderator Name</th>
+                <th scope="col" class="rounded-top-3">Moderator Name</th>
             </tr>
             </thead>
             <tbody>
@@ -47,18 +21,16 @@
             </tbody>
         </table>
 
-        <div>
-            <form action="" method="post">
-                {% csrf_token %}
-                {% for field in form %}
-                    <div class="d-flex me-3 align-items-center">
-                        {% include 'pages/bingo/innertemplates/fieldtemplate.html' %}
-                        <input type="submit" class="btn border-green4 ms-3" value="Add Moderator">
-                    </div>
-                {% endfor %}
+        <form action="" method="post" class="d-flex bg-primary-2 rounded-3 justify-content-around p-2">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="d-flex me-3 align-items-center">
+                    {% include 'pages/bingo/innertemplates/fieldtemplate.html' %}
+                </div>
+            {% endfor %}
+            <input type="submit" class="btn-default rounded-3" value="Add Moderator">
 
-            </form>
-        </div>
+        </form>
     </div>
 {% endblock %}
 
@@ -67,5 +39,7 @@
     <script>
         {#    Set the back button   #}
         show_back_button("{% url 'defaults:main' %}");
+
+        set_edit_bingo_active_tab('moderators_id');
     </script>
 {% endblock %}

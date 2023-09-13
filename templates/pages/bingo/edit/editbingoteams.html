@@ -3,78 +3,26 @@
 
 {% block content %}
     <div class="flex-column">
-        <div class="mb-3">
-            <ul class="nav nav-tabs">
-                <li class="nav-item">
-                    <a href="{% url 'bingo:edit_bingo_board' bingo.id %}" class="nav-link">Board</a>
-                </li>
-                <li class="nav-item">
-                    <a href="{% url 'bingo:edit_bingo_teams' bingo.pk %}" class="nav-link active">Teams</a>
-                </li>
-                <li class="nav-item">
-                    <a href="{% url 'bingo:edit_bingo_players' bingo.pk %}" class="nav-link">Players</a>
-                </li>
-                <li class="nav-item">
-                    <a href="{% url 'bingo:edit_bingo_moderators' bingo.pk %}" class="nav-link">Moderators</a>
-                </li>
-                <li class="nav-item">
-                    <a href="{% url 'bingo:edit_bingo_setting' bingo.pk %}" class="nav-link">Setting</a>
-                </li>
-                <li class="nav-item ms-auto">
-                    {% if bingo.is_ready %}
-                        <a href="" class="nav-link text-success disabled">Status : Bingo is ready</a>
-                    {% else %}
-                        <a href="" class="nav-link text-danger disabled">Status : Some tiles still have default values</a>
-                    {% endif %}
-                </li>
-            </ul>
-        </div>
+        {% include 'pages/bingo/edit/innertemplates/editmenu_template.html' %}
 
-        <div>
-            <form action="" method="post">
-                {% csrf_token %}
-                {{ form.management_form }}
-                {% for team_form in form %}
-                    <p>{{ team_form }}</p>
-                {% endfor %}
+        <form action="" method="post" class="bg-primary-2 rounded-3 p-2">
+            {% csrf_token %}
+            {{ form.management_form }}
+            {% for team_form in form %}
+                <p>{{ team_form }}</p>
+            {% endfor %}
 
-                <input type="submit" class="btn btn-primary" value="Save">
-            </form>
-
-            {#            {{ teams }}#}
-        </div>
-        <div>
-{#            {{ form.management_form }}#}
-{#            {% for f in form %}#}
-{#                {{ f }}#}
-{#            {% endfor %}#}
-
-        </div>
+            <input type="submit" class="btn-default rounded-3 px-3" value="Save">
+        </form>
     </div>
 {% endblock %}
 
 
 {% block js %}
     <script>
-        let team_count = {{ teams.count }} +1;
-        {# Add new option for teams #}
-        let ss = null
-
-        function add_team() {
-            let original = document.querySelector("#div_team_form")
-            let clone = original.cloneNode(true)
-            clone.id = clone.id + "_" + team_count
-            clone.childNodes.item(1).textContent = clone.childNodes.item(1).textContent + team_count
-            clone.childNodes.item(3).id = clone.childNodes.item(3).id + "_" + team_count
-            clone.childNodes.item(3).defaultValue = clone.childNodes.item(3).defaultValue + team_count
-            clone.childNodes.item(3).name = "team_name_new"
-            clone.classList.remove("d-none")
-            ss = clone
-            document.querySelector("#div_teams").append(clone)
-            team_count += 1
-        }
-
         {#    Set the back button   #}
         show_back_button("{% url 'defaults:main' %}");
+
+        set_edit_bingo_active_tab('teams_id')
     </script>
 {% endblock %}
