@@ -43,3 +43,7 @@
 .color-primary-2 {
     color: var(--primary-2-color) !important;
 }
+
+.color-accent {
+    color: var(--accent-color) !important;
+}
