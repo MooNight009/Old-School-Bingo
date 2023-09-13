@@ -39,3 +39,7 @@
 .color-secondary-2 {
     color: var(--secondary-2-color) !important;
 }
+
+.color-primary-2 {
+    color: var(--primary-2-color) !important;
+}

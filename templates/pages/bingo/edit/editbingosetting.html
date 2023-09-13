@@ -24,7 +24,8 @@
                     {% if bingo.is_ready %}
                         <a href="" class="nav-link text-success disabled">Status : Bingo is ready</a>
                     {% else %}
-                        <a href="" class="nav-link text-danger disabled">Status : Some tiles still have default values</a>
+                        <a href="" class="nav-link text-danger disabled">Status : Some tiles still have default
+                            values</a>
                     {% endif %}
                 </li>
             </ul>
@@ -33,7 +34,7 @@
         <div>
             <form action="" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
-{#                {{ form.as_p }}#}
+                {#                {{ form.as_p }}#}
                 {% for field in form %}
                     <div class="d-flex pb-2">
                         {% include 'pages/bingo/innertemplates/fieldtemplate.html' %}
@@ -43,9 +44,25 @@
                 <input type="submit" class="btn border-green4" value="Save">
             </form>
         </div>
-    <a href="{% url 'bingo:delete_board' bingo.id %}" class="btn">DELETE BOARD</a>
-                    <a href="{% url 'bingo:launch_bingo' bingo.id %}" class="btn">LAUNCH Bingo</a>
-                    <input type="text" value="{{ bingo.get_join_link }}" disabled>
+        <button type="button" class="btn-default rounded-3"
+                data-bs-toggle="modal" data-bs-target="#delete_modal_id">Delete
+        </button>
+        <a href="{% url 'bingo:launch_bingo' bingo.id %}" class="btn-default rounded-3">LAUNCH Bingo</a>
+        <input type="text" value="{{ bingo.get_join_link }}" disabled>
+    </div>
+
+    <div class="modal fade" id="delete_modal_id" aria-hidden="true" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-primary-2">
+                <div class="modal-header" id="modal_head_id">
+                    Are you sure you want to delete the board
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-footer" id="modal_footer_id">
+                    <a href="{% url 'bingo:delete_board' bingo.id %}" class="btn-default rounded-3">DELETE BOARD</a>
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}
 

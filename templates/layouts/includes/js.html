@@ -19,8 +19,19 @@
         header_name_p.innerText = name
     }
 
+    {#I think it's removed#}
     function show_header_div(html) {
         header_details_div.classList.remove('d-none')
         header_details_div.innerHTML = html
+    }
+
+    function set_edit_bingo_active_tab(tab_id) {
+        document.getElementById(tab_id).classList.add('bg-accent')
+    }
+
+
+    function copy_link(link) {
+        alert("Copied the text " + link)
+        navigator.clipboard.writeText(link)
     }
 </script>
