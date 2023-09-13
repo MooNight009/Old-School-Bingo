@@ -16,7 +16,7 @@
                 </div>
             </div>
 
-            <div class="d-flex flex-column col col-md-6 col-lg-3 rounded-3 p-3 bg-primary-2 text-center order-2">
+            <div class="d-flex flex-column justify-content-center col col-md-6 col-lg-3 rounded-3 p-3 bg-primary-2 text-center order-2">
                 {% if user|is_moderator:teamtile.team.bingo.pk %}
                     {% if teamtile.is_complete %}
                         <div class="h4 color-green3">Tile is complete</div>
