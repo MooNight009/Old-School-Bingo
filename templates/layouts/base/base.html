@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% load static %}
 {#<html lang="en" class="h-100 html-body">#}
 <html lang="en" class="">
 
@@ -13,7 +14,7 @@
     {#    {% block head_extras %} {% endblock %}#}
 </head>
 
-<body class="d-flex flex-column">
+<body class="d-flex flex-column" style="background-image: url('{% static 'background.png' %}')">
     {% include 'layouts/base/header.html' %}
 
     <div id="content" class="container p-0">
