@@ -1,15 +1,15 @@
-{% extends 'layouts/base.html' %}
+{% extends 'layouts/base/base.html' %}
 {% load bingo_extras %}
 
 {% block content %}
-    {% include 'pages/bingo/innertemplates/bingowinnertemplate.html' %}
+    {% include 'layouts/innertemplates/winner.html' %}
 
     <div class="d-flex flex-wrap row-cols-1 row-cols-lg-2 p-0 m-0">
         <div id="canvas_id" class="d-flex flex-column col col-lg-8 p-0 pe-lg-3 mb-3 mb-lg-0">
             <div id="canvas_board_id" class="overflow-x-auto overflow-y-hidden">
                 <div class="row h-100 p-0 m-0" style="min-width: {{ bingo.get_div_width }}px">
                     {% for team_tile in team_tiles %}
-                        {% include 'pages/bingo/innertemplates/teamtiletemplate.html' %}
+                        {% include 'layouts/innertemplates/generaltile.html' %}
                     {% endfor %}
                 </div>
             </div>
@@ -17,13 +17,13 @@
 
         <div class="d-flex flex-column border-0 col col-lg-4 ">
             <div id="info_id" class="rounded-3 bg-primary-2 mb-2">
-                <div class="dropdown mb-2">
+                <div class="dropdown">
                     <button class="btn-default fs-3 w-100 border-0 rounded-3 rounded-bottom-0 dropdown-toggle"
                             type="button"
                             data-bs-toggle="dropdown">
                         {{ current_team.team_name }}
                     </button>
-                    <ul class="dropdown-menu bg-primary-2 w-100">
+                    <ul class="dropdown-menu bg-alabaster w-100">
                         {% for team in teams %}
                             {% if team.team_name == 'General' %}
                                 <li><a href="{% url 'bingo:play_bingo_general' bingo.id %}"
@@ -40,12 +40,30 @@
                     </ul>
                 </div>
 
-                <div class="p-2 text-center">
-                    <div class="fs-4 pb-2">Rank : <b>{{ current_team.get_ranking }}</b></div>
-                    <div class="fs-4">Score : <b>{{ current_team.score }}</b> points</div>
+                <div class="p-2 text-center overflow-y-auto" style="max-height: 200px;">
+                    <table class="table mb-0">
+                        <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Team</th>
+                            <th>Score</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for team in teams|dictsortreversed:'score' %}
+                            {% if team.team_name != 'General' %}
+                                <tr>
+                                    <td>{{ team.get_ranking }}</td>
+                                    <td>{{ team.team_name }}</td>
+                                    <td>{{ team.score }}</td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+
+                        </tbody>
+                    </table>
                 </div>
             </div>
-
             <div id="board_id" class="d-flex flex-column rounded-3 bg-primary-2 ">
                 <div class="d-flex text-center mb-3">
                     <button id="achievement_btn_id" style="border-bottom-left-radius: 0!important;"
@@ -60,12 +78,12 @@
 
                 <div id="achievement_div_id" class="h-100 overflow-y-auto px-3">
                     {% for achievement in achievements %}
-                        {% include 'pages/bingo/innertemplates/achievementtemplate.html' %}
+                        {% include 'layouts/innertemplates/achievement.html' %}
                     {% endfor %}
                 </div>
                 <div id="submission_div_id" class="h-100 overflow-y-auto px-3 d-none">
                     {% for submission in submissions %}
-                        {% include 'pages/bingo/innertemplates/submissiontemplate.html' %}
+                        {% include 'layouts/innertemplates/submission.html' %}
                     {% endfor %}
                 </div>
             </div>

@@ -1,4 +1,4 @@
-{% extends 'layouts/base.html' %}
+{% extends 'layouts/base/base.html' %}
 {#{% load static %}#}
 
 {% block content %}
@@ -10,7 +10,7 @@
             {{ form.non_field_error }}
             {% for field in form %}
                 <div class="d-flex pb-2 gap-3">
-                    {% include 'pages/bingo/innertemplates/fieldtemplate.html' %}
+                    {% include 'layouts/innertemplates/field.html' %}
                 </div>
             {% endfor %}
 

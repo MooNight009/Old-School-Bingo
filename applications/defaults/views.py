@@ -6,7 +6,7 @@ from applications.player.models import Player
 
 
 class HomePageView(TemplateView):
-    template_name = 'pages/main.html'
+    template_name = 'pages/common/main.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

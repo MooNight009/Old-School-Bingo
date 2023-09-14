@@ -14,7 +14,7 @@ from applications.tile.models import Tile, TeamTile
 
 
 class CreateBingo(LoginRequiredMixin, FormView):
-    template_name = 'pages/bingo/createbingo.html'
+    template_name = 'pages/bingo/create/create.html'
     form_class = BingoForm
     success_url = '/'
 
@@ -34,7 +34,7 @@ class CreateBingo(LoginRequiredMixin, FormView):
 class EditBingoBoard(LoginRequiredMixin, UserIsModeratorMixin, DetailView):
     model = Bingo
     context_object_name = 'bingo'
-    template_name = 'pages/bingo/edit/editbingoboard.html'
+    template_name = 'pages/bingo/edit/board.html'
 
     # def get_queryset(self):
     #     return self.model.objects.filter(tile__bingo=self.kwargs['pk'])
@@ -46,7 +46,7 @@ class EditBingoBoard(LoginRequiredMixin, UserIsModeratorMixin, DetailView):
 
 class EditBingoTeams(LoginRequiredMixin, UserIsModeratorMixin, FormView):
     form_class = TeamFormSet
-    template_name = 'pages/bingo/edit/editbingoteams.html'
+    template_name = 'pages/bingo/edit/teams.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -80,7 +80,7 @@ class EditBingoTeams(LoginRequiredMixin, UserIsModeratorMixin, FormView):
 class EditBingoPlayers(LoginRequiredMixin, UserIsModeratorMixin, ListView):
     model = Player
     context_object_name = 'players'
-    template_name = 'pages/bingo/edit/editbingoplayers.html'
+    template_name = 'pages/bingo/edit/players.html'
 
     def get_queryset(self):
         players = Player.objects.filter(bingos__in=Bingo.objects.filter(pk=self.kwargs['pk']))
@@ -95,7 +95,7 @@ class EditBingoPlayers(LoginRequiredMixin, UserIsModeratorMixin, ListView):
 
 class EditBingoModerators(LoginRequiredMixin, UserIsModeratorMixin, FormView):
     form_class = ModeratorForm
-    template_name = 'pages/bingo/edit/editbingomoderators.html'
+    template_name = 'pages/bingo/edit/moderators.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -123,7 +123,7 @@ class EditBingoSetting(LoginRequiredMixin, UserIsModeratorMixin, UpdateView):
     context_object_name = 'bingo'
     form_class = EditBingoForm
 
-    template_name = 'pages/bingo/edit/editbingosetting.html'
+    template_name = 'pages/bingo/edit/setting.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -154,7 +154,7 @@ class DeleteTeam(LoginRequiredMixin, UserIsModeratorMixin, RedirectView):
 
 class JoinBingo(DetailView):
     model = Bingo
-    template_name = 'pages/bingo/joinbingo.html'
+    template_name = 'pages/bingo/view/join.html'
 
     def get_context_data(self, **kwargs):
         context = super(JoinBingo, self).get_context_data(**kwargs)
@@ -174,7 +174,7 @@ class JoinBingo(DetailView):
 class BingoHomePage(LoginRequiredMixin, DetailView):
     model = Bingo
     template_name_field = 'bingo'
-    template_name = 'pages/bingo/bingohomepage.html'
+    template_name = 'pages/bingo/view/homepage.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -280,7 +280,7 @@ class PlayBingo(LoginRequiredMixin, PlayerAccessMixin, DetailView):
     model = Bingo
     access_object = 'bingo'
     template_name_field = 'bingo'
-    template_name = 'pages/bingo/playbingo.html'
+    template_name = 'pages/bingo/view/play.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -297,7 +297,7 @@ class PlayBingo(LoginRequiredMixin, PlayerAccessMixin, DetailView):
 class PlayBingoGeneral(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     model = Bingo
     template_name_field = 'bingo'
-    template_name = 'pages/bingo/playbingogeneral.html'
+    template_name = 'pages/bingo/view/general.html'
 
     def test_func(self):
         return Moderator.objects.filter(player__user=self.request.user,

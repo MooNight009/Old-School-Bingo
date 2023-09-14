@@ -14,14 +14,12 @@
 </head>
 
 <body class="d-flex flex-column">
-    {% include 'layouts/header.html' %}
+    {% include 'layouts/base/header.html' %}
 
     <div id="content" class="container p-0">
         {% block content %}{% endblock %}
     </div>
 
-
-    {#    </div>#}
     {#        {% include 'layouts/footer.html' %}#}
 
     {% include 'layouts/includes/js.html' %}

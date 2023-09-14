@@ -2,7 +2,7 @@ from django.views.generic import TemplateView
 
 
 class handle404(TemplateView):
-    template_name = 'pages/404.html'
+    template_name = 'pages/common/404.html'
 
     def render_to_response(self, context, **response_kwargs):
         response = super(handle404, self).render_to_response(context, **response_kwargs)
@@ -10,4 +10,4 @@ class handle404(TemplateView):
         return response
 
 class HandleNoPermission(TemplateView):
-    template_name = 'pages/nopermission.html'
+    template_name = 'pages/common/403.html'

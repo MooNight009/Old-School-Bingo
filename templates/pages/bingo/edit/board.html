@@ -1,9 +1,9 @@
-{% extends 'layouts/base.html' %}
+{% extends 'layouts/base/base.html' %}
 {#{% load static %}#}
 
 {% block content %}
     <div class="flex-column">
-        {% include 'pages/bingo/edit/innertemplates/editmenu_template.html' %}
+        {% include 'pages/bingo/edit/innertemplates/menu.html' %}
 
         <div class="d-flex flex-column bg-primary-2 pt-2">
             <h5 class="p-2">{{ bingo.name }}</h5>
