@@ -91,8 +91,6 @@ WSGI_APPLICATION = 'OSRSPG.wsgi.application'
 
 # PostgreSQL Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
-print('os.environ')
-print(os.environ)
 if 'RDS_DB_NAME' in os.environ:
     DATABASES = {
         'default': {

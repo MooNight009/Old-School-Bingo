@@ -59,7 +59,7 @@ urlpatterns += [
 
 # Add health check
 urlpatterns += [
-    url(r'^health/?', include('health_check.urls')),
+    re_path(r'^health/?', include('health_check.urls')),
 ]
 
 # Error pages
