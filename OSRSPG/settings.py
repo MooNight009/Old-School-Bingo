@@ -42,6 +42,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'storages',
 
+    # For redirecting http to https and website health in aws
+    'health_check',
+    'health_check.db',
+    'health_check.cache',
+    'health_check.storage',
+
     'applications.bingo',
     'applications.invocation',
     'applications.player',

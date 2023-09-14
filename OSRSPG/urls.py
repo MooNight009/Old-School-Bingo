@@ -16,6 +16,7 @@ Including another URLconf
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.staticfiles.storage import staticfiles_storage
+from django.template.defaulttags import url
 from django.urls import path, include, re_path
 from django.views.generic import RedirectView
 from django.views.static import serve
@@ -54,6 +55,11 @@ urlpatterns += static(settings.STATIC_URL)
 # Add favicon url
 urlpatterns += [
     path('favicon.ico', RedirectView.as_view(url=staticfiles_storage.url('favicon/favicon.ico')))
+]
+
+# Add health check
+urlpatterns += [
+    url(r'^health/?', include('health_check.urls')),
 ]
 
 # Error pages
