@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate, login, logout
 # Create your views here.
 from django.urls import reverse
-from django.views.generic import FormView, RedirectView
+from django.views.generic import FormView, RedirectView, TemplateView
 
 from applications.player.forms import LoginForm, CreateUserForm
 
@@ -46,3 +46,6 @@ class LogoutView(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         logout(self.request)
         return reverse('defaults:main')
+
+class AccountView(TemplateView):
+    template_name = 'pages/player/account.html'
