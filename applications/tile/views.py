@@ -15,7 +15,7 @@ from applications.tile.models import Tile, TeamTile
 
 
 class EditTile(LoginRequiredMixin, UserIsModeratorMixin, UpdateView):
-    template_name = 'pages/tile/edittile.html'
+    template_name = 'pages/tile/edit/edit.html'
     model = Tile
     form_class = EditTileForm
 
@@ -45,7 +45,7 @@ class PlayTile(LoginRequiredMixin, PlayerAccessMixin, CreateView):
     model = Submission
     access_object = 'team_tile'
     form_class = SubmissionForm
-    template_name = 'pages/tile/playtile.html'
+    template_name = 'pages/tile/view/play.html'
 
     def get_context_data(self, **kwargs):
         """ Add to context:
@@ -126,8 +126,10 @@ class ApproveTile(LoginRequiredMixin, RedirectView):
                 achievement.delete()
 
         team_tile.save()
-        self.row_col_completion(team_tile)
-        team_tile.team.save()
+        # Check if completing a row or column provides extra points.
+        if team_tile.tile.bingo.is_row_col_extra:
+            self.row_col_completion(team_tile)
+            team_tile.team.save()
         self.calculate_ranking(team_tile.team.bingo)
 
         return reverse('tile:play_tile', kwargs={'pk': team_tile.pk})

@@ -1,0 +1,29 @@
+{% extends 'layouts/base/base.html' %}
+{#{% load static %}#}
+
+{% block content %}
+    <div class="bg-primary-2 rounded-3 p-2 mb-5">
+        <h1>Create Bingo</h1>
+
+        <form method="POST" action="" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.non_field_error }}
+            {% for field in form %}
+                <div class="d-flex pb-2 gap-3">
+                    {% include 'layouts/innertemplates/field.html' %}
+                </div>
+            {% endfor %}
+
+            {##}
+            <div class="d-flex justify-content-center pb-2">
+                <input class="btn-default rounded-3" type="submit" value="Create Bingo">
+            </div>
+        </form>
+    </div>
+    {##}
+    {#    {% for message in messages %}#}
+    {#        <p>{{ message }}</p>#}
+    {#    {% endfor %}#}
+
+
+{% endblock %}

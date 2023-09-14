@@ -1,4 +1,4 @@
-{% extends 'layouts/base.html' %}
+{% extends 'layouts/base/base.html' %}
 {#{% load static %}#}
 {% load bingo_extras %}
 
@@ -8,9 +8,9 @@
         <div class="d-flex mb-3 bg-primary-2 color-secondary-1 rounded-3 p-2 h3">
             Your Bingos
         </div>
-        <div class="d-flex flex-wrap gap-3 mb-5">
+        <div class="d-flex flex-wrap mb-5">
             {% for bingo in moderating_bingos %}
-                <div class="col-lg-3 col-md-4 col"> {#  me-3 mb-3 #}
+                <div class="col-lg-3 col-md-4 col px-3"> {#  me-3 mb-3 #}
                     <div class="card h-100 bg-primary-2">
                         <img src="{{ bingo.get_img_url }}"
                              class="card-img-top bg-secondary-1" alt="">
@@ -33,12 +33,12 @@
     {% endif %}
 
     <div class="d-flex mb-3 bg-primary-2 rounded-3 p-2 h3">Joined Bingos</div>
-    <div class="d-flex flex-wrap gap-3 mb-5">
+    <div class="d-flex flex-wrap mb-5">
         {% if  joined_bingos|length == 0 %}
             <div class="ps-2 fs-3">You have not joined any bingo...</div>
         {% endif %}
         {% for bingo in joined_bingos %}
-            <div class="col-lg-3 col-md-4 col"> {#  me-3 mb-3 #}
+            <div class="col-lg-3 col-md-4 col px-3"> {#  me-3 mb-3 #}
                 <div class="card h-100 bg-primary-2">
                     <img src="{{ bingo.get_img_url }}"
                          class="card-img-top bg-secondary-1" alt="">
@@ -83,12 +83,12 @@
     </div>
 
     <div class="d-flex mb-3 bg-primary-2 rounded-3 p-2 h3">Public Bingos</div>
-    <div class="d-flex flex-wrap gap-3 mb-4">
+    <div class="d-flex flex-wrap mb-4">
         {% if  public_bingos|length == 0 %}
             <div class="ps-2 fs-3">No public bingo is available...</div>
         {% endif %}
         {% for bingo in public_bingos %}
-            <div class="col-lg-3 col-md-4 col"> {#  me-3 mb-3 #}
+            <div class="col-lg-3 col-md-4 col px-3"> {#  me-3 mb-3 #}
                 <div class="card h-100 bg-primary-2">
                     <img src="{{ bingo.get_img_url }}"
                          class="card-img-top bg-secondary-1 " alt="">
@@ -106,4 +106,10 @@
             </div>
         {% endfor %}
     </div>
+{% endblock %}
+
+{% block js %}
+    <script>
+        show_header_div(`<a href="{% url 'bingo:create_bingo' %}" class="btn-default rounded-3">Create Bingo</a>`)
+    </script>
 {% endblock %}

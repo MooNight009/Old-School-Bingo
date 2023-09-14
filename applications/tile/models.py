@@ -67,7 +67,11 @@ class Tile(models.Model):
 
         return color
 
-
+    def get_url(self):
+        if self.img:
+            return self.img.url
+        else:
+            return ''
 
 
 class TeamTile(models.Model):

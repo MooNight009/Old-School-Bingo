@@ -1,18 +1,18 @@
 {#{% load i18n %}#}
 {#{% load tag_extras %}#}
 {% load static %}
-<header class="navbar navbar-expand-lg navbar-light mb-3 py-3 bg-primary-2 rounded-5 rounded-top-0">
-    <div class="container-fluid">
+<header class="navbar navbar-expand-lg mb-3 py-3 bg-primary-2 rounded-5 rounded-top-0">
+    <div class="container-fluid justify-content-start">
         <a href="" class="d-none" id="back_button"><i class="fas fa-arrow-left color-secondary-1"></i></a>
         <p class="d-none my-auto ms-3 fs-4 rounded-5" id="header_name_p"></p>
+
+        <div class="my-auto ms-3" id="header_details_div"></div>
 
         <a href="/" class="navbar-brand custom-logo">
             <img src="{% static 'logo.png' %}" alt="" style="height: 50px;">
         </a>
 
-        <div class="my-auto me-3 ms-auto" id="header_details_div"></div>
-
-        <div class="border border-accent rounded-3" id="navbarSupportedContent">
+        <div class="border border-accent rounded-3 ms-auto" id="navbarSupportedContent">
             <ul class="navbar-nav mb-2 mb-lg-0">
                 {% if request.user.is_anonymous %}
                     <li class="nav-item dropdown">
@@ -37,7 +37,7 @@
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li>
-                                <a class="nav-link dropdown-item" href="#">My Account</a>
+                                <a class="nav-link dropdown-item" href="{% url 'player:account' %}">My Account</a>
                             </li>
                             <li>
                                 <a class="nav-link dropdown-item" href="{% url 'player:logout' %}">Logout</a>

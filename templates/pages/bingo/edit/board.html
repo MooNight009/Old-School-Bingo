@@ -1,0 +1,38 @@
+{% extends 'layouts/base/base.html' %}
+{#{% load static %}#}
+
+{% block content %}
+    <div class="flex-column">
+        {% include 'pages/bingo/edit/innertemplates/menu.html' %}
+
+        <div class="d-flex flex-column bg-primary-2 pt-2">
+            <h5 class="p-2">{{ bingo.name }}</h5>
+            <div class="overflow-auto">
+                <div class="row h-100 p-0 m-0" style="min-width: {{ bingo.get_div_width }}px;">
+                    {% for tile in bingo.get_tiles %}
+                        <div class="col tile p-2"
+                             style="--width_perc: {{ bingo.get_column_width }}%; aspect-ratio: 1/1!important;">
+                            <a class="card h-100 border-4 rounded-3 text-decoration-none {{ tile.get_ready_color }}"
+                               href={% url 'tile:edit_tile' tile.id %}>
+                                <div class="fs-4 bg-primary-2 overflow-hidden text-center text-ellipsis text-nowrap px-2 pb-2">{{ tile.name }}</div>
+                                <div class="d-flex h-100"
+                                     style=" background-image: url('{{ tile.get_url }}'); background-size: cover">
+                                </div>
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block js %}
+    <script>
+        {#    Set the back button   #}
+        show_back_button("{% url 'defaults:main' %}");
+
+        set_edit_bingo_active_tab('board_id')
+    </script>
+{% endblock %}

@@ -14,7 +14,7 @@ from applications.tile.models import Tile, TeamTile
 
 
 class CreateBingo(LoginRequiredMixin, FormView):
-    template_name = 'pages/bingo/createbingo.html'
+    template_name = 'pages/bingo/create/create.html'
     form_class = BingoForm
     success_url = '/'
 
@@ -34,7 +34,7 @@ class CreateBingo(LoginRequiredMixin, FormView):
 class EditBingoBoard(LoginRequiredMixin, UserIsModeratorMixin, DetailView):
     model = Bingo
     context_object_name = 'bingo'
-    template_name = 'pages/bingo/edit/editbingoboard.html'
+    template_name = 'pages/bingo/edit/board.html'
 
     # def get_queryset(self):
     #     return self.model.objects.filter(tile__bingo=self.kwargs['pk'])
@@ -46,13 +46,12 @@ class EditBingoBoard(LoginRequiredMixin, UserIsModeratorMixin, DetailView):
 
 class EditBingoTeams(LoginRequiredMixin, UserIsModeratorMixin, FormView):
     form_class = TeamFormSet
-    template_name = 'pages/bingo/edit/editbingoteams.html'
+    template_name = 'pages/bingo/edit/teams.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         bingo = Bingo.objects.get(pk=self.kwargs['pk'])
         context['bingo'] = bingo
-        # context['team_formset'] = TeamFormSet(instance=bingo)
 
         return context
 
@@ -62,13 +61,18 @@ class EditBingoTeams(LoginRequiredMixin, UserIsModeratorMixin, FormView):
         return TeamFormSet(instance=Bingo.objects.get(pk=self.kwargs['pk']))
 
     def form_invalid(self, form):
-        print("Form is invalid")
         return super().form_invalid(form)
 
     def get_success_url(self):
         return reverse("bingo:edit_bingo_teams", kwargs={'pk': self.kwargs['pk']})
 
     def form_valid(self, form):
+        for f in form:
+            if len(f.cleaned_data) != 0:
+                if f.cleaned_data['id'] is not None and f.cleaned_data['id'].team_name == 'General':
+                    f.cleaned_data['team_name'] = 'General'
+                    f.instance.team_name = 'General'
+
         form.save()
         return super().form_valid(form)
 
@@ -76,7 +80,7 @@ class EditBingoTeams(LoginRequiredMixin, UserIsModeratorMixin, FormView):
 class EditBingoPlayers(LoginRequiredMixin, UserIsModeratorMixin, ListView):
     model = Player
     context_object_name = 'players'
-    template_name = 'pages/bingo/edit/editbingoplayers.html'
+    template_name = 'pages/bingo/edit/players.html'
 
     def get_queryset(self):
         players = Player.objects.filter(bingos__in=Bingo.objects.filter(pk=self.kwargs['pk']))
@@ -88,22 +92,20 @@ class EditBingoPlayers(LoginRequiredMixin, UserIsModeratorMixin, ListView):
         context['bingo'] = Bingo.objects.filter(pk=self.kwargs['pk']).get()
         return context
 
+
 class EditBingoModerators(LoginRequiredMixin, UserIsModeratorMixin, FormView):
     form_class = ModeratorForm
-    template_name = 'pages/bingo/edit/editbingomoderators.html'
+    template_name = 'pages/bingo/edit/moderators.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        print(self.kwargs['pk'])
         context['bingo'] = Bingo.objects.get(pk=self.kwargs['pk'])
         context['mods'] = Moderator.objects.filter(bingo_id=self.kwargs['pk'])
-
 
         return context
 
     def form_valid(self, form):
         player = Player.objects.filter(user__username=form.cleaned_data['player_name'])
-        print(player)
         if player.exists():
             if not Moderator.objects.filter(player=player.get()).exists():
                 mod = Moderator.objects.create(player=player.get(), bingo_id=self.kwargs['pk'])
@@ -111,6 +113,7 @@ class EditBingoModerators(LoginRequiredMixin, UserIsModeratorMixin, FormView):
 
     def get_success_url(self):
         return reverse('bingo:edit_bingo_moderators', kwargs={'pk': self.kwargs['pk']})
+
 
 class EditBingoSetting(LoginRequiredMixin, UserIsModeratorMixin, UpdateView):
     """
@@ -120,7 +123,7 @@ class EditBingoSetting(LoginRequiredMixin, UserIsModeratorMixin, UpdateView):
     context_object_name = 'bingo'
     form_class = EditBingoForm
 
-    template_name = 'pages/bingo/edit/editbingosetting.html'
+    template_name = 'pages/bingo/edit/setting.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -151,7 +154,7 @@ class DeleteTeam(LoginRequiredMixin, UserIsModeratorMixin, RedirectView):
 
 class JoinBingo(DetailView):
     model = Bingo
-    template_name = 'pages/bingo/joinbingo.html'
+    template_name = 'pages/bingo/view/join.html'
 
     def get_context_data(self, **kwargs):
         context = super(JoinBingo, self).get_context_data(**kwargs)
@@ -162,15 +165,16 @@ class JoinBingo(DetailView):
         if not user.is_anonymous:
             player = Player.objects.get(user=user)
             context['is_in_bingo'] = player.bingos.contains(self.object)
-        else :
+        else:
             context['is_in_bingo'] = False
 
         return context
 
+
 class BingoHomePage(LoginRequiredMixin, DetailView):
     model = Bingo
     template_name_field = 'bingo'
-    template_name = 'pages/bingo/bingohomepage.html'
+    template_name = 'pages/bingo/view/homepage.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -276,7 +280,7 @@ class PlayBingo(LoginRequiredMixin, PlayerAccessMixin, DetailView):
     model = Bingo
     access_object = 'bingo'
     template_name_field = 'bingo'
-    template_name = 'pages/bingo/playbingo.html'
+    template_name = 'pages/bingo/view/play.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -293,7 +297,7 @@ class PlayBingo(LoginRequiredMixin, PlayerAccessMixin, DetailView):
 class PlayBingoGeneral(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     model = Bingo
     template_name_field = 'bingo'
-    template_name = 'pages/bingo/playbingogeneral.html'
+    template_name = 'pages/bingo/view/general.html'
 
     def test_func(self):
         return Moderator.objects.filter(player__user=self.request.user,

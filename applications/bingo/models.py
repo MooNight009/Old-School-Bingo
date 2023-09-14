@@ -20,25 +20,35 @@ BINGO_TYPES = (
 
 class Bingo(models.Model):
     name = models.CharField(max_length=64)
-    img = models.ImageField(null=True, blank=True, storage=PublicMediaStorage()) # TODO: SET PROPER PATH FOR STORAGE
+    img = models.ImageField(null=True, blank=True, storage=PublicMediaStorage(),
+                            help_text="Image displayed in home page") # TODO: SET PROPER PATH FOR STORAGE
     description = models.TextField(max_length=2048)
-    img = models.ImageField(null=True, blank=True, storage=PublicMediaStorage())  # TODO: SET PROPER PATH FOR STORAGE
 
-    start_date = models.DateTimeField()
-    end_date = models.DateTimeField()
-    is_game_over_on_finish = models.BooleanField(default=False)
+    start_date = models.DateTimeField(help_text="Starting date and time of bingo. UTC not local timezone")
+    end_date = models.DateTimeField(help_text="Starting date and time of bingo. UTC not local timezone")
+    is_game_over_on_finish = models.BooleanField(default=False,
+                                                 help_text="Does the game finish when a team reaches maximum points? (Not implemented)")
 
     is_ready = models.BooleanField(default=False)  # Is the game ready to start
     is_started = models.BooleanField(default=False)  # Has is the game started
     is_over = models.BooleanField(default=False)  # Is the game over
-    is_public = models.BooleanField(default=False)  # Is the game public
-    is_team_public = models.BooleanField(default=False)  # Status of team public
 
-    can_players_create_team = models.BooleanField(default=True)
-    max_players_in_team = models.IntegerField(default=0)
+    is_public = models.BooleanField(default=False,
+                                    help_text="Can someone who hasn't joined the bingo see it? (Not implemented)")  # Is the game public
+    is_team_public = models.BooleanField(default=False,
+                                         help_text="Can a player view other teams' boards? (Not fully tested)")  # Status of team public
+    is_row_col_extra = models.BooleanField(default=True,
+                                           help_text="Do teams get extra points for completing a row or column?")  # Whether players get extra point for finishing a full row/column
 
-    board_type = models.CharField(max_length=16, choices=BINGO_TYPES, default='square')
-    board_size = models.IntegerField(default=10)
+    can_players_create_team = models.BooleanField(default=True,
+                                                  help_text="Can the players create the own teams?")
+    max_players_in_team = models.IntegerField(default=0,
+                                              help_text="If players can create their teams what is the maximum team size? (0 Means no limit)")
+
+    board_type = models.CharField(max_length=16, choices=BINGO_TYPES, default='square',
+                                  help_text="Board type (Not implemented)")
+    board_size = models.IntegerField(default=5,
+                                     help_text="Width/Height size of the board. THIS CANNOT BE CHANGED LATER")
 
     max_score = models.IntegerField(default=-1)
 
@@ -56,9 +66,8 @@ class Bingo(models.Model):
     # TODO: Actually implement method
     def get_is_started(self):
         if not self.is_started:
-            change = self.start_date <= datetime.datetime.now(datetime.timezone.utc)
-            if change != self.is_started:
-                self.is_started = change
+            if self.start_date <= datetime.datetime.now(datetime.timezone.utc):
+                self.is_started = True
                 self.save()
         return self.is_started
 
