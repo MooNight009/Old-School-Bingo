@@ -52,7 +52,6 @@ class EditBingoTeams(LoginRequiredMixin, UserIsModeratorMixin, FormView):
         context = super().get_context_data(**kwargs)
         bingo = Bingo.objects.get(pk=self.kwargs['pk'])
         context['bingo'] = bingo
-        # context['team_formset'] = TeamFormSet(instance=bingo)
 
         return context
 
@@ -62,13 +61,18 @@ class EditBingoTeams(LoginRequiredMixin, UserIsModeratorMixin, FormView):
         return TeamFormSet(instance=Bingo.objects.get(pk=self.kwargs['pk']))
 
     def form_invalid(self, form):
-        print("Form is invalid")
         return super().form_invalid(form)
 
     def get_success_url(self):
         return reverse("bingo:edit_bingo_teams", kwargs={'pk': self.kwargs['pk']})
 
     def form_valid(self, form):
+        for f in form:
+            if len(f.cleaned_data) != 0:
+                if f.cleaned_data['id'] is not None and f.cleaned_data['id'].team_name == 'General':
+                    f.cleaned_data['team_name'] = 'General'
+                    f.instance.team_name = 'General'
+
         form.save()
         return super().form_valid(form)
 
@@ -88,6 +92,7 @@ class EditBingoPlayers(LoginRequiredMixin, UserIsModeratorMixin, ListView):
         context['bingo'] = Bingo.objects.filter(pk=self.kwargs['pk']).get()
         return context
 
+
 class EditBingoModerators(LoginRequiredMixin, UserIsModeratorMixin, FormView):
     form_class = ModeratorForm
     template_name = 'pages/bingo/edit/editbingomoderators.html'
@@ -96,7 +101,6 @@ class EditBingoModerators(LoginRequiredMixin, UserIsModeratorMixin, FormView):
         context = super().get_context_data(**kwargs)
         context['bingo'] = Bingo.objects.get(pk=self.kwargs['pk'])
         context['mods'] = Moderator.objects.filter(bingo_id=self.kwargs['pk'])
-
 
         return context
 
@@ -109,6 +113,7 @@ class EditBingoModerators(LoginRequiredMixin, UserIsModeratorMixin, FormView):
 
     def get_success_url(self):
         return reverse('bingo:edit_bingo_moderators', kwargs={'pk': self.kwargs['pk']})
+
 
 class EditBingoSetting(LoginRequiredMixin, UserIsModeratorMixin, UpdateView):
     """
@@ -160,10 +165,11 @@ class JoinBingo(DetailView):
         if not user.is_anonymous:
             player = Player.objects.get(user=user)
             context['is_in_bingo'] = player.bingos.contains(self.object)
-        else :
+        else:
             context['is_in_bingo'] = False
 
         return context
+
 
 class BingoHomePage(LoginRequiredMixin, DetailView):
     model = Bingo

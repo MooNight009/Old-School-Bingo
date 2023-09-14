@@ -17,7 +17,10 @@ class Team(models.Model):
         is_new = False
         if not self.pk and self.team_name != 'General':
             is_new = True
-            self.ranking = Team.objects.filter(bingo=self.bingo).order_by('-ranking').first().ranking+1
+            if not Team.objects.filter(bingo=self.bingo).order_by('-ranking').exists():
+                self.ranking = 1
+            else:
+                self.ranking = Team.objects.filter(bingo=self.bingo).order_by('-ranking').first().ranking + 1
         super().save(force_insert=force_insert, force_update=force_update, using=using, update_fields=update_fields)
 
         if is_new:
@@ -26,6 +29,9 @@ class Team(models.Model):
                 team_tile.save()
 
     def delete(self, *args, **kwargs):
+        if self.team_name == 'General':
+            return ''
+
         for player in self.player_set.all():
             player.teams.remove(self)
             player.teams.add(Team.objects.get(bingo=self.bingo, team_name='General'))

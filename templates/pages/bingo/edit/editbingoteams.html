@@ -8,8 +8,17 @@
         <form action="" method="post" class="bg-primary-2 rounded-3 p-2">
             {% csrf_token %}
             {{ form.management_form }}
+            {{ form.non_field_errors }}
+            {{ form.non_form_errors }}
             {% for team_form in form %}
-                <p>{{ team_form }}</p>
+                {{ team_form.non_field_errors }}
+                <div>
+                    {% if 'General' not in team_form %}
+                        {% for field in team_form %}
+                            {% include 'pages/bingo/innertemplates/fieldtemplate.html' %}
+                        {% endfor %}
+                    {% endif %}
+                </div>
             {% endfor %}
 
             <input type="submit" class="btn-default rounded-3 px-3" value="Save">
