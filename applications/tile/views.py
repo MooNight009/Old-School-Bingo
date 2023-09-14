@@ -126,8 +126,10 @@ class ApproveTile(LoginRequiredMixin, RedirectView):
                 achievement.delete()
 
         team_tile.save()
-        self.row_col_completion(team_tile)
-        team_tile.team.save()
+        # Check if completing a row or column provides extra points.
+        if team_tile.tile.bingo.is_row_col_extra:
+            self.row_col_completion(team_tile)
+            team_tile.team.save()
         self.calculate_ranking(team_tile.team.bingo)
 
         return reverse('tile:play_tile', kwargs={'pk': team_tile.pk})

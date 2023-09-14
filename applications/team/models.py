@@ -15,7 +15,7 @@ class Team(models.Model):
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         is_new = False
-        if not self.pk:
+        if not self.pk and self.team_name != 'General':
             is_new = True
             self.ranking = Team.objects.filter(bingo=self.bingo).order_by('-ranking').first().ranking+1
         super().save(force_insert=force_insert, force_update=force_update, using=using, update_fields=update_fields)
