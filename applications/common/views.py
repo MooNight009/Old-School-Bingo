@@ -9,3 +9,5 @@ class handle404(TemplateView):
         response.status_code = 404
         return response
 
+class HandleNoPermission(TemplateView):
+    template_name = 'pages/nopermission.html'
