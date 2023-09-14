@@ -1,3 +1,11 @@
-from django.shortcuts import render
+from django.views.generic import TemplateView
 
-# Create your views here.
+
+class handle404(TemplateView):
+    template_name = 'pages/404.html'
+
+    def render_to_response(self, context, **response_kwargs):
+        response = super(handle404, self).render_to_response(context, **response_kwargs)
+        response.status_code = 404
+        return response
+

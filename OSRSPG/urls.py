@@ -23,6 +23,8 @@ from django.views.static import serve
 from OSRSPG import settings
 
 # Django urls
+from applications.common.views import handle404
+
 urlpatterns = [
     path('admin/', admin.site.urls),
 ]
@@ -33,6 +35,7 @@ urlpatterns += [
     path('', include('applications.defaults.urls', namespace='defaults')),
     path('', include('applications.bingo.urls', namespace='bingo')),
     path('', include('applications.tile.urls', namespace='tile')),
+    # path('', include('applications.common.urls', namespace='common'))
 ]
 
 # Media url
@@ -53,3 +56,7 @@ urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += [
     path('favicon.ico', RedirectView.as_view(url=staticfiles_storage.url('favicon/favicon.ico')))
 ]
+
+
+# Error pages
+handler404 = handle404.as_view()
