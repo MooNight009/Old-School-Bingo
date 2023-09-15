@@ -20,10 +20,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ['RDS_SECRET_KEY_DJANGO']
+SECRET_KEY = '***REMOVED***'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
     'oldschoolbingo-test.***REMOVED***.elasticbeanstalk.com',
@@ -153,6 +153,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 if 'USE_S3' in os.environ:
+# if True:
     # aws settings
     AWS_ACCESS_KEY_ID = os.environ['RDS_AWS_ACCESS_KEY_ID']
     AWS_SECRET_ACCESS_KEY = os.environ['RDS_AWS_SECRET_ACCESS_KEY']
