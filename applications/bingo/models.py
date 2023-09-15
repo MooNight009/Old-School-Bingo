@@ -110,8 +110,7 @@ class Bingo(models.Model):
     def get_img_url(self):
         if self.img:
             return self.img.url
-        else:
-            return 'https://www.thesportsdb.com/images/media/league/trophy/x6hlig1575731898.png'
+        return ''
 
     def get_winner(self):
         if self.winner is not None:
