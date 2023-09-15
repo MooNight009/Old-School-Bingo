@@ -1,6 +1,7 @@
 import datetime
 
 from PIL import Image
+from discord import SyncWebhook
 from django.db import models
 from django.urls import reverse
 
@@ -48,6 +49,17 @@ class Bingo(models.Model):
                                      help_text="Width/Height size of the board. THIS CANNOT BE CHANGED LATER")
 
     max_score = models.IntegerField(default=-1)
+
+    enable_discord = models.BooleanField(default=False,
+                                         help_text="Should you be notified via discord when something changes?")
+    discord_webhook = models.CharField(blank=True, max_length=256,
+                                       help_text="Webhook URL for your channel.")
+    notify_submission = models.BooleanField(default=False,
+                                            help_text="Should you be notified when someone submits a new picture?")
+    notify_completion = models.BooleanField(default=False,
+                                            help_text="Should you be notified when someone completes a tile?")
+    notify_approval = models.BooleanField(default=False,
+                                            help_text="Should you be notified when someone approves a tile?")
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
@@ -106,3 +118,10 @@ class Bingo(models.Model):
             return first_team
 
         return top_teams.first()
+
+    def send_discord_message(self, message):
+        try:
+            webhook = SyncWebhook.from_url(self.discord_webhook)
+            webhook.send(message)
+        except ValueError:
+            print("Sending discord message failed") # TODO: Better error logging method

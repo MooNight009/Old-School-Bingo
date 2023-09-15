@@ -125,13 +125,22 @@ class EditBingoSetting(LoginRequiredMixin, UserIsModeratorMixin, UpdateView):
 
     template_name = 'pages/bingo/edit/setting.html'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return context
-
     def get_success_url(self):
         return reverse('bingo:edit_bingo_setting', kwargs={'pk': self.kwargs['pk']})
 
+
+class EditBingoDiscord(LoginRequiredMixin, UserIsModeratorMixin, UpdateView):
+    """
+        Edit bingo details : Discord
+    """
+    model = Bingo
+    context_object_name = 'bingo'
+    form_class = EditBingoDiscordForm
+
+    template_name = 'pages/bingo/edit/discord.html'
+
+    def get_success_url(self):
+        return reverse('bingo:edit_bingo_discord', kwargs={'pk': self.kwargs['pk']})
 
 # Add delete confirmation later
 # TODO: Switch name to DeleteBingo

@@ -13,6 +13,12 @@ class Submission(models.Model):
 
     def save(self,*args, **kwargs):
         super().save(*args, **kwargs)
+
+        bingo = self.team_tile.tile.bingo
+        if bingo.notify_approval:
+            bingo.send_discord_message(
+                f'Player **{self.player.user.username}** Added submission to **{self.team_tile.tile.name}** with the comment "**{self.comment}"**.')
+
         if self.img is not None:
             img = Image.open(self.img.path)
             img.thumbnail((1000,1000))

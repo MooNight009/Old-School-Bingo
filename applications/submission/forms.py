@@ -15,3 +15,4 @@ class SubmissionForm(forms.ModelForm):
             'img': 'Image:',
             'comment':'Comment:'
         }
+

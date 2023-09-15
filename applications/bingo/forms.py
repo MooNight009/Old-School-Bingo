@@ -1,5 +1,6 @@
 import datetime
 
+from discord import SyncWebhook
 from django import forms
 
 from applications.bingo.models import Bingo
@@ -19,8 +20,8 @@ class BingoForm(forms.ModelForm):
             'img': forms.FileInput(attrs={'class': 'form-control w-25', 'required': 'required'}),
 
             # 'start_date': forms.SelectDateWidget(),
-            'start_date': DateTimeWidget(attrs={'class':'btn-default rounded-3'}),
-            'end_date': DateTimeWidget(attrs={'class':'btn-default rounded-3'}),
+            'start_date': DateTimeWidget(attrs={'class': 'btn-default rounded-3'}),
+            'end_date': DateTimeWidget(attrs={'class': 'btn-default rounded-3'}),
             'is_game_over_on_finish': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
 
             'board_size': forms.NumberInput(attrs={'class': 'form-control w-25'}),
@@ -67,8 +68,8 @@ class EditBingoForm(forms.ModelForm):
             'img': forms.FileInput(attrs={'class': 'form-control w-25'}),
 
             # 'start_date': forms.SelectDateWidget(),
-            'start_date': DateTimeWidget(attrs={'class':'btn-default rounded-3'}),
-            'end_date': DateTimeWidget(attrs={'class':'btn-default rounded-3'}),
+            'start_date': DateTimeWidget(attrs={'class': 'btn-default rounded-3'}),
+            'end_date': DateTimeWidget(attrs={'class': 'btn-default rounded-3'}),
             'is_game_over_on_finish': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
 
             'is_row_col_extra': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
@@ -101,6 +102,36 @@ class EditBingoForm(forms.ModelForm):
             raise forms.ValidationError({'is_team_public': ['Previous option has to be enabled for this to be on.']})
 
         return clean
+
+
+class EditBingoDiscordForm(forms.ModelForm):
+    class Meta:
+        model = Bingo
+        fields = ['enable_discord', 'discord_webhook', 'notify_submission', 'notify_completion', 'notify_approval']
+
+        labels = {
+            'enable_discord': 'enable discord integration'
+        }
+        widgets = {
+            'enable_discord': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'discord_webhook': forms.TextInput(attrs={'class': 'form-control w-25'}),
+            'notify_submission': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'notify_completion': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'notify_approval': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        }
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        if ('discord_webhook' in self.changed_data or 'enable_discord' in self.changed_data) and cleaned_data['enable_discord']:
+            try:
+                webhook = SyncWebhook.from_url(cleaned_data['discord_webhook'])
+                webhook.send(f'You are now connected to the bingo **{self.instance.name}** from OldSchoolBingo.')
+            except ValueError:
+                raise forms.ValidationError(
+                    {'discord_webhook': ['The webhook you entered is working. Make sure to follow the documentation.']})
+
+        return cleaned_data
 
 
 class ModeratorForm(forms.Form):

@@ -83,20 +83,27 @@ class CompleteTile(LoginRequiredMixin, PlayerAccessMixin, RedirectView):
 
     def get_redirect_url(self, *args, **kwargs):
         team_tile = TeamTile.objects.get(pk=kwargs['pk'])
-        if team_tile.tile.bingo.get_is_over() and not team_tile.tile.bingo.get_is_started():
+        bingo = team_tile.tile.bingo
+        if bingo.get_is_over() and not bingo.get_is_started():
             return reverse('tile:play_tile', kwargs={'pk': team_tile.id})
 
         # Make the player is mod or part of team
         player = Player.objects.get(user=self.request.user)
-        if not (player.bingos.contains(team_tile.team.bingo) and player.teams.contains(
+        if not (player.bingos.contains(bingo) and player.teams.contains(
                 team_tile.team) and not team_tile.is_complete) and not Moderator.objects.filter(
-            bingo=team_tile.team.bingo,
+            bingo=bingo,
             player=player).exists():
             return reverse('tile:play_tile', kwargs={'pk': team_tile.id})
 
         team_tile.is_complete = not team_tile.is_complete
+
+        if bingo.notify_completion:
+            bingo.send_discord_message(
+                f'Player **{player.user.username}** set the status of **{team_tile.tile.name}** completion to **{team_tile.is_complete}**.')
+
         if team_tile.is_complete:
             team_tile.completion_date = datetime.datetime.now(datetime.timezone.utc)
+
         team_tile.save()
 
         return reverse('tile:play_tile', kwargs={'pk': team_tile.id})
@@ -105,13 +112,19 @@ class CompleteTile(LoginRequiredMixin, PlayerAccessMixin, RedirectView):
 class ApproveTile(LoginRequiredMixin, RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         team_tile = TeamTile.objects.filter(pk=kwargs['pk']).get()
-        if team_tile.tile.bingo.get_is_over() or not team_tile.tile.bingo.get_is_started():
+        bingo = team_tile.tile.bingo
+        if bingo.get_is_over() or not bingo.get_is_started():
             return reverse('tile:play_tile', kwargs={'pk': team_tile.id})
 
         # self.team_tile = team_tile
-        if not Moderator.objects.filter(bingo=team_tile.team.bingo, player__user=self.request.user).exists():
+        if not Moderator.objects.filter(bingo=bingo, player__user=self.request.user).exists():
             return reverse('tile:play_tile', kwargs={'pk': team_tile.id})
         team_tile.is_mod_approved = not team_tile.is_mod_approved
+
+        if bingo.notify_approval:
+            bingo.send_discord_message(
+                f'Moderator **{self.request.user.username}** set the status of **{team_tile.tile.name}** approval to **{team_tile.is_complete}**.')
+
         if team_tile.is_mod_approved:
             team_tile.team.score += team_tile.tile.score  # Add a point for finishing the tile
 
