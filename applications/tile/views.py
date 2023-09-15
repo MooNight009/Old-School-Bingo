@@ -32,6 +32,7 @@ class EditTile(LoginRequiredMixin, UserIsModeratorMixin, UpdateView):
     def form_valid(self, form):
         if form.has_changed() and form.instance.description != Tile().description and form.instance.name != Tile().name:
             form.instance.is_ready = True
+            form.instance.bingo.calculate_max_score()
         return super(EditTile, self).form_valid(form)
 
     def get_success_url(self):

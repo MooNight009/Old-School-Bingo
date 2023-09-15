@@ -59,9 +59,9 @@ class Bingo(models.Model):
     notify_completion = models.BooleanField(default=False,
                                             help_text="Should you be notified when someone completes a tile?")
     notify_approval = models.BooleanField(default=False,
-                                            help_text="Should you be notified when someone approves a tile?")
+                                          help_text="Should you be notified when someone approves a tile?")
 
-    winner = models.OneToOneField('team.Team', on_delete= models.SET_NULL, null=True, related_name='bingo_winner_team')
+    winner = models.OneToOneField('team.Team', on_delete=models.SET_NULL, null=True, related_name='bingo_winner_team')
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
@@ -131,4 +131,16 @@ class Bingo(models.Model):
             webhook = SyncWebhook.from_url(self.discord_webhook)
             webhook.send(message)
         except ValueError:
-            print("Sending discord message failed") # TODO: Better error logging method
+            print("Sending discord message failed")  # TODO: Better error logging method
+
+    def calculate_max_score(self):
+        max_score = 0
+        for tile in self.tile_set.all():
+            max_score += tile.score
+
+        if self.is_row_col_extra:
+            max_score += (self.board_size * 2)
+
+        self.max_score = max_score
+        self.save()
+        return max_score
