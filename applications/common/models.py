@@ -1,5 +1,3 @@
-import os
-
 from django.db import models
 from django.dispatch import receiver
 
@@ -17,7 +15,7 @@ def auto_delete_file_on_delete(sender, instance, **kwargs):
     when corresponding `MediaFile` object is deleted.
     """
     if instance.img:
-        if os.path.isfile(instance.img.path):
+        # if os.path.isfile(instance.img.path):
             # os.remove(instance.img.path)
             instance.img.delete(False)
 
@@ -43,6 +41,6 @@ def auto_delete_file_on_change(sender, instance, **kwargs):
 
     new_file = instance.img
     if not old_file == new_file:
-        if os.path.isfile(old_file.path):
+        # if os.path.isfile(old_file.path):
             # os.remove(old_file.path)
             old_file.delete(False)
