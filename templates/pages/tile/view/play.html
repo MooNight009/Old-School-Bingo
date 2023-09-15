@@ -166,10 +166,10 @@
             let parent = e.parentElement.parentElement
 
             let image = document.createElement("img")
-            image.classList.add('img-fluid')
+            image.classList.add('img-fluid', 'w-100')
             image.src = parent.querySelector("#submission_image_id").getAttribute('src')
 
-            let exit_button = `<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>`
+            let exit_button = `<button type="button" class="btn-close btn-default" data-bs-dismiss="modal" aria-label="Close"></button>`
 
             document.getElementById("modal_head_id").innerHTML = parent.querySelector("#submission_comment_id").innerHTML + exit_button
             document.getElementById("modal_body_id").innerHTML = ''

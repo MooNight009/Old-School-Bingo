@@ -80,6 +80,21 @@
     background-color: var(--primary-2-color) !important;
 }
 
+@media (min-width: 1024px) {
+    .modal-dialog {
+        max-width: 700px;
+        margin-right: auto;
+        margin-left: auto;
+    }
+}
+@media (min-width: 1440px) {
+    .modal-dialog {
+        max-width: 1000px;
+        margin-right: auto;
+        margin-left: auto;
+    }
+}
+
 /*Setting body details*/
 body {
     background-color: var(--primary-1-color);
