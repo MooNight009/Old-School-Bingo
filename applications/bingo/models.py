@@ -7,7 +7,7 @@ from django.urls import reverse
 
 from applications.submission.models import Achievement
 from applications.team.models import Team
-from applications.tile.models import Tile
+from applications.tile.models import Tile, TeamTile
 
 BINGO_TYPES = (
     ('square', 'SQUARE'),
@@ -113,7 +113,7 @@ class Bingo(models.Model):
             dict = {}
             first_team = top_teams.first()
             for team in top_teams:
-                last_achievement = Achievement.objects.filter(team_tile__team=team).order_by('-date').first()
+                last_achievement = TeamTile.objects.filter(team=team).order_by('-completion_date').first()
                 dict[team] = last_achievement
 
             for team in top_teams:
