@@ -61,6 +61,8 @@ class Bingo(models.Model):
     notify_approval = models.BooleanField(default=False,
                                             help_text="Should you be notified when someone approves a tile?")
 
+    winner = models.OneToOneField('team.Team', on_delete= models.SET_NULL, null=True, related_name='bingo_winner_team')
+
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         if self.img is not None:
@@ -73,6 +75,7 @@ class Bingo(models.Model):
         if not self.is_started:
             if self.start_date <= datetime.datetime.now(datetime.timezone.utc):
                 self.is_started = True
+                self.winner = None
                 self.save()
         return self.is_started
 
@@ -103,7 +106,9 @@ class Bingo(models.Model):
             return 'https://www.thesportsdb.com/images/media/league/trophy/x6hlig1575731898.png'
 
     def get_winner(self):
-        top_teams = self.team_set.filter(ranking=1)
+        if self.winner is not None:
+            return self.winner
+        top_teams = self.team_set.filter(ranking=1).exclude(team_name='General')
         if top_teams.count() > 1:
             dict = {}
             first_team = top_teams.first()
@@ -115,9 +120,11 @@ class Bingo(models.Model):
                 if dict[team].date < dict[first_team].date:
                     first_team = team
 
-            return first_team
+            self.winner = first_team
 
-        return top_teams.first()
+        self.winner = top_teams.first()
+        self.save()
+        return self.winner
 
     def send_discord_message(self, message):
         try:

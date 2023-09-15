@@ -60,8 +60,8 @@ class EditBingoForm(forms.ModelForm):
         model = Bingo
         fields = ['name', 'description', 'img', 'start_date', 'end_date', 'is_game_over_on_finish',
                   'is_row_col_extra', 'is_public', 'is_team_public', 'can_players_create_team',
-                  'max_players_in_team']
-        exclude = ['is_ready', 'max_score', 'is_started', 'is_over', 'board_size', 'board_type']
+                  'max_players_in_team', 'is_started', 'is_over']
+        exclude = ['is_ready', 'max_score', 'board_size', 'board_type']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control w-25'}),
             'description': forms.Textarea(attrs={'class': 'form-control w-50'}),
@@ -89,7 +89,10 @@ class EditBingoForm(forms.ModelForm):
 
         # Disable changing start date if it's started
         # TODO: Disable the option to begin with
+        print(self.instance.is_started)
         if self.instance.get_is_started():
+            print(clean['start_date'])
+            print(self.instance.start_date)
             clean['start_date'] = self.instance.start_date
         # Make sure the new start date is not before today
         elif clean['start_date'] <= datetime.datetime.now(datetime.timezone.utc):
