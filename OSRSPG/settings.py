@@ -153,7 +153,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 print(os.environ)
-if 'USE_S3' in os.environ:
+if 'RDS_USE_S3' in os.environ:
 # if True:
     print('got here')
     # aws settings
