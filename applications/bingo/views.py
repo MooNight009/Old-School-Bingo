@@ -107,8 +107,8 @@ class EditBingoModerators(LoginRequiredMixin, UserIsModeratorMixin, FormView):
     def form_valid(self, form):
         player = Player.objects.filter(user__username=form.cleaned_data['player_name'])
         if player.exists():
-            if not Moderator.objects.filter(player=player.get()).exists():
-                mod = Moderator.objects.create(player=player.get(), bingo_id=self.kwargs['pk'])
+            if not Moderator.objects.filter(player=player.get(), bingo_id=self.kwargs['pk']).exists():
+                Moderator.objects.create(player=player.get(), bingo_id=self.kwargs['pk'])
         return super().form_valid(form)
 
     def get_success_url(self):
