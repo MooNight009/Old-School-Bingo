@@ -19,6 +19,10 @@
         <a href="{% url 'bingo:edit_bingo_setting' bingo.pk %}" id="settings_id"
            class="nav-link btn-default rounded-0 px-3">Setting</a>
     </li>
+    <li class="nav-item">
+        <a href="{% url 'bingo:edit_bingo_discord' bingo.pk %}" id="discord_id"
+           class="nav-link btn-default rounded-0 px-3">Discord Notification</a>
+    </li>
     <li class="nav-item ms-auto">
         {% if bingo.is_ready %}
             <div class="nav-link text-success disabled">Status : Bingo is ready</div>
@@ -28,6 +32,6 @@
     </li>
     <li class="nav-item">
         <input type="text" class="nav-link bg-accent color-secondary-1 text-center rounded-start-0"
-               onclick="copy_link('https://oldschoolbingo.com/{{ bingo.get_join_link }}')" value="Copy join link">
+               onclick="copy_link('https://oldschoolbingo.com{{ bingo.get_join_link }}')" value="Copy join link">
     </li>
 </ul>

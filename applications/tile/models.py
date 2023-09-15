@@ -1,9 +1,7 @@
-import sys
 from io import BytesIO
 
 from PIL import Image
 from django.core.files.storage import default_storage
-from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.db import models
 
 from applications.defaults.storage_backends import PublicMediaStorage
@@ -11,7 +9,7 @@ from applications.defaults.storage_backends import PublicMediaStorage
 
 class Tile(models.Model):
     name = models.CharField(max_length=64, default="Tile Name")
-    img = models.ImageField(null=True, blank=True, storage=PublicMediaStorage()) # TODO: SET PROPER PATH FOR STORAGE
+    img = models.ImageField(null=True, blank=True, storage=PublicMediaStorage())  # TODO: SET PROPER PATH FOR STORAGE
     description = models.TextField(max_length=512, default="Description")
 
     bingo_location = models.IntegerField()
@@ -23,7 +21,7 @@ class Tile(models.Model):
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        if self.img is not None and self.img.name is not None:
+        if self.img is not None and self.img.name is not None and len(self.img.name) != 0:
             memfile = BytesIO()
             img = Image.open(self.img)
             img.thumbnail((270, 200))
@@ -62,7 +60,7 @@ class Tile(models.Model):
             color = 'border-warning-subtle'
         elif approved_count == total.count():
             color = 'border-success'
-        elif approved_count >= (total.count()/2):
+        elif approved_count >= (total.count() / 2):
             color = 'border-success-subtle'
 
         return color
@@ -112,7 +110,6 @@ class TeamTile(models.Model):
             color = 'border-red3'
 
         return color
-
 
     def get_url(self):
         if self.tile.img:

@@ -15,8 +15,8 @@ class EditTileForm(forms.ModelForm):
         fields = ['name', 'description', 'img', 'score']
 
         widgets = {
-            'name': forms.TextInput(attrs={'class':'form-control'}),
-            'description': forms.Textarea(attrs={'class':'form-control'}),
-            'img': forms.FileInput(attrs={'class':'form-control'}),
-            'score': forms.NumberInput(attrs={'class':'form-control'}),
+            'name': forms.TextInput(attrs={'class':'form-control w-25'}),
+            'description': forms.Textarea(attrs={'class':'form-control w-50'}),
+            'img': forms.FileInput(attrs={'class':'form-control w-25'}),
+            'score': forms.NumberInput(attrs={'class':'form-control w-25'}),
         }

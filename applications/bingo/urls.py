@@ -10,8 +10,10 @@ urlpatterns = [
     path('edit_bingo_board/<int:pk>', EditBingoBoard.as_view(), name='edit_bingo_board'),
     path('edit_bingo_players/<int:pk>', EditBingoPlayers.as_view(), name='edit_bingo_players'),
     path('edit_bingo_teams/<int:pk>', EditBingoTeams.as_view(), name='edit_bingo_teams'),
-    path('edit_bingo_moderators/<int:pk>', EditBingoModerators.as_view(), name='edit_bingo_moderators'),
     path('edit_bingo_setting/<int:pk>', EditBingoSetting.as_view(), name='edit_bingo_setting'),
+    path('edit_bingo_discord/<int:pk>', EditBingoDiscord.as_view(), name='edit_bingo_discord'),
+    path('edit_bingo_moderators/<int:pk>', EditBingoModerators.as_view(), name='edit_bingo_moderators'),
+    path('kick_moderator/<int:pk>/<int:mod_pk>', KickModerator.as_view(), name='kick_moderator'),
 
     path('delete_team/<int:pk>', DeleteTeam.as_view(), name='delete_team'),
     path('delete_board/<int:pk>', DeleteBoard.as_view(), name='delete_board'),

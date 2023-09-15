@@ -65,19 +65,48 @@
 /*Changing some default values of bootstrap*/
 .dropdown-item {
     --bs-dropdown-link-active-bg: var(--accent-color);
-    color: var(--secondary-1-color)!important;
+    color: var(--secondary-1-color) !important;
 }
+
 .dropdown-item:hover {
-    background-color: var(--accent-color)!important;
+    background-color: var(--accent-color) !important;
 }
 
 .table > :not(caption) > * > * {
     background-color: var(--primary-2-color) !important;
-    color: var(--secondary-1-color)!important;
+    color: var(--secondary-1-color) !important;
 }
 
 .dropdown-menu {
     background-color: var(--primary-2-color) !important;
+}
+
+@media (min-width: 768px) {
+    .custom-logo {
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%, 0);
+    }
+
+    .custom-logo > img {
+        height: 50px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .modal-dialog {
+        max-width: 700px;
+        margin-right: auto;
+        margin-left: auto;
+    }
+}
+
+@media (min-width: 1440px) {
+    .modal-dialog {
+        max-width: 1000px;
+        margin-right: auto;
+        margin-left: auto;
+    }
 }
 
 /*Setting body details*/
@@ -113,9 +142,11 @@ body {
 
 /*Class for logo*/
 .custom-logo {
-    position: absolute;
-    left: 50%;
-    transform: translate(-50%, 0);
+    margin-left: auto!important;
+}
+
+.custom-logo > img {
+    height: 30px;
 }
 
 /*Overwriting color detail for card*/
@@ -139,7 +170,6 @@ body {
 .btn-default:hover {
     background-color: var(--accent-color);
 }
-
 
 
 /*Generic stuff*/

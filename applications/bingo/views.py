@@ -107,13 +107,19 @@ class EditBingoModerators(LoginRequiredMixin, UserIsModeratorMixin, FormView):
     def form_valid(self, form):
         player = Player.objects.filter(user__username=form.cleaned_data['player_name'])
         if player.exists():
-            if not Moderator.objects.filter(player=player.get()).exists():
-                mod = Moderator.objects.create(player=player.get(), bingo_id=self.kwargs['pk'])
+            if not Moderator.objects.filter(player=player.get(), bingo_id=self.kwargs['pk']).exists():
+                Moderator.objects.create(player=player.get(), bingo_id=self.kwargs['pk'])
         return super().form_valid(form)
 
     def get_success_url(self):
         return reverse('bingo:edit_bingo_moderators', kwargs={'pk': self.kwargs['pk']})
 
+class KickModerator(LoginRequiredMixin, UserIsModeratorMixin, RedirectView):
+    def get_redirect_url(self, *args, **kwargs):
+        if Moderator.objects.filter(bingo_id=kwargs['pk']).count() > 1:
+            mod = Moderator.objects.get(pk=kwargs['mod_pk'])
+            mod.delete()
+        return reverse('bingo:edit_bingo_moderators', kwargs={'pk':kwargs['pk']})
 
 class EditBingoSetting(LoginRequiredMixin, UserIsModeratorMixin, UpdateView):
     """
@@ -125,13 +131,22 @@ class EditBingoSetting(LoginRequiredMixin, UserIsModeratorMixin, UpdateView):
 
     template_name = 'pages/bingo/edit/setting.html'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return context
-
     def get_success_url(self):
         return reverse('bingo:edit_bingo_setting', kwargs={'pk': self.kwargs['pk']})
 
+
+class EditBingoDiscord(LoginRequiredMixin, UserIsModeratorMixin, UpdateView):
+    """
+        Edit bingo details : Discord
+    """
+    model = Bingo
+    context_object_name = 'bingo'
+    form_class = EditBingoDiscordForm
+
+    template_name = 'pages/bingo/edit/discord.html'
+
+    def get_success_url(self):
+        return reverse('bingo:edit_bingo_discord', kwargs={'pk': self.kwargs['pk']})
 
 # Add delete confirmation later
 # TODO: Switch name to DeleteBingo
@@ -300,9 +315,10 @@ class PlayBingoGeneral(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     template_name = 'pages/bingo/view/general.html'
 
     def test_func(self):
+        bingo = Bingo.objects.get(pk=self.kwargs['pk'])
+
         return Moderator.objects.filter(player__user=self.request.user,
-                                        bingo_id=self.kwargs['pk']).exists() or Bingo.objects.filter(
-            pk=self.kwargs['pk']).get().is_team_public
+                                        bingo_id=self.kwargs['pk']).exists() or (bingo.is_team_public and bingo.is_started)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

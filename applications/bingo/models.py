@@ -3,13 +3,14 @@ import datetime
 from io import BytesIO
 from PIL import Image
 from django.core.files.storage import default_storage
+from discord import SyncWebhook
 from django.db import models
 from django.urls import reverse
 
 from applications.defaults.storage_backends import PublicMediaStorage
 from applications.submission.models import Achievement
 from applications.team.models import Team
-from applications.tile.models import Tile
+from applications.tile.models import Tile, TeamTile
 
 BINGO_TYPES = (
     ('square', 'SQUARE'),
@@ -52,6 +53,19 @@ class Bingo(models.Model):
 
     max_score = models.IntegerField(default=-1)
 
+    enable_discord = models.BooleanField(default=False,
+                                         help_text="Should you be notified via discord when something changes?")
+    discord_webhook = models.CharField(blank=True, max_length=256,
+                                       help_text="Webhook URL for your channel.")
+    notify_submission = models.BooleanField(default=False,
+                                            help_text="Should you be notified when someone submits a new picture?")
+    notify_completion = models.BooleanField(default=False,
+                                            help_text="Should you be notified when someone completes a tile?")
+    notify_approval = models.BooleanField(default=False,
+                                          help_text="Should you be notified when someone approves a tile?")
+
+    winner = models.OneToOneField('team.Team', on_delete=models.SET_NULL, null=True, related_name='bingo_winner_team')
+
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         if self.img is not None:
@@ -68,6 +82,7 @@ class Bingo(models.Model):
         if not self.is_started:
             if self.start_date <= datetime.datetime.now(datetime.timezone.utc):
                 self.is_started = True
+                self.winner = None
                 self.save()
         return self.is_started
 
@@ -98,18 +113,41 @@ class Bingo(models.Model):
             return 'https://www.thesportsdb.com/images/media/league/trophy/x6hlig1575731898.png'
 
     def get_winner(self):
-        top_teams = self.team_set.filter(ranking=1)
+        if self.winner is not None:
+            return self.winner
+        top_teams = self.team_set.filter(ranking=1).exclude(team_name='General')
         if top_teams.count() > 1:
             dict = {}
             first_team = top_teams.first()
             for team in top_teams:
-                last_achievement = Achievement.objects.filter(team_tile__team=team).order_by('-date').first()
+                last_achievement = TeamTile.objects.filter(team=team).order_by('-completion_date').first()
                 dict[team] = last_achievement
 
             for team in top_teams:
                 if dict[team].date < dict[first_team].date:
                     first_team = team
 
-            return first_team
+            self.winner = first_team
 
-        return top_teams.first()
+        self.winner = top_teams.first()
+        self.save()
+        return self.winner
+
+    def send_discord_message(self, message):
+        try:
+            webhook = SyncWebhook.from_url(self.discord_webhook)
+            webhook.send(message)
+        except ValueError:
+            print("Sending discord message failed")  # TODO: Better error logging method
+
+    def calculate_max_score(self):
+        max_score = 0
+        for tile in self.tile_set.all():
+            max_score += tile.score
+
+        if self.is_row_col_extra:
+            max_score += (self.board_size * 2)
+
+        self.max_score = max_score
+        self.save()
+        return max_score
