@@ -85,7 +85,7 @@ class CompleteTile(LoginRequiredMixin, PlayerAccessMixin, RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         team_tile = TeamTile.objects.get(pk=kwargs['pk'])
         bingo = team_tile.tile.bingo
-        if bingo.get_is_over() and not bingo.get_is_started():
+        if bingo.get_is_over() or not bingo.get_is_started():
             return reverse('tile:play_tile', kwargs={'pk': team_tile.id})
 
         # Make the player is mod or part of team
@@ -145,6 +145,12 @@ class ApproveTile(LoginRequiredMixin, RedirectView):
             self.row_col_completion(team_tile)
             team_tile.team.save()
         self.calculate_ranking(team_tile.team.bingo)
+
+        # Finish the game
+        if bingo.is_game_over_on_finish:
+            if team_tile.team.score == bingo.max_score:
+                bingo.is_over = True
+                bingo.save()
 
         return reverse('tile:play_tile', kwargs={'pk': team_tile.pk})
 
