@@ -23,14 +23,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = '***REMOVED***'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
     'oldschoolbingo-test.***REMOVED***.elasticbeanstalk.com',
     'ec2-3-74-227-28.***REMOVED***.compute.amazonaws.com',
     '172.31.3.70',
     'oldschoolbingo.com',
-    'www.oldschoolbingo.com'
+    'www.oldschoolbingo.com',
+    '192.168.0.158'
 ]
 
 # Application definition

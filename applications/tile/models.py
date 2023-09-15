@@ -26,9 +26,10 @@ class Tile(models.Model):
             img = Image.open(self.img)
             img.thumbnail((270, 200))
             img.save(memfile, format='PNG', quality=60, optimize=True)
-            default_storage.save(self.img.name, memfile)
-            memfile.close()
-            img.close()
+            imageFile = default_storage.open(self.img.name, 'wb')
+            imageFile.write(memfile.getvalue())
+            imageFile.flush()
+            imageFile.close()
 
         # Make board ready if all tiles are ready
         if not Tile.objects.filter(bingo=self.bingo, is_ready=False).exists():

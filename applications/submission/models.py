@@ -29,9 +29,10 @@ class Submission(models.Model):
             img = Image.open(self.img)
             img.thumbnail((1000, 1000))
             img.save(memfile, format='PNG', quality=60, optimize=True)
-            default_storage.save(self.img.name, memfile)
-            memfile.close()
-            img.close()
+            imageFile = default_storage.open(self.img.name, 'wb')
+            imageFile.write(memfile.getvalue())
+            imageFile.flush()
+            imageFile.close()
 
 
 class Reaction(models.Model):
