@@ -10,12 +10,14 @@
             <thead>
             <tr>
                 <th scope="col" class="rounded-top-3">Moderator Name</th>
+                <th scope="col" class="">Kick</th>
             </tr>
             </thead>
             <tbody>
             {% for mod in mods %}
                 <tr>
                     <td>{{ mod.player.user.username }}</td>
+                    <td><a href="{% url 'bingo:kick_moderator' bingo.pk mod.pk %}" class="btn-default rounded-3">Kick</a></td>
                 </tr>
             {% endfor %}
             </tbody>

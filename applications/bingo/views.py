@@ -114,6 +114,12 @@ class EditBingoModerators(LoginRequiredMixin, UserIsModeratorMixin, FormView):
     def get_success_url(self):
         return reverse('bingo:edit_bingo_moderators', kwargs={'pk': self.kwargs['pk']})
 
+class KickModerator(LoginRequiredMixin, UserIsModeratorMixin, RedirectView):
+    def get_redirect_url(self, *args, **kwargs):
+        if Moderator.objects.filter(bingo_id=kwargs['pk']).count() > 1:
+            mod = Moderator.objects.get(pk=kwargs['mod_pk'])
+            mod.delete()
+        return reverse('bingo:edit_bingo_moderators', kwargs={'pk':kwargs['pk']})
 
 class EditBingoSetting(LoginRequiredMixin, UserIsModeratorMixin, UpdateView):
     """
