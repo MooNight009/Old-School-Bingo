@@ -60,8 +60,8 @@ class EditBingoForm(forms.ModelForm):
         model = Bingo
         fields = ['name', 'description', 'img', 'start_date', 'end_date', 'is_game_over_on_finish',
                   'is_row_col_extra', 'is_public', 'is_team_public', 'can_players_create_team',
-                  'max_players_in_team', 'is_started', 'is_over']
-        exclude = ['is_ready', 'max_score', 'board_size', 'board_type']
+                  'max_players_in_team']
+        exclude = ['is_ready', 'max_score', 'board_size', 'board_type', 'is_started', 'is_over']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control w-25'}),
             'description': forms.Textarea(attrs={'class': 'form-control w-50'}),
