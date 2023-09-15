@@ -30,16 +30,16 @@ def get_user_bingo_team(user, bingo):
     player = Player.objects.get(user=user)
 
     team_id = -1
-    # Is the player a moderator
-    if Moderator.objects.filter(player=player, bingo=bingo).exists():
-        team = Team.objects.filter(bingo=bingo).first()
-        if team is not None:
-            team_id = team.id
     # Is the player in bingo
-    elif player.bingos.contains(bingo):
+    if player.bingos.contains(bingo):
         team = player.teams.filter(bingo=bingo).exclude(team_name='General')
         if team.exists():
             team_id = team.get().id
+    # # Is the player a moderator
+    # elif Moderator.objects.filter(player=player, bingo=bingo).exists():
+    #     team = Team.objects.filter(bingo=bingo).first()
+    #     if team is not None:
+    #         team_id = team.id
 
     return team_id
 
@@ -71,11 +71,11 @@ def get_user_bingo_id_team(user, bingo_pk):
     if player.bingos.contains(bingo):
         team = player.teams.filter(bingo=bingo).get()
         team_id = team.id
-    # Is the player a moderator
-    elif Moderator.objects.filter(player=player, bingo=bingo):
-        team = Team.objects.filter(bingo=bingo).first()
-        if team is not None:
-            team_id = team.id
+    # # Is the player a moderator
+    # elif Moderator.objects.filter(player=player, bingo=bingo):
+    #     team = Team.objects.filter(bingo=bingo).first()
+    #     if team is not None:
+    #         team_id = team.id
 
     return team_id
 
