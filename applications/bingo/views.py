@@ -315,9 +315,10 @@ class PlayBingoGeneral(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     template_name = 'pages/bingo/view/general.html'
 
     def test_func(self):
+        bingo = Bingo.objects.get(pk=self.kwargs['pk'])
+
         return Moderator.objects.filter(player__user=self.request.user,
-                                        bingo_id=self.kwargs['pk']).exists() or Bingo.objects.filter(
-            pk=self.kwargs['pk']).get().is_team_public
+                                        bingo_id=self.kwargs['pk']).exists() or (bingo.is_team_public and bingo.is_started)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

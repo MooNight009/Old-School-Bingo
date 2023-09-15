@@ -38,17 +38,16 @@ class PlayerAccessMixin(UserPassesTestMixin):
             bingo = Bingo.objects.get(pk=self.kwargs['pk'])
             if self.team is None:
                 self.team = Team.objects.get(pk=self.kwargs['team_pk'])
+
+            if not bingo.is_started and not Moderator.objects.filter(player=player, bingo=bingo).exists():
+                return False
         elif self.access_object == 'team_tile':
             team_tile = TeamTile.objects.get(pk=self.kwargs['pk'])
             self.team = team_tile.team
             bingo = self.team.bingo
-        # elif self.access_object is 'complete_tile':
-        #     team_tile = TeamTile.objects.get(pk=self.kwargs['pk'])
-        #     bingo = team_tile.team.bingo
-        #     team = team_tile.team
-        #     if player.bingos.contains(bingo) and player.teams.contains(team):
-        #         return True
-        #     else
+
+            if not bingo.is_started and not Moderator.objects.filter(player=player, bingo=bingo).exists():
+                return False
 
         if bingo.is_public:
             return True
