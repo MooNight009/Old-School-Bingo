@@ -1,4 +1,6 @@
 from PIL import Image
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 from django.db import models
 
 
@@ -12,7 +14,12 @@ class Tile(models.Model):
     is_ready = models.BooleanField(default=False)
 
     bingo = models.ForeignKey('bingo.Bingo', on_delete=models.CASCADE)
-    special_tile = models.ForeignKey('tile.SpecialTile', on_delete=models.SET_NULL, null=True)
+    # special_tile = models.ForeignKey('tile.SpecialTile', on_delete=models.SET_NULL, null=True)
+
+    # invocation = models.OneToOneField('invocation.Invocation', on_delete=models.SET_NULL, null=True)
+    content_type = models.ForeignKey(ContentType, on_delete=models.SET_NULL, null=True)
+    object_id = models.PositiveIntegerField()
+    invocation = GenericForeignKey('content_type', 'object_id')
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)

@@ -30,7 +30,6 @@ def auto_delete_file_on_change(sender, instance, **kwargs):
     when corresponding `MediaFile` object is updated
     with new file.
     """
-    print("We got here2121ssssssssssssssssss")
     if not instance.pk:
         return False
 

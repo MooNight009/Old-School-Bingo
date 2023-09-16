@@ -6,6 +6,7 @@ from django.views.generic import FormView, RedirectView, DetailView, ListView, U
 from applications.bingo.forms import *
 from applications.bingo.models import Bingo
 from applications.common.mixins import UserIsModeratorMixin, PlayerAccessMixin
+from applications.invocation.models import SubmissionInvo
 from applications.player.models import Player, Moderator, PlayerBingoDetail
 from applications.submission.models import Achievement, Submission
 from applications.team.forms import TeamFormSet
@@ -24,10 +25,11 @@ class CreateBingo(LoginRequiredMixin, FormView):
         moderator = Moderator(player=player, bingo=bingo)
         moderator.save()
         for i in range(1, bingo.board_size ** 2 + 1):
-            tile = Tile(bingo_location=i, score=1,
-                        bingo=bingo)
-            tile.save()
-        Team(team_name='General', bingo=bingo).save()
+            invocation = SubmissionInvo.objects.create()
+            tile = Tile.objects.create(bingo_location=i, score=1, bingo=bingo, invocation=invocation)
+            invocation.tile = tile
+            invocation.save()
+        Team.objects.create(team_name='General', bingo=bingo)
         return super().form_valid(form)
 
 
@@ -114,12 +116,14 @@ class EditBingoModerators(LoginRequiredMixin, UserIsModeratorMixin, FormView):
     def get_success_url(self):
         return reverse('bingo:edit_bingo_moderators', kwargs={'pk': self.kwargs['pk']})
 
+
 class KickModerator(LoginRequiredMixin, UserIsModeratorMixin, RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         if Moderator.objects.filter(bingo_id=kwargs['pk']).count() > 1:
             mod = Moderator.objects.get(pk=kwargs['mod_pk'])
             mod.delete()
-        return reverse('bingo:edit_bingo_moderators', kwargs={'pk':kwargs['pk']})
+        return reverse('bingo:edit_bingo_moderators', kwargs={'pk': kwargs['pk']})
+
 
 class EditBingoSetting(LoginRequiredMixin, UserIsModeratorMixin, UpdateView):
     """
@@ -147,6 +151,7 @@ class EditBingoDiscord(LoginRequiredMixin, UserIsModeratorMixin, UpdateView):
 
     def get_success_url(self):
         return reverse('bingo:edit_bingo_discord', kwargs={'pk': self.kwargs['pk']})
+
 
 # Add delete confirmation later
 # TODO: Switch name to DeleteBingo
@@ -332,7 +337,8 @@ class PlayBingoGeneral(LoginRequiredMixin, UserPassesTestMixin, DetailView):
         bingo = Bingo.objects.get(pk=self.kwargs['pk'])
 
         return Moderator.objects.filter(player__user=self.request.user,
-                                        bingo_id=self.kwargs['pk']).exists() or (bingo.is_team_public and bingo.is_started)
+                                        bingo_id=self.kwargs['pk']).exists() or (
+                       bingo.is_team_public and bingo.is_started)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
