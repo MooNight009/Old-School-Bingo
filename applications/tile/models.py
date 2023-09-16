@@ -99,6 +99,8 @@ class TeamTile(models.Model):
     team = models.ForeignKey('team.Team', on_delete=models.CASCADE)
     tile = models.ForeignKey('tile.Tile', on_delete=models.CASCADE)
 
+    score = models.IntegerField(default=0)
+
     def is_complete_fc(self):
         return 'checked' if self.is_complete else ''
 

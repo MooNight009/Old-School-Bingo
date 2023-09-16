@@ -280,6 +280,7 @@ class ChangeTeam(LoginRequiredMixin, RedirectView):
             for joined_team in joined_teams:
                 player.teams.remove(joined_team)
             player.teams.add(team)
+
         return reverse('bingo:bingo_home_page', kwargs={'pk': bingo.id})
 
 
