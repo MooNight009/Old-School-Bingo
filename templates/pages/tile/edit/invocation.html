@@ -10,7 +10,7 @@
             <div class="h1">Edit Tile</div>
 
 
-            <form method="post" enctype="multipart/form-data">
+            <form method="post">
                 {% csrf_token %}
                 {{ form.non_field_errors }}
                 {% for field in form %}
@@ -32,6 +32,6 @@
         show_back_button("{% url 'bingo:edit_bingo_board' object.bingo.id %}");
         show_header_name('{{ tile.name }}')
 
-        set_edit_bingo_active_tab('detail_id')
+        set_edit_bingo_active_tab('wom_id')
     </script>
 {% endblock %}

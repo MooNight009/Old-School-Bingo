@@ -1,0 +1,12 @@
+<ul class="nav nav-tabs border-0 bg-primary-2 rounded-top-3 mb-3">
+    <li class="nav-item">
+        <a href="{% url 'tile:edit_tile' tile.pk %}" id="detail_id"
+           class="nav-link btn-default rounded-0 rounded-top-3 rounded-end-0 px-3">Details</a>
+    </li>
+    {% if tile.invocation_type == 'WOM' %}
+        <li class="nav-item">
+            <a href="{% url 'tile:edit_invocation' tile.pk %}" id="wom_id"
+               class="nav-link btn-default rounded-0 px-3">WiseOldMan</a>
+        </li>
+    {% endif %}
+</ul>
