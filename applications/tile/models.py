@@ -3,8 +3,12 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
 
+from applications.invocation.models import SubmissionInvo
+
 
 class Tile(models.Model):
+    bingo = models.ForeignKey('bingo.Bingo', on_delete=models.CASCADE)
+
     name = models.CharField(max_length=64, default="Tile Name")
     description = models.TextField(max_length=512, default="Description")
     img = models.ImageField(null=True, blank=True)  # TODO: SET PROPER PATH FOR STORAGE
@@ -13,15 +17,22 @@ class Tile(models.Model):
     score = models.IntegerField(default=1)
     is_ready = models.BooleanField(default=False)
 
-    bingo = models.ForeignKey('bingo.Bingo', on_delete=models.CASCADE)
-    # special_tile = models.ForeignKey('tile.SpecialTile', on_delete=models.SET_NULL, null=True)
+    # Invocation details
+    INVOCATION_TYPES = [
+        ('SBM', "Submission"),
+        ('WOM', "WiseOldMan")
+    ]
+    invocation_type = models.CharField(max_length=3, default='SBM', choices=INVOCATION_TYPES)
 
-    # invocation = models.OneToOneField('invocation.Invocation', on_delete=models.SET_NULL, null=True)
     content_type = models.ForeignKey(ContentType, on_delete=models.SET_NULL, null=True)
     object_id = models.PositiveIntegerField()
     invocation = GenericForeignKey('content_type', 'object_id')
 
     def save(self, *args, **kwargs):
+        is_new = self._state.adding
+        if is_new:
+            invocation = SubmissionInvo.objects.create()
+            self.invocation = invocation
         super().save(*args, **kwargs)
         if self.img is not None and self.img.name is not None and len(self.img.name) != 0:
             img = Image.open(self.img.path)
@@ -29,9 +40,14 @@ class Tile(models.Model):
             img.save(self.img.path, format='PNG', quality=60, optimize=True)
 
         # Make board ready if all tiles are ready
+        # TODO: Add better way of checking whether everything is set
         if not Tile.objects.filter(bingo=self.bingo, is_ready=False).exists():
             self.bingo.is_ready = True
             self.bingo.save()
+
+        if is_new:
+            self.invocation.tile = self
+            self.invocation.save()
 
     def get_ready_color(self):
         if self.is_ready:

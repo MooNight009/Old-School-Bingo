@@ -1,7 +1,7 @@
 import datetime
 from abc import abstractmethod
 
-from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
 
@@ -45,5 +45,13 @@ class SubmissionInvo(Invocation):
                 f'Moderator **{username}** set the status of **{team_tile.tile.name}** approval to **{team_tile.is_complete}**.')
         pass
 
-class WOSInvo(Invocation):
-    pass
+class WOMInvo(Invocation):
+    TYPES = [
+        ('XP', 'Skilling'),
+        ('KC', 'Bossing'),
+        ('LV', 'Levels')
+    ]
+
+    type = models.CharField(max_length=2, default='LV', choices=TYPES)
+    amount = models.IntegerField(default=1)
+    names = models.CharField(max_length=256, default='')
