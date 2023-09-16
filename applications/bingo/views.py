@@ -6,7 +6,7 @@ from django.views.generic import FormView, RedirectView, DetailView, ListView, U
 from applications.bingo.forms import *
 from applications.bingo.models import Bingo
 from applications.common.mixins import UserIsModeratorMixin, PlayerAccessMixin
-from applications.player.models import Player, Moderator
+from applications.player.models import Player, Moderator, PlayerBingoDetail
 from applications.submission.models import Achievement, Submission
 from applications.team.forms import TeamFormSet
 from applications.team.models import Team
@@ -211,6 +211,9 @@ class ActuallyJoinBingo(LoginRequiredMixin, RedirectView):
         player = Player.objects.filter(user=user).get()
         if not player.bingos.contains(bingo):
             player.bingos.add(bingo)
+            player_details = PlayerBingoDetail.objects.get_or_create(player=player, bingo=bingo)[0]
+            player_details.account_names = self.request.POST['account_names']
+            player_details.save()
 
         player.teams.add(bingo.team_set.get(team_name='General'))
 
