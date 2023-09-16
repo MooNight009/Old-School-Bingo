@@ -23,6 +23,7 @@ class PlayerBingoDetail(models.Model):
     player = models.ForeignKey(Player, on_delete=models.CASCADE, null=False)
     bingo = models.ForeignKey(Bingo, on_delete=models.CASCADE, null=False)
     account_names = models.CharField(max_length=512, blank=True, default='')
+    team = models.ForeignKey(Team, on_delete=models.CASCADE, null=True)
 
     def save(self, *args, **kwargs):
         if self.account_names == '':

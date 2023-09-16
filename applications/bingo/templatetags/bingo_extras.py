@@ -1,7 +1,7 @@
 from django import template
 
 from applications.bingo.models import Bingo
-from applications.player.models import Player, Moderator
+from applications.player.models import Player, Moderator, PlayerBingoDetail
 from applications.team.models import Team
 
 register = template.Library()
@@ -104,3 +104,9 @@ def get_player_bingo_team_name(player, bingo_pk):
 
     return team_name if team_name!= 'General' else 'No team'
 
+
+# New filters
+@register.filter(name='get_player_bingo_detail')
+def get_player_bingo_detail(player, bingo):
+    player_bingo_detail = PlayerBingoDetail.objects.filter(player=player, bingo=bingo)
+    return None if not player_bingo_detail.exists() else player_bingo_detail.get()

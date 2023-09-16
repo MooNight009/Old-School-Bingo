@@ -213,6 +213,7 @@ class ActuallyJoinBingo(LoginRequiredMixin, RedirectView):
             player.bingos.add(bingo)
             player_details = PlayerBingoDetail.objects.get_or_create(player=player, bingo=bingo)[0]
             player_details.account_names = self.request.POST['account_names']
+            player_details.team = bingo.team_set.get(team_name='General')
             player_details.save()
 
         player.teams.add(bingo.team_set.get(team_name='General'))
@@ -231,22 +232,32 @@ class KickPlayer(LoginRequiredMixin, UserIsModeratorMixin, RedirectView):
         bingo = Bingo.objects.get(pk=self.kwargs['pk'])
         player.bingos.remove(bingo)
         player.teams.remove(*Team.objects.filter(bingo=bingo))
+        PlayerBingoDetail.objects.filter(player=player, bingo=bingo).delete()
 
         return reverse('bingo:edit_bingo_players', kwargs={'pk': self.kwargs['pk']})
 
 
 # TODO: Move to team
-class ChangeTeamModerator(LoginRequiredMixin, UserIsModeratorMixin, RedirectView):
+class UpdatePlayerDetail(LoginRequiredMixin, UserIsModeratorMixin, RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         bingo = Bingo.objects.filter(pk=kwargs['pk']).get()
+        player = Player.objects.get(pk=kwargs['player_pk'])
+        player_detail = PlayerBingoDetail.objects.get(player=player, bingo=bingo)
+
+        # Make sure a team is selected and not empty
         if self.request.POST.get('team_id', False):
             team = Team.objects.filter(pk=self.request.POST['team_id']).get()
 
-            player = Player.objects.get(pk=kwargs['player_pk'])
+            # TODO: Older methods, remove later on
             joined_teams = player.teams.filter(bingo=bingo)
             for joined_team in joined_teams:
                 player.teams.remove(joined_team)
             player.teams.add(team)
+            # New method
+            player_detail.team = team
+
+        player_detail.account_names = self.request.POST.get('account_names', player.user.username)
+        player_detail.save()
 
         return reverse('bingo:edit_bingo_players', kwargs={'pk': kwargs['pk']})
 

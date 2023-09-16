@@ -11,33 +11,44 @@
             <tr>
                 <th scope="col">Player Name</th>
                 <th scope="col">Team</th>
+                <th scope="col">Account names</th>
+                <th scope="col">Update</th>
                 <th scope="col">Kick</th>
             </tr>
             </thead>
             <tbody>
             {% for player in players %}
-                <tr class="align-middle">
-                    <td>{{ player.user.username }}</td>
-                    <td>
-                        <form action="{% url 'bingo:change_team_moderator' view.kwargs.pk player.id %}" method="post"
-                              class="d-flex" nams="{{ player|get_player_bingo_team:bingo }}">
+                {% with player|get_player_bingo_detail:bingo as player_detail %}
+                    <tr class="align-middle">
+                        <form action="{% url 'bingo:update_player_detail' view.kwargs.pk player.id %}" method="post"
+                              class="d-flex" nams="{{ player|get_player_bingo_team:bingo }}" id="player_{{ player.id }}_id">
                             {% csrf_token %}
-                            <select name="team_id" id="" class="form-select">
-                                {% if player.user|get_user_bingo_team:bingo == -1 %}
-                                    <option value="-1" disabled selected>No Team Selected</option>
-                                {% endif %}
-                                {% for team in teams %}
-                                    {% if team.team_name != 'General' %}
-                                        <option value="{{ team.id }}" {{ player|is_player_in_team:team }}>{{ team.team_name }}</option>
+                            <td>{{ player.user.username }}</td>
+                            <td>
+                                <select name="team_id" id="" class="form-select" form="player_{{ player.id }}_id">
+                                    {% if player.user|get_user_bingo_team:bingo == -1 %}
+                                        <option value="-1" disabled selected>No Team Selected</option>
                                     {% endif %}
-                                {% endfor %}
-                            </select>
-                            <input type="submit" class="btn-default rounded-3 ms-3" value="Change">
+                                    {% for team in teams %}
+                                        {% if team.team_name != 'General' %}
+                                            <option value="{{ team.id }}" {{ player|is_player_in_team:team }}>{{ team.team_name }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td>
+                                <input type="text" name="account_names" class="form-control" value="{{ player_detail.account_names }}">
+                            </td>
+                            <td>
+                                <input type="submit" class="btn-default rounded-3 ms-3" value="Update">
+                            </td>
+                            <td>
+                                <a href="{% url 'bingo:kick_bingo_player' view.kwargs.pk player.id %}"
+                                   class="btn-default rounded-3">Kick player</a>
+                            </td>
                         </form>
-                    </td>
-                    <td><a href="{% url 'bingo:kick_bingo_player' view.kwargs.pk player.id %}" class="btn-default rounded-3">Kick
-                        player</a></td>
-                </tr>
+                    </tr>
+                {% endwith %}
             {% endfor %}
             </tbody>
         </table>
