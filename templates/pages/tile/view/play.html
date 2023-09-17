@@ -66,22 +66,22 @@
 
                     {% endif %}
                 {% elif teamtile.tile.invocation_type == 'WOM' %}
-                    {% if teamtile.tile.invocation.type == 'LV' %}
-                        <div>Skills : {{ teamtile.tile.invocation.names }}</div>
-                        <div>Gained : {{ teamtile.score }} levels</div>
-                        <div>Goal   : {{ teamtile.tile.invocation.amount }} levels</div>
-                    {% elif teamtile.tile.invocation.type == 'XP' %}
-                        <div>Skills : {{ teamtile.tile.invocation.names }}</div>
-                        <div>Gained : {{ teamtile.score }} xp</div>
-                        <div>Goal   : {{ teamtile.tile.invocation.amount }} xp</div>
-                    {% else %}
-                        <div>Bosses : {{ teamtile.tile.invocation.names }}</div>
-                        <div>Gained : {{ teamtile.score }} kc</div>
-                        <div>Goal   : {{ teamtile.tile.invocation.amount }} kc</div>
-                    {% endif %}
-{#                    <div class="h4">{{ teamtile.tile.invocation.type }} - {{ teamtile.tile.invocation.names }}</div>#}
-{#                    <div class="h4">Achieved {{ teamtile.score }} out of#}
-{#                        required {{ teamtile.tile.invocation.amount }}</div>#}
+                    <div class="border border-accent rounded-3 align-self-center p-3 mb-3">
+                        {% if teamtile.tile.invocation.type == 'LV' %}
+                            <div>Skills : {{ teamtile.tile.invocation.names }}</div>
+                            <div>Gained : <b>{{ teamtile.score }}</b> levels</div>
+                            <div>Goal : {{ teamtile.tile.invocation.amount }} levels</div>
+                        {% elif teamtile.tile.invocation.type == 'XP' %}
+                            <div>Skills : {{ teamtile.tile.invocation.names }}</div>
+                            <div>Gained : <b>{{ teamtile.score }}</b> xp</div>
+                            <div>Goal : {{ teamtile.tile.invocation.amount }} xp</div>
+                        {% else %}
+                            <div>Bosses : {{ teamtile.tile.invocation.names }}</div>
+                            <div>Gained : <b>{{ teamtile.score }}</b> kc</div>
+                            <div>Goal : {{ teamtile.tile.invocation.amount }} kc</div>
+                        {% endif %}
+                    </div>
+
                     {% if teamtile.is_complete %}
                         <div class="h4 color-green4">Tile is complete</div>
                         {% if user|is_moderator:teamtile.team.bingo.pk %}

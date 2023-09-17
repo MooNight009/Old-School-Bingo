@@ -41,7 +41,7 @@ class EditTile(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         return super(EditTile, self).form_valid(form)
 
     def get_success_url(self):
-        return reverse('tile:edit_tile', kwargs={'pk': self.object.bingo.id})
+        return reverse('tile:edit_tile', kwargs={'pk': self.object.id})
 
 
 class EditInvocation(LoginRequiredMixin, UserPassesTestMixin, UpdateView):

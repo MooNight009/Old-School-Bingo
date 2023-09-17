@@ -75,7 +75,7 @@ class SubmissionInvo(Invocation):
 
 class WOMInvo(Invocation):
     TYPES = [
-        ('XP', 'Skilling'),
+        ('XP', 'Experience'),
         ('KC', 'Bossing'),
         ('LV', 'Levels')
     ]
