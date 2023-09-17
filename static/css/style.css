@@ -81,6 +81,15 @@
     background-color: var(--primary-2-color) !important;
 }
 
+/*Class for logo*/
+.custom-logo {
+    margin-left: auto!important;
+}
+
+.custom-logo > img {
+    height: 30px;
+}
+
 @media (min-width: 768px) {
     .custom-logo {
         position: absolute;
@@ -138,15 +147,6 @@ body {
     min-height: 100px;
     max-height: 150px;
     overflow: hidden;
-}
-
-/*Class for logo*/
-.custom-logo {
-    margin-left: auto!important;
-}
-
-.custom-logo > img {
-    height: 30px;
 }
 
 /*Overwriting color detail for card*/
