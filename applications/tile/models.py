@@ -29,7 +29,7 @@ class Tile(models.Model):
     invocation_type = models.CharField(max_length=3, default='SBM', choices=INVOCATION_TYPES)
 
     content_type = models.ForeignKey(ContentType, on_delete=models.SET_NULL, null=True, blank=True)
-    object_id = models.PositiveIntegerField(null=True, blank=True)
+    object_id = models.PositiveIntegerField()
     invocation = GenericForeignKey('content_type', 'object_id')
 
     def save(self, *args, **kwargs):
