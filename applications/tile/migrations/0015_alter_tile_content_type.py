@@ -15,6 +15,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='tile',
             name='content_type',
-            field=models.ForeignKey(to='contenttypes.contenttype', on_delete=django.db.models.deletion.SET_NULL),
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='contenttypes.contenttype'),
         ),
     ]

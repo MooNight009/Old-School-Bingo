@@ -19,13 +19,13 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='tile',
             name='content_type',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='contenttypes.contenttype'),
+            field=models.ForeignKey(default=None, on_delete=django.db.models.deletion.CASCADE, to='contenttypes.contenttype'),
             preserve_default=False,
         ),
         migrations.AddField(
             model_name='tile',
             name='object_id',
-            field=models.PositiveIntegerField(null=True),
+            field=models.PositiveIntegerField(default=-1),
             preserve_default=False,
         ),
     ]
