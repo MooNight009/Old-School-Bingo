@@ -1,6 +1,7 @@
 import datetime
 
 from io import BytesIO
+import requests
 from PIL import Image
 from django.core.files.storage import default_storage
 from discord import SyncWebhook
@@ -85,6 +86,15 @@ class Bingo(models.Model):
                 self.is_started = True
                 self.winner = None
                 self.save()
+
+                # Update every player detail
+                players_details = self.playerbingodetail_set.all()
+                for players_detail in players_details:
+                    names = players_detail.account_names.split(',')
+                    for name in names:
+                        response = requests.post(f'https://api.wiseoldman.net/v2/players/{name}/')
+                        if response.status_code!= 200:
+                            print("We got an error in player "+ name)
         return self.is_started
 
     def get_is_over(self):

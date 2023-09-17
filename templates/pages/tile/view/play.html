@@ -17,52 +17,84 @@
             </div>
 
             <div class="d-flex flex-column justify-content-center col col-md-6 col-lg-3 rounded-3 p-3 bg-primary-2 text-center order-0 order-lg-2 mb-3 mb-lg-0">
-                {% if user|is_moderator:teamtile.team.bingo.pk %}
-                    {% if teamtile.is_complete %}
-                        <div class="h4 color-green3">Tile is complete</div>
-                        <button type="button" class="btn-default rounded-3 mb-3"
-                                data-bs-toggle="modal" data-bs-target="#complete_modal_id">Uncomplete
-                        </button>
-                    {% else %}
-                        <div class="h4 color-red3">Tile is not complete</div>
-                        <button type="button" class="btn-default rounded mb-3"
-                                data-bs-toggle="modal" data-bs-target="#complete_modal_id">Complete Tile
-                        </button>
-                    {% endif %}
+                {% if teamtile.tile.invocation_type == 'SBM' %}
+                    {% if user|is_moderator:teamtile.team.bingo.pk %}
+                        {% if teamtile.is_complete %}
+                            <div class="h4 color-green3">Tile is complete</div>
+                            <button type="button" class="btn-default rounded-3 mb-3"
+                                    data-bs-toggle="modal" data-bs-target="#complete_modal_id">Uncomplete
+                            </button>
+                        {% else %}
+                            <div class="h4 color-red3">Tile is not complete</div>
+                            <button type="button" class="btn-default rounded mb-3"
+                                    data-bs-toggle="modal" data-bs-target="#complete_modal_id">Complete Tile
+                            </button>
+                        {% endif %}
 
 
-                    {% if teamtile.is_mod_approved %}
-                        <div class="h4 color-green3">Tile is approved by mods</div>
-                        <button type="button" class="btn-default rounded mb-3"
-                                data-bs-toggle="modal"
-                                data-bs-target="#approve_modal_id">Disapprove tile
-                        </button>
-                    {% else %}
-                        <div class="h4 text-warning">Waiting for mod to approve</div>
-                        <button type="button" class="btn-default rounded mb-3"
-                                data-bs-toggle="modal"
-                                data-bs-target="#approve_modal_id">Approve tile
-                        </button>
-                    {% endif %}
-
-
-                {% else %}
-                    {% if teamtile.is_complete %}
-                        <div class="h4 color-green4">Tile is complete</div>
                         {% if teamtile.is_mod_approved %}
-                            <div class="h4 color-green4">Tile is approved by mods</div>
+                            <div class="h4 color-green3">Tile is approved by mods</div>
+                            <button type="button" class="btn-default rounded mb-3"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#approve_modal_id">Disapprove tile
+                            </button>
                         {% else %}
                             <div class="h4 text-warning">Waiting for mod to approve</div>
+                            <button type="button" class="btn-default rounded mb-3"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#approve_modal_id">Approve tile
+                            </button>
+                        {% endif %}
+
+
+                    {% else %}
+                        {% if teamtile.is_complete %}
+                            <div class="h4 color-green4">Tile is complete</div>
+                            {% if teamtile.is_mod_approved %}
+                                <div class="h4 color-green4">Tile is approved by mods</div>
+                            {% else %}
+                                <div class="h4 text-warning">Waiting for mod to approve</div>
+                            {% endif %}
+                        {% else %}
+                            <div class="h4 color-red3">Tile is not complete</div>
+                            <button type="button" class="btn-default rounded mb-3"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#complete_modal_id">
+                                Complete Tile
+                            </button>
+                        {% endif %}
+
+                    {% endif %}
+                {% elif teamtile.tile.invocation_type == 'WOM' %}
+                    <div class="border border-accent rounded-3 align-self-center p-3 mb-3">
+                        {% if teamtile.tile.invocation.type == 'LV' %}
+                            <div>Skills : {{ teamtile.tile.invocation.names }}</div>
+                            <div>Gained : <b>{{ teamtile.score }}</b> levels</div>
+                            <div>Goal : {{ teamtile.tile.invocation.amount }} levels</div>
+                        {% elif teamtile.tile.invocation.type == 'XP' %}
+                            <div>Skills : {{ teamtile.tile.invocation.names }}</div>
+                            <div>Gained : <b>{{ teamtile.score }}</b> xp</div>
+                            <div>Goal : {{ teamtile.tile.invocation.amount }} xp</div>
+                        {% else %}
+                            <div>Bosses : {{ teamtile.tile.invocation.names }}</div>
+                            <div>Gained : <b>{{ teamtile.score }}</b> kc</div>
+                            <div>Goal : {{ teamtile.tile.invocation.amount }} kc</div>
+                        {% endif %}
+                    </div>
+
+                    {% if teamtile.is_complete %}
+                        <div class="h4 color-green4">Tile is complete</div>
+                        {% if user|is_moderator:teamtile.team.bingo.pk %}
+                            <button type="button" class="btn-default rounded-3 mb-3"
+                                    data-bs-toggle="modal" data-bs-target="#refresh_modal_id">Refresh WiseOldMan
+                            </button>
                         {% endif %}
                     {% else %}
-                        <div class="h4 color-red3">Tile is not complete</div>
-                        <button type="button" class="btn-default rounded mb-3"
-                                data-bs-toggle="modal"
-                                data-bs-target="#complete_modal_id">
-                            Complete Tile
+                        <div class="h4 color-red3">Tile is complete</div>
+                        <button type="button" class="btn-default rounded-3 mb-3"
+                                data-bs-toggle="modal" data-bs-target="#refresh_modal_id">Refresh WiseOldMan
                         </button>
                     {% endif %}
-
                 {% endif %}
             </div>
         </div>
@@ -133,6 +165,25 @@
                     <form action="{% url 'tile:complete_tile' teamtile.id %}" method="post">
                         {% csrf_token %}
                         <input type="submit" class="btn-default rounded-3" value="Confirm Tile Completion"/>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="refresh_modal_id" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content bg-primary-2">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Refreshing might take a couple of seconds.</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <form action="{% url 'tile:complete_tile' teamtile.id %}" method="post">
+                        {% csrf_token %}
+                        <input type="submit" class="btn-default rounded-3" value="Refresh"/>
                     </form>
 
                 </div>

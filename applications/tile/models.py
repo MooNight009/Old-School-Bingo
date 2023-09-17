@@ -1,13 +1,18 @@
 from io import BytesIO
 
 from PIL import Image
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 from django.core.files.storage import default_storage
 from django.db import models
 
 from applications.defaults.storage_backends import PublicMediaStorage
+from applications.invocation.models import SubmissionInvo
 
 
 class Tile(models.Model):
+    bingo = models.ForeignKey('bingo.Bingo', on_delete=models.CASCADE)
+
     name = models.CharField(max_length=64, default="Tile Name")
     img = models.ImageField(null=True, blank=True, storage=PublicMediaStorage())  # TODO: SET PROPER PATH FOR STORAGE
     description = models.TextField(max_length=512, default="Description")
@@ -16,10 +21,22 @@ class Tile(models.Model):
     score = models.IntegerField(default=1)
     is_ready = models.BooleanField(default=False)
 
-    bingo = models.ForeignKey('bingo.Bingo', on_delete=models.CASCADE)
-    special_tile = models.ForeignKey('tile.SpecialTile', on_delete=models.SET_NULL, null=True)
+    # Invocation details
+    INVOCATION_TYPES = [
+        ('SBM', "Submission"),
+        ('WOM', "WiseOldMan")
+    ]
+    invocation_type = models.CharField(max_length=3, default='SBM', choices=INVOCATION_TYPES)
+
+    content_type = models.ForeignKey(ContentType, on_delete=models.SET_NULL, null=True)
+    object_id = models.PositiveIntegerField()
+    invocation = GenericForeignKey('content_type', 'object_id')
 
     def save(self, *args, **kwargs):
+        is_new = self._state.adding
+        if is_new:
+            invocation = SubmissionInvo.objects.create()
+            self.invocation = invocation
         super().save(*args, **kwargs)
         if self.img is not None and self.img.name is not None and len(self.img.name) != 0:
             memfile = BytesIO()
@@ -32,9 +49,14 @@ class Tile(models.Model):
             imageFile.close()
 
         # Make board ready if all tiles are ready
+        # TODO: Add better way of checking whether everything is set
         if not Tile.objects.filter(bingo=self.bingo, is_ready=False).exists():
             self.bingo.is_ready = True
             self.bingo.save()
+
+        if is_new:
+            self.invocation.tile = self
+            self.invocation.save()
 
     def get_ready_color(self):
         if self.is_ready:
@@ -85,6 +107,8 @@ class TeamTile(models.Model):
 
     team = models.ForeignKey('team.Team', on_delete=models.CASCADE)
     tile = models.ForeignKey('tile.Tile', on_delete=models.CASCADE)
+
+    score = models.IntegerField(default=0)
 
     def is_complete_fc(self):
         return 'checked' if self.is_complete else ''
