@@ -35,8 +35,10 @@ class CreateUserForm(UserCreationForm):
     def clean(self):
         return super().clean()
 
-    def save(self):
-        user = super().save()
+    def save(self, *args, **kwargs):
+        user = super().save(*args, **kwargs)
+        user.is_active = False
+        user.save()
         player = Player(user=user)
         player.save()
         return user
