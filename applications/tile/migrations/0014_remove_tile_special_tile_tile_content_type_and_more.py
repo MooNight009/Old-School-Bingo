@@ -25,7 +25,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='tile',
             name='object_id',
-            field=models.PositiveIntegerField(),
+            field=models.PositiveIntegerField(null=True),
             preserve_default=False,
         ),
     ]
