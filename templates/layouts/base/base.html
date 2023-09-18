@@ -14,6 +14,15 @@
 
     {#    {% block head_extras %} {% endblock %}#}
 </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-LQ9MMSRC7N"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-LQ9MMSRC7N');
+</script>
 
 <body class="d-flex flex-column" style="background-image: url('{% static 'background.png' %}')">
     {% include 'layouts/base/header.html' %}
