@@ -187,7 +187,7 @@ else:
 
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
-MEDIA_ROOT = os.path.join(BASE_DIR,'media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 # Default primary key field type
@@ -195,7 +195,12 @@ MEDIA_URL = '/media/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
 # Login details
 LOGIN_URL = '/login'
 LOGIN_REDIRECT_URL = '/'
+
+# Email details
+EMAIL_BACKEND = 'django_ses.SESBackend'
+AWS_ACCESS_KEY_ID = '***REMOVED***'
+AWS_SECRET_ACCESS_KEY = '***REMOVED***'
+AWS_DEFAULT_REGION = '***REMOVED***'

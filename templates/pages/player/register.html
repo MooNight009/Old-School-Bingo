@@ -10,9 +10,7 @@
             {% csrf_token %}
                 {% for field in form %}
                     <div class="pb-2">
-                        {{ field.errors }}
-                        <label for="" class="form-label pe-2">{{ field.label }}</label>
-                        {{ field }}
+                        {% include 'layouts/innertemplates/field.html' %}
                     </div>
                 {% endfor %}
 
@@ -20,6 +18,10 @@
                     <input class="btn-default rounded-3" type="submit" value="Register">
                 </div>
             </form>
+
+                <div class="d-flex mt-3">
+                    <a href="{% url 'player:forgot_password' %}" class="btn-default rounded-3 w-100 mt-3">Forgot password</a>
+                </div>
         </div>
     </div>
 

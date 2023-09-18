@@ -1,0 +1,10 @@
+{% autoescape off %}
+    Hi {{ user.username }},
+
+    Thank you for deciding to create an account with OldSchoolBingo.
+    You can activate your account using the following link:
+    http://{{ domain }}{% url 'player:activate' uidb64=uid token=token %}
+
+    Hope you enjoy your bingo!
+    If you run into any bugs or a missing feature you can contact me in discord: moonight009 or join the discord group:
+{% endautoescape %}

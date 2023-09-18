@@ -6,7 +6,7 @@
         <div class="d-flex flex-column bg-primary-2 rounded-3 mx-auto p-3">
             <div class="h3 mb-2">Login</div>
 
-            <form method="post" action="" class="mb-3">
+            <form method="post" action="" class="mb-5">
                 {% csrf_token %}
                 {% for field in form %}
                     <div class="pb-2">
@@ -21,7 +21,10 @@
                     <input class="btn-default rounded-3" type="submit" value="Login">
                 </div>
             </form>
-            <a href="{% url 'player:register' %}" class="btn-default rounded-3">Create new account</a>
+{#            <div class="d-flex">#}
+                <a href="{% url 'player:register' %}" class="btn-default rounded-3 mb-2">Create new account</a>
+                <a href="{% url 'player:forgot_password' %}" class="btn-default rounded-3">Forgot password</a>
+{#            </div>#}
         </div>
     </div>
 
