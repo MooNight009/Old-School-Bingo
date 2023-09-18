@@ -155,7 +155,7 @@ class EditBingoDiscord(LoginRequiredMixin, UserIsModeratorMixin, UpdateView):
 class DeleteBoard(LoginRequiredMixin, UserIsModeratorMixin, RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         bingo = Bingo.objects.filter(pk=kwargs['pk']).get()
-        # bingo.delete()
+        bingo.delete()
         print("Deleting board disabled")
         return "/"
 
