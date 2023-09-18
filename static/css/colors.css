@@ -17,7 +17,7 @@
     background-color: var(--secondary-1-color);
 }
 .bg-secondary-2 {
-    background-color: var(--secondary-2-color);
+    background-color: var(--secondary-2-color)!important;
 }
 .bg-accent {
     background-color: var(--accent-color)!important;
@@ -28,6 +28,10 @@
 
 .border-accent {
     border-color: var(--accent-color) !important;
+}
+
+.border-secondary-1 {
+    border-color: var(--secondary-1-color) !important;
 }
 
 /*Color*/

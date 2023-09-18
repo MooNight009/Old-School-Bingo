@@ -1,10 +1,10 @@
 :root {
     --khaki-color: #C0A886; /* */
-    --fern-green-color: #52783C; /* */
+    --fern-green-color: #24ED23; /* */
     --alabaster-color: #F0EAE1; /* */
     --dark-green-color: #1C2915; /* */
-    --fire-brick-color: #AD3527; /* */
-    --cal-poly-green-color: #375129; /*green4*/
+    --fire-brick-color: #E82423; /* */
+    --cal-poly-green-color: #24ED23; /*green4*/
 
 }
 
@@ -158,19 +158,54 @@ body {
 .btn-default {
     background-color: var(--primary-2-color);
     color: var(--secondary-1-color) !important;
-    border: var(--bs-border-width) var(--bs-border-style) var(--accent-color); /*Replace with custom variables*/
+    border: var(--secondary-1-color) 2px solid!important; /*Replace with custom variables*/
 
     padding: 0.5rem;
 
     text-align: center;
     text-decoration: none;
-    transition: background-color 0.5s;
+    transition: background-color 0.5s,color 0.5s;
 }
 
 .btn-default:hover {
-    background-color: var(--accent-color);
+    background-color: var(--secondary-1-color);
+    color: var(--primary-1-color) !important;
 }
 
+.btn-default:hover > a {
+    color: var(--primary-1-color) !important;
+}
+
+.btn-homepage {
+    background-color: var(--primary-2-color);
+    color: var(--secondary-1-color) !important;
+    border: var(--secondary-1-color) 2px solid; /*Replace with custom variables*/
+
+    padding: 0.5rem;
+
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.5s,color 0.5s;
+}
+
+.btn-homepage:hover {
+    background-color: var(--secondary-1-color);
+    color: var(--primary-1-color) !important;
+}
+
+.btn-homepage:hover > a {
+    color: var(--primary-1-color) !important;
+}
+
+.hover-switch:hover {
+    background-color: var(--secondary-1-color)!important;
+    color: var(--primary-1-color) !important;
+}
+
+.active-switch{
+    background-color: var(--secondary-1-color)!important;
+    color: var(--primary-1-color) !important;
+}
 
 /*Generic stuff*/
 .text-ellipsis {
