@@ -155,7 +155,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 print(os.environ)
-if 'RDS_USE_S3' in os.environ:
+if 'RDS_USE_S3' in os.environ: # TODO: Use a better detection method AND combine with database
 # if True:
     print('got here')
     # aws settings
@@ -163,6 +163,7 @@ if 'RDS_USE_S3' in os.environ:
     AWS_SECRET_ACCESS_KEY = os.environ['RDS_AWS_SECRET_ACCESS_KEY']
     AWS_STORAGE_BUCKET_NAME = os.environ['RDS_AWS_STORAGE_BUCKET_NAME']
     AWS_S3_REGION_NAME = os.environ['RDS_AWS_S3_REGION_NAME']
+    AWS_DEFAULT_REGION = os.environ['RDS_AWS_S3_REGION_NAME'] # TODO: Switch to custom var for each region
 
     AWS_DEFAULT_ACL = 'public-read'
 
@@ -201,6 +202,6 @@ LOGIN_REDIRECT_URL = '/'
 
 # Email details
 EMAIL_BACKEND = 'django_ses.SESBackend'
-AWS_ACCESS_KEY_ID = '***REMOVED***'
-AWS_SECRET_ACCESS_KEY = '***REMOVED***'
-AWS_DEFAULT_REGION = '***REMOVED***'
+# AWS_ACCESS_KEY_ID = os.environ['RDS_SES_AWS_ACCESS_KEY_ID']
+# AWS_SECRET_ACCESS_KEY = os.environ['RDS_SES_AWS_SECRET_ACCESS_KEY']
+# AWS_DEFAULT_REGION = os.environ['RDS_AWS_S3_REGION_NAME']
