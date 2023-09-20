@@ -90,6 +90,8 @@
     height: 30px;
 }
 
+
+
 @media (min-width: 768px) {
     .custom-logo {
         position: absolute;
@@ -99,6 +101,10 @@
 
     .custom-logo > img {
         height: 50px;
+    }
+
+    .w-md-50 {
+        width: 50% !important;
     }
 }
 
@@ -157,7 +163,7 @@ body {
 /*Default button details*/
 .btn-default {
     background-color: var(--primary-2-color);
-    color: var(--secondary-1-color) !important;
+    color: var(--secondary-1-color);
     border: var(--secondary-1-color) 2px solid!important; /*Replace with custom variables*/
 
     padding: 0.5rem;
