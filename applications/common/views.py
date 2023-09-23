@@ -14,7 +14,7 @@ class BingosView(TemplateView):
 
         user = self.request.user
         if self.request.user.is_anonymous:
-            public_bingos = Bingo.objects.all().filter(is_public=True)
+            public_bingos = Bingo.objects.all().filter(is_public=True, is_over=False)
             context['public_bingos'] = public_bingos
         else:
             player = Player.objects.get(user=user)
@@ -22,7 +22,7 @@ class BingosView(TemplateView):
 
             moderating_bingos = bingos.filter(moderator_bingo__player=player)
             joined_bingo = bingos.filter(player=player)
-            public_bingos = bingos.filter(is_public=True).exclude(pk__in=moderating_bingos).exclude(
+            public_bingos = bingos.filter(is_public=True, is_over=False).exclude(pk__in=moderating_bingos).exclude(
                 pk__in=joined_bingo)
 
             context['moderating_bingos'] = moderating_bingos

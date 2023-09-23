@@ -6,6 +6,11 @@
     --fire-brick-color: #E82423; /* */
     --cal-poly-green-color: #24ED23; /*green4*/
 
+    --primary-1-color: #242423;
+    --primary-2-color: #333533;
+    --secondary-1-color: #E8EDDF;
+    --secondary-2-color: #CFDBD5;
+    --accent-color: #FCA311;
 }
 
 
@@ -59,6 +64,68 @@
 
 .color-green4 {
     color: var(--cal-poly-green-color)
+}
+
+
+
+/*COLORS CSS*/
+/*Background*/
+.bg-primary-1 {
+    background-color: var(--primary-1-color);
+}
+.bg-primary-2 {
+    background-color: var(--primary-2-color);
+}
+.bg-secondary-1 {
+    background-color: var(--secondary-1-color)!important;
+}
+.bg-secondary-2 {
+    background-color: var(--secondary-2-color)!important;
+}
+.bg-accent {
+    background-color: var(--accent-color)!important;
+}
+
+
+/*Border*/
+
+.border-accent {
+    border-color: var(--accent-color) !important;
+}
+
+.border-secondary-1 {
+    border-color: var(--secondary-1-color) !important;
+}
+
+/*Color*/
+
+.color-secondary-1 {
+    color: var(--secondary-1-color) !important;
+}
+
+.color-secondary-2 {
+    color: var(--secondary-2-color) !important;
+}
+
+.color-primary-2 {
+    color: var(--primary-2-color) !important;
+}
+
+.color-accent {
+    color: var(--accent-color) !important;
+}
+
+
+
+
+
+/*BORDER CSS*/
+.rounded-start-bottom-3 {
+    border-bottom-left-radius: var(--bs-border-radius-lg) !important
+}
+
+.rounded-end-bottom-3 {
+    border-bottom-right-radius: var(--bs-border-radius-lg) !important
 }
 
 

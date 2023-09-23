@@ -41,7 +41,9 @@
                 </div>
 
                 <div class="p-2 text-center">
-                    <div class="fs-4 pb-2">Rank : <b>{{ current_team.get_ranking }}</b></div>
+                    {% if bingo.is_team_public %}
+                        <div class="fs-4 pb-2">Rank : <b>{{ current_team.get_ranking }}</b></div>
+                    {% endif %}
                     <div class="fs-4">Score : <b>{{ current_team.score }}</b> points</div>
                 </div>
             </div>

@@ -102,6 +102,7 @@ class Bingo(models.Model):
             change = self.end_date <= datetime.datetime.now(datetime.timezone.utc)
             if change != self.is_over:
                 self.is_over = change
+                self.is_team_public - True
                 self.save()
         return self.is_over
 
