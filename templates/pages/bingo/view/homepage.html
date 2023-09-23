@@ -1,0 +1,188 @@
+{% extends 'layouts/base/base.html' %}
+{#{% load static %}#}
+{% load bingo_extras %}
+
+{% block content %}
+    <div class="d-flex flex-column">
+        <div class="d-flex flex-column flex-md-row mb-3">
+            <div class="d-flex flex-column col col-md-8 col-lg-9 mb-3 mb-lg-0">
+                <div class="d-flex flex-column bg-primary-2 rounded-3 p-2 me-md-3">
+                    <div class="h1 mb-2">{{ object.name }}</div>
+                    {% if object.get_is_over %}
+                        <div class="text-center text-success fs-3 mb-3 my-auto">Winner
+                            is {{ object.get_winner.team_name }}</div>
+                        <a href="{% url 'bingo:play_bingo_general' object.pk %}"
+                           class="btn-default rounded-3 align-self-center px-5 mb-3 my-auto">View board</a>
+                    {% elif object.get_is_started %}
+                        <div class="text-center text-success fs-3 mb-3 my-auto">Bingo has started</div>
+                        {% if user|get_user_bingo_team:bingo != -1 %}
+                            <a href="{% url 'bingo:play_bingo' bingo.id user|get_user_bingo_team:bingo %}"
+                               class="btn-default rounded-3 align-self-center px-5 mb-3 my-auto">Play</a>
+                        {% else %}
+                            <div class="text-center text-danger fs-4 mb-3 my-auto">Contact a moderator to join a team
+                            </div>
+                        {% endif %}
+                    {% endif %}
+                    <div class="fs-1 mb-2 text-center" id="time_left"></div>
+
+                    <p class="">{{ object.description|linebreaks }}</p>
+                </div>
+            </div>
+
+            <div class="d-flex flex-column text-center align-self-center bg-primary-2 rounded-3 col col-md-4 col-lg-3 pb-3">
+                <div class="h3">Teams</div>
+                <table class="table mb-0">
+                    <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Team</th>
+                        <th>Score</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for team in teams %}
+                        <tr>
+                            <td>{{ team.get_ranking }}</td>
+                            <td>{{ team.team_name }}</td>
+                            <td>{{ team.score }}</td>
+                        </tr>
+                    {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        {% if is_in_bingo %}
+            <div class="d-flex flex-wrap justify-content-center bg-primary-2 rounded-3 gap-5 mb-3 py-3">
+{#                {% if bingo.get_is_started and not bingo.get_is_over %}#}
+{#                    <div class="align-self-center p-3">Bingo has started... To join or change teams contact a moderator</div>#}
+{#                {% elif not bingo.get_is_over %}#}
+                {% if not bingo.get_is_over %}
+                    {% if teams|length != 0 %}
+                        <form action="{% url 'bingo:change_team' object.id %}" method="post"
+                              class="d-flex align-items-baseline gap-3">
+                            {% csrf_token %}
+                            <select name="selected_team_id" id="" class="form-select bg-alabaster border-green4">
+                                {% for team in teams %}
+                                    <option value="{{ team.id }}" {{ user|is_user_in_team:team }}>{{ team.team_name }}</option>
+                                {% endfor %}
+                            </select>
+                            <div class="d-flex justify-content-center">
+                                <input class="btn-default rounded-3" type="submit" value="Join Team">
+                            </div>
+                        </form>
+                    {% else %}
+                        <div class="align-self-center">No team available yet!</div>
+                    {% endif %}
+                    {% if bingo.can_players_create_team %}
+                        <form action="{% url 'bingo:create_team' object.id %}" method="post"
+                              class="d-flex align-items-baseline gap-3">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <input type="text" class="form-control bg-alabaster border-green4" name="new_team_name"
+                                       placeholder="Enter desired name...">
+                            </div>
+                            <div class="d-flex justify-content-center mt-3">
+                                <input class="btn-default rounded-3" type="submit" value="Create Team">
+                            </div>
+                        </form>
+                    {% endif %}
+                {% endif %}
+            </div>
+        {% else %}
+            <a href="{% url 'bingo:join_bingo' object.pk %}" class="btn-default rounded-3 mx-auto mb-3">Join
+                Bingo</a>
+        {% endif %}
+
+
+        <div class="text-center rounded-3 pb-3 mb-3 bg-primary-2">
+            <div class="h3 my-3">Players in bingo</div>
+            <table class="table mb-0">
+                <thead>
+                <tr>
+                    <th>Player</th>
+                    <th class="border-end">team</th>
+                    <th>Player</th>
+                    <th>team</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    {% for player in players %}
+                        {% if forloop.counter0|divisibleby:2 %}
+                            </tr>
+                            <tr>
+                        {% endif %}
+                        <td>{{ player.user.username }}</td>
+                        <td class="border-end">{{ player|get_player_bingo_team_name:bingo.pk }}</td>
+                    {% endfor %}
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block js %}
+    <script>
+        let start_date = new Date({{ bingo.start_date|date:"U" }} * 1000
+        )
+        ;
+        start_date = (Date.parse(start_date) / 1000)
+        let end_date = new Date({{ bingo.end_date|date:"U" }} * 1000
+        )
+        ;
+        end_date = (Date.parse(end_date) / 1000)
+
+        let interval = setInterval(function () {
+            countdown()
+        }, 1000)
+        countdown()
+
+        function countdown() {
+            let now = new Date()
+            now = (Date.parse(now) / 1000)
+            let time_left = start_date - now
+            let tag = 'Starting in '
+
+            if (time_left <= 0) {
+                time_left = end_date - now
+                tag = 'Ending in '
+            }
+            if ((end_date - now) <= 0 && time_left <= 0) {
+                console.log('got here')
+                document.getElementById('time_left').innerHTML = ''
+                return clearInterval(interval)
+            }
+            console.log("Did we continue")
+
+            let days = Math.floor(time_left / 86400);
+            let hours = Math.floor((time_left - (days * 86400)) / 3600);
+            let minutes = Math.floor((time_left - (days * 86400) - (hours * 3600)) / 60);
+            let seconds = Math.floor((time_left - (days * 86400) - (hours * 3600) - (minutes * 60)));
+
+            if (days < "10") {
+                days = "0" + days;
+            }
+            if (hours < "10") {
+                hours = "0" + hours;
+            }
+            if (minutes < "10") {
+                minutes = "0" + minutes;
+            }
+            if (seconds < "10") {
+                seconds = "0" + seconds;
+            }
+
+            document.getElementById('time_left').innerHTML = tag + " " + days + "D : " + hours + "H : " + minutes + "M : " + seconds + "S";
+
+        }
+
+        {#Set Details on header#}
+        show_back_button("{% url 'common:main' %}");
+
+    </script>
+{% endblock %}

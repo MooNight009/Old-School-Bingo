@@ -1,32 +1,31 @@
-{% extends 'layouts/base.html' %}
+{% extends 'layouts/base/base.html' %}
 {#{% load static %}#}
 
 {% block content %}
-    <div class="d-flex flex-column align-items-center">
-        <div class="h3">Login</div>
+    <div class="d-flex">
+        <div class="d-flex flex-column bg-primary-2 rounded-3 mx-auto p-3">
+            <div class="h3 mb-2">Login</div>
 
-        <form method="post" action="">
-            {% csrf_token %}
-            {#        <div class="input-group mb-3">#}
-            {#            <input type="text" name="username" placeholder="Username..." class="form-control">#}
-            {#        </div>#}
-            {#        <div class="input-group mb-2">#}
-            {#            <input type="password" name="password" placeholder="Password..." class="form-control">#}
-            {#        </div>#}
-            {#        {{ form.as_p }}#}
-            {% for field in form %}
-                <div class="pb-2">
-                {{ field.errors }}
-                <label for="" class="form-label pe-2">{{ field.label }}</label>
-                {{ field }}
+            <form method="post" action="" class="mb-5">
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="pb-2">
+                        {{ field.errors }}
+                        <label for="" class="form-label pe-2">{{ field.label }}</label>
+                        {{ field }}
+                    </div>
+                {% endfor %}
+
+
+                <div class="d-flex justify-content-center mt-3 gap-3">
+                    <input class="btn-default rounded-3" type="submit" value="Login">
                 </div>
-            {% endfor %}
-
-
-            <div class="d-flex justify-content-center mt-3">
-                <input class="btn btn-outline-dark" type="submit" value="Login">
-            </div>
-        </form>
+            </form>
+{#            <div class="d-flex">#}
+                <a href="{% url 'player:register' %}" class="btn-default rounded-3 mb-2">Create new account</a>
+                <a href="{% url 'player:forgot_password' %}" class="btn-default rounded-3">Forgot password</a>
+{#            </div>#}
+        </div>
     </div>
 
     {% for message in messages %}

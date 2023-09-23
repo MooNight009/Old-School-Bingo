@@ -1,0 +1,94 @@
+{% extends 'layouts/base/base.html' %}
+{#{% load static %}#}
+{% load bingo_extras %}
+
+{% block content %}
+    <div class="d-flex flex-column bg-primary-2 rounded-3 p-2 pb-3">
+        <div class="h1 mb-2">{{ object.name }}</div>
+        <div class="fs-1 mb-3 text-center" id="status"></div>
+        <div class="fs-1 mb-3 text-center" id="time_left"></div>
+        <p class="mb-3">{{ object.description|linebreaks }}</p>
+
+        {% if is_in_bingo %}
+            <a href="{% url 'bingo:bingo_home_page' object.pk %}" class="btn-default rounded-3 mx-auto">Bingo Home
+                Page</a>
+        {% else %}
+            <form action="{% url 'bingo:actually_join_bingo' object.pk %}" method="post"
+                  class="d-flex flex-row justify-content-center align-items-center">
+                {% csrf_token %}
+                <label for="account_names_id" class="form-label text-nowrap me-3">OSRS account names</label>
+                <input type="text" name="account_names" id="account_names_id" class="form-control w-25 me-2"
+                       value="{{ request.user.username }}">
+                <i class="fa-solid fa-circle-exclamation color-accent align-self-center me-3"
+                   data-bs-toggle="tooltip" data-bs-placement="top"
+                   data-bs-title="For multiple accounts separate them by a ',' (comma). This information will be used for tiles that get data from WiseOldMan."></i>
+                </button>
+                <button type="submit" class="btn-default rounded-3 px-4">Join</button>
+            </form>
+        {% endif %}
+    </div>
+
+{% endblock %}
+
+{% block js %}
+    <script>
+        let start_date = new Date({{ bingo.start_date|date:"U" }} * 1000
+        )
+        ;
+        start_date = (Date.parse(start_date) / 1000)
+        let end_date = new Date({{ bingo.end_date|date:"U" }} * 1000
+        )
+        ;
+        end_date = (Date.parse(end_date) / 1000)
+
+        let interval = setInterval(function () {
+            countdown()
+        }, 1000)
+        countdown()
+
+        function countdown() {
+            let now = new Date()
+            now = (Date.parse(now) / 1000)
+            let time_left = start_date - now
+            let tag = 'Starting in '
+
+            if (time_left <= 0) {
+                time_left = end_date - now
+                tag = 'Ending in '
+                document.getElementById('status').innerText = 'Started'
+            }
+            if ((end_date - now) <= 0 && time_left <= 0) {
+                console.log('got here')
+                document.getElementById('status').innerHTML = 'Ended'
+                document.getElementById('time_left').innerHTML = ''
+                return clearInterval(interval)
+            }
+            console.log("Did we continue")
+
+            let days = Math.floor(time_left / 86400);
+            let hours = Math.floor((time_left - (days * 86400)) / 3600);
+            let minutes = Math.floor((time_left - (days * 86400) - (hours * 3600)) / 60);
+            let seconds = Math.floor((time_left - (days * 86400) - (hours * 3600) - (minutes * 60)));
+
+            if (days < "10") {
+                days = "0" + days;
+            }
+            if (hours < "10") {
+                hours = "0" + hours;
+            }
+            if (minutes < "10") {
+                minutes = "0" + minutes;
+            }
+            if (seconds < "10") {
+                seconds = "0" + seconds;
+            }
+
+            document.getElementById('time_left').innerHTML = tag + " " + days + "D : " + hours + "H : " + minutes + "M : " + seconds + "S";
+
+        }
+
+        {#Set Details on header#}
+        show_back_button("{% url 'common:main' %}");
+
+    </script>
+{% endblock %}

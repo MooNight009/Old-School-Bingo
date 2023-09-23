@@ -1,0 +1,92 @@
+{% extends 'layouts/base/base.html' %}
+{% load static %}
+{% load bingo_extras %}
+
+{% block content %}
+    <div class="">
+        <div class="d-flex flex-column bg-primary-2 border border-3 border-secondary-1 align-items-center rounded-top-pill p-3 pb-0">
+            <h1 class="underline-accent fw-bold p-3 mb-5">Bingo in one place</h1>
+            <div class="d-flex flex-column flex-lg-row">
+                <div class="fs-4 btn-homepage border-0 pb-3 p-2 px-5">
+                    <a href="#bingo_id" class="color-secondary-1">Bingo Creation</a>
+                </div>
+                <div class="fs-4 btn-homepage border-0 pb-3 p-2 px-5">
+                    <a href="#leaderboard_id" class="color-secondary-1">Leaderboard</a>
+                </div>
+                <div class="fs-4 btn-homepage border-0 pb-3 p-2 px-5">
+                    <a href="#wom_id" class="color-secondary-1">WiseOldMan</a>
+                </div>
+                <div class="fs-4 btn-homepage border-0 pb-3 p-2 px-5"><a
+                        href="#tile_id" class="color-secondary-1">Tiles</a>
+                </div>
+            </div>
+        </div>
+
+
+        <div id="bingo_id" class="d-flex border-top border-accent py-5 justify-content-center">
+            <a href="{% url 'common:main' %}" class="btn-default bg-secondary-1 color-primary-2 border-3 fs-4 py-3 px-5 rounded-3">Play now</a>
+        </div>
+
+        <div class="d-flex flex-column flex-md-row py-3 mb-5">
+            <div class="d-flex flex-column flex-fill bg-primary-2 text-center rounded-3 p-3 me-0 me-md-3 mb-3 mb-md-0">
+                <h2 class="fw-bold mb-3">Bingo Creation</h2>
+                <div class="d-flex flex-column flex-grow-1 justify-content-between">
+                    <div class="mb-2">Edit details of bingo</div>
+                    <div class="mb-2">Customize every tile</div>
+                    <div class="mb-2">Get notified on <span class="color-accent">discord</span> when someone finishes a
+                        tile
+                    </div>
+                    <div class="mb-2">Decide on <span class="color-accent">scoring methods</span> and how game is
+                        finished
+                    </div>
+                    <div class="mb-2">Option to manually manage teams or <span class="color-accent">let players create them</span></div>
+                </div>
+            </div>
+            <div class="bg-secondary-1 rounded-3 p-2    w-md-50">
+                <img src="{% static 'homepage media/Bingo edit board.png' %}" alt="" class="img-fluid">
+            </div>
+        </div>
+
+
+        <div class="d-flex flex-column flex-md-row mb-5">
+            <div id="leaderboard_id" class="flex-fill w-md-50 bg-primary-2 rounded-3 text-center p-3 me-0 me-md-2 mb-3 mb-md-0">
+                <h2 class="fw-bold mb-4">Leaderboard</h2>
+                <div class="d-flex flex-column gap-3 justify-content-between">
+                    <div class="mb-2">View team rankings <span class="color-accent">(If enabled in bingo)</span></div>
+                    <div class="mb-2">See who has completed which tiles</div>
+                    <div class="mb-2">View submissions of different people</div>
+                </div>
+            </div>
+            <div id="wom_id" class="flex-fill w-md-50 bg-primary-2 rounded-3 text-center p-3 ms-0 ms-md-2">
+                <h2 class="fw-bold mb-4">WiseOldMan</h2>
+                <div class="d-flex flex-column gap-3 justify-content-between">
+                    <div class="mb-2">Update on demand</div>
+                    <div class="mb-2">Custom tiles that track WiseOldMan progress</div>
+                    <div class="mb-2">Track multiple <span class="color-accent">bosses</span> or <span class="color-accent">skills</span> at one time</div>
+                </div>
+            </div>
+        </div>
+
+
+        <div id="tile_id" class="d-flex flex-column flex-md-row py-3 mb-5">
+            <div class="bg-secondary-1 rounded-3 p-2 w-md-50">
+                <img src="{% static 'homepage media/play tile.png' %}" alt="" class="img-fluid">
+            </div>
+            <div class="d-flex flex-column flex-fill bg-primary-2 text-center rounded-3 p-3 ms-0 ms-md-3 mt-3 mt-md-0">
+                <h2 class="fw-bold mb-3">Tile</h2>
+                <div class="d-flex flex-column flex-grow-1 justify-content-between">
+                    <div class="mb-2">View tile details</div>
+                    <div class="mb-2">Send an image showing your contribution to the tile</div>
+                    <div class="mb-2">Complete a tile as a player or approve it as a mod</div>
+                    <div class="mb-2">View <span class="color-accent">submissions</span> images and descriptions for a tile</div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script>
+        show_header_div(`<a href="{% url 'common:main' %}" class="btn-default rounded-3">Play</a>`)
+    </script>
+{% endblock %}

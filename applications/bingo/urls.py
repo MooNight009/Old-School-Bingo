@@ -11,6 +11,9 @@ urlpatterns = [
     path('edit_bingo_players/<int:pk>', EditBingoPlayers.as_view(), name='edit_bingo_players'),
     path('edit_bingo_teams/<int:pk>', EditBingoTeams.as_view(), name='edit_bingo_teams'),
     path('edit_bingo_setting/<int:pk>', EditBingoSetting.as_view(), name='edit_bingo_setting'),
+    path('edit_bingo_discord/<int:pk>', EditBingoDiscord.as_view(), name='edit_bingo_discord'),
+    path('edit_bingo_moderators/<int:pk>', EditBingoModerators.as_view(), name='edit_bingo_moderators'),
+    path('kick_moderator/<int:pk>/<int:mod_pk>', KickModerator.as_view(), name='kick_moderator'),
 
     path('delete_team/<int:pk>', DeleteTeam.as_view(), name='delete_team'),
     path('delete_board/<int:pk>', DeleteBoard.as_view(), name='delete_board'),
@@ -20,7 +23,7 @@ urlpatterns = [
     path('kick_bingo_player/<int:pk>/<int:player_pk>', KickPlayer.as_view(), name='kick_bingo_player'),
 
     path('change_team/<int:pk>', ChangeTeam.as_view(), name='change_team'),
-    path('change_team_moderator/<int:pk>/<int:player_pk>', ChangeTeamModerator.as_view(), name='change_team_moderator'),
+    path('update_player_detail/<int:pk>/<int:player_pk>', UpdatePlayerDetail.as_view(), name='update_player_detail'),
     path('create_team/<int:pk>', CreateTeam.as_view(), name='create_team'),
 
     path('join_bingo/<int:pk>', JoinBingo.as_view(), name='join_bingo'),

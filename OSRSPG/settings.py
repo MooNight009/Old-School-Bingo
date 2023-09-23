@@ -13,18 +13,26 @@ import os.path
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '***REMOVED***'
+SECRET_KEY = os.environ['RDS_SECRET_KEY_DJANGO']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'oldschoolbingo-test.***REMOVED***.elasticbeanstalk.com',
+    'ec2-3-74-227-28.***REMOVED***.compute.amazonaws.com',
+    '172.31.3.70',
+    'oldschoolbingo.com',
+    'www.oldschoolbingo.com',
+    '192.168.0.158'
+]
 
 # Application definition
 
@@ -35,6 +43,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'storages',
+
+    # For redirecting http to https and website health in aws
+    'health_check',
+    'health_check.db',
+    'health_check.cache',
+    'health_check.storage',
 
     'applications.bingo',
     'applications.invocation',
@@ -43,16 +58,22 @@ INSTALLED_APPS = [
     'applications.team',
     'applications.tile',
     'applications.common',
+    'applications.defaults',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'django.middleware.cache.UpdateCacheMiddleware',
+    'django.middleware.gzip.GZipMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    # Custom middleware for eb health
+    'applications.common.middleware.HealthCheckMiddleware'
 ]
 
 ROOT_URLCONF = 'OSRSPG.urls'
@@ -76,15 +97,30 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'OSRSPG.wsgi.application'
 
-# Database
+# PostgreSQL Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if 'RDS_DB_NAME' in os.environ:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': os.environ['RDS_DB_NAME'],
+            'USER': os.environ['RDS_USERNAME'],
+            'PASSWORD': os.environ['RDS_PASSWORD'],
+            'HOST': os.environ['RDS_HOSTNAME'],
+            'PORT': os.environ['RDS_PORT'],
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': '***REMOVED***',
+            'USER': 'postgres',
+            'PASSWORD': '***REMOVED***',
+            'HOST': 'localhost',
+            'PORT': '5432',
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -118,12 +154,41 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_URL = 'innertemplates/static/'
-STATICFILES_DIRS = [
-    BASE_DIR / 'templates/static',
-]
+print(os.environ)
+if 'RDS_USE_S3' in os.environ: # TODO: Use a better detection method AND combine with database
+# if True:
+    print('got here')
+    # aws settings
+    AWS_ACCESS_KEY_ID = os.environ['RDS_AWS_ACCESS_KEY_ID']
+    AWS_SECRET_ACCESS_KEY = os.environ['RDS_AWS_SECRET_ACCESS_KEY']
+    AWS_STORAGE_BUCKET_NAME = os.environ['RDS_AWS_STORAGE_BUCKET_NAME']
+    AWS_S3_REGION_NAME = os.environ['RDS_AWS_S3_REGION_NAME']
+    AWS_DEFAULT_REGION = os.environ['RDS_AWS_S3_REGION_NAME'] # TODO: Switch to custom var for each region
 
-MEDIA_ROOT = os.path.join(BASE_DIR,'media')
+    AWS_DEFAULT_ACL = 'public-read'
+
+    AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
+    AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
+
+    # s3 static settings
+    STATIC_LOCATION = 'static'
+    STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{STATIC_LOCATION}/'
+    STATICFILES_STORAGE = 'applications.defaults.storage_backends.StaticStorage'
+
+    # s3 public media settings
+    PUBLIC_MEDIA_LOCATION = 'media'
+    MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{PUBLIC_MEDIA_LOCATION}/'
+    DEFAULT_FILE_STORAGE = 'applications.defaults.storage_backends.PublicMediaStorage'
+else:
+    STATIC_ROOT = os.path.join(BASE_DIR, "..", "www", "static")
+    STATIC_URL = '/static/'
+    STATICFILES_DIRS = [
+        BASE_DIR / 'static',
+    ]
+
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 # Default primary key field type
@@ -131,7 +196,12 @@ MEDIA_URL = '/media/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
 # Login details
 LOGIN_URL = '/login'
 LOGIN_REDIRECT_URL = '/'
+
+# Email details
+EMAIL_BACKEND = 'django_ses.SESBackend'
+# AWS_ACCESS_KEY_ID = os.environ['RDS_SES_AWS_ACCESS_KEY_ID']
+# AWS_SECRET_ACCESS_KEY = os.environ['RDS_SES_AWS_SECRET_ACCESS_KEY']
+# AWS_DEFAULT_REGION = os.environ['RDS_AWS_S3_REGION_NAME']

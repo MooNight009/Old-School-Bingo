@@ -1,0 +1,33 @@
+{% extends 'layouts/base/base.html' %}
+{#{% load static %}#}
+
+{% block content %}
+    <div class="flex-column">
+        {% include 'pages/tile/edit/innertemplates/menu.html' %}
+
+        <div class="bg-primary-2 rounded-3 p-2">
+            <form method="post">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+                {% for field in form %}
+                    <div class="d-flex pb-2 align-items-center">
+                        {% include 'layouts/innertemplates/field.html' %}
+                    </div>
+                {% endfor %}
+
+                <input type="submit" class="btn-default rounded-3" value="Update">
+            </form>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block js %}
+    <script>
+        {#    Set the back button   #}
+        show_back_button("{% url 'bingo:edit_bingo_board' object.bingo.id %}");
+        show_header_name('{{ tile.name }}')
+
+        set_edit_bingo_active_tab('wom_id')
+    </script>
+{% endblock %}

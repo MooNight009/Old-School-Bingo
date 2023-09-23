@@ -1,30 +1,28 @@
-{% extends 'layouts/base.html' %}
+{% extends 'layouts/base/base.html' %}
 {#{% load static %}#}
 
 {% block content %}
-    <div class="d-flex flex-column align-items-center">
-        <div class="h3">Register</div>
+    <div class="d-flex">
+        <div class="d-flex flex-column bg-primary-2 rounded-3 mx-auto p-3">
+            <div class="h3">Register</div>
 
-        <form method="post" action="">
+            <form method="post" action="">
             {% csrf_token %}
-            {#        <div class="input-group mb-3">#}
-            {#            <input type="text" name="username" placeholder="Username..." class="form-control">#}
-            {#        </div>#}
-            {#        <div class="input-group mb-2">#}
-            {#            <input type="password" name="password" placeholder="Password..." class="form-control">#}
-            {#        </div>#}
-            {% for field in form %}
-                <div class="pb-2">
-                    {{ field.errors }}
-                    <label for="" class="form-label pe-2">{{ field.label }}</label>
-                    {{ field }}
-                </div>
-            {% endfor %}
+                {% for field in form %}
+                    <div class="pb-2">
+                        {% include 'layouts/innertemplates/field.html' %}
+                    </div>
+                {% endfor %}
 
-            <div class="d-flex justify-content-center mt-3">
-                <input class="btn btn-outline-dark" type="submit" value="Register">
-            </div>
-        </form>
+                <div class="d-flex justify-content-center mt-3">
+                    <input class="btn-default rounded-3" type="submit" value="Register">
+                </div>
+            </form>
+
+                <div class="d-flex mt-3">
+                    <a href="{% url 'player:forgot_password' %}" class="btn-default rounded-3 w-100 mt-3">Forgot password</a>
+                </div>
+        </div>
     </div>
 
     {#    {% for message in messages %}#}

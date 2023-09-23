@@ -15,27 +15,53 @@ Including another URLconf
 """
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.contrib.staticfiles.storage import staticfiles_storage
+from django.template.defaulttags import url
 from django.urls import path, include, re_path
+from django.views.generic import RedirectView
 from django.views.static import serve
 
 from OSRSPG import settings
+# Django urls
+from applications.common.views import handle404, HandleNoPermission
 
 urlpatterns = [
     path('admin/', admin.site.urls),
 ]
 
+# Implemented urls
 urlpatterns += [
     path('', include('applications.player.urls', namespace='player')),
     path('', include('applications.defaults.urls', namespace='defaults')),
     path('', include('applications.bingo.urls', namespace='bingo')),
     path('', include('applications.tile.urls', namespace='tile')),
+    path('', include('applications.common.urls', namespace='common'))
 ]
+
+# Media url
 urlpatterns += [
-        re_path(
-            r"^media/(?P<path>.*)$",
-            serve,
-            {
-                "document_root": settings.MEDIA_ROOT,
-            },
-        ),
-    ]
+    re_path(
+        r"^media/(?P<path>.*)$",
+        serve,
+        {
+            "document_root": settings.MEDIA_ROOT,
+        },
+    ),
+]
+
+# Statis url
+urlpatterns += static(settings.STATIC_URL)
+
+# Add favicon url
+urlpatterns += [
+    path('favicon.ico', RedirectView.as_view(url=staticfiles_storage.url('favicon/favicon.ico')))
+]
+
+# Add health check
+urlpatterns += [
+    re_path(r'^health/?', include('health_check.urls')),
+]
+
+# Error pages
+handler404 = handle404.as_view()
+handler403 = HandleNoPermission.as_view()

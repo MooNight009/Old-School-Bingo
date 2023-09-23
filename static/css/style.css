@@ -1,0 +1,292 @@
+:root {
+    --khaki-color: #C0A886; /* */
+    --fern-green-color: #24ED23; /* */
+    --alabaster-color: #F0EAE1; /* */
+    --dark-green-color: #1C2915; /* */
+    --fire-brick-color: #E82423; /* */
+    --cal-poly-green-color: #24ED23; /*green4*/
+
+    --primary-1-color: #242423;
+    --primary-2-color: #333533;
+    --secondary-1-color: #E8EDDF;
+    --secondary-2-color: #CFDBD5;
+    --accent-color: #FCA311;
+}
+
+
+.bg-khaki {
+    background-color: var(--khaki-color) !important;;
+}
+
+.bg-dark-green {
+    background-color: var(--dark-green-color) !important;;
+}
+
+.bg-green4 {
+    background-color: var(--cal-poly-green-color) !important;;
+}
+
+.fern-green-bg {
+    background-color: var(--fern-green-color) !important;;
+}
+
+.bg-alabaster {
+    background-color: var(--alabaster-color) !important;;
+}
+
+.bg-none {
+    background: none !important;
+}
+
+.border-dark-green {
+    border-color: var(--dark-green-color) !important;;
+}
+
+.border-red3 {
+    border-color: var(--fire-brick-color) !important;;
+}
+
+.border-green3 {
+    border-color: var(--fern-green-color) !important;;
+}
+
+.border-green4 {
+    border-color: var(--cal-poly-green-color) !important;
+}
+
+.color-red3 {
+    color: var(--fire-brick-color) !important;;
+}
+
+.color-green3 {
+    color: var(--fern-green-color) !important;;
+}
+
+.color-green4 {
+    color: var(--cal-poly-green-color)
+}
+
+
+
+/*COLORS CSS*/
+/*Background*/
+.bg-primary-1 {
+    background-color: var(--primary-1-color);
+}
+.bg-primary-2 {
+    background-color: var(--primary-2-color);
+}
+.bg-secondary-1 {
+    background-color: var(--secondary-1-color)!important;
+}
+.bg-secondary-2 {
+    background-color: var(--secondary-2-color)!important;
+}
+.bg-accent {
+    background-color: var(--accent-color)!important;
+}
+
+
+/*Border*/
+
+.border-accent {
+    border-color: var(--accent-color) !important;
+}
+
+.border-secondary-1 {
+    border-color: var(--secondary-1-color) !important;
+}
+
+/*Color*/
+
+.color-secondary-1 {
+    color: var(--secondary-1-color) !important;
+}
+
+.color-secondary-2 {
+    color: var(--secondary-2-color) !important;
+}
+
+.color-primary-2 {
+    color: var(--primary-2-color) !important;
+}
+
+.color-accent {
+    color: var(--accent-color) !important;
+}
+
+
+
+
+
+/*BORDER CSS*/
+.rounded-start-bottom-3 {
+    border-bottom-left-radius: var(--bs-border-radius-lg) !important
+}
+
+.rounded-end-bottom-3 {
+    border-bottom-right-radius: var(--bs-border-radius-lg) !important
+}
+
+
+/*Changing some default values of bootstrap*/
+.dropdown-item {
+    --bs-dropdown-link-active-bg: var(--accent-color);
+    color: var(--secondary-1-color) !important;
+}
+
+.dropdown-item:hover {
+    background-color: var(--accent-color) !important;
+}
+
+.table > :not(caption) > * > * {
+    background-color: var(--primary-2-color) !important;
+    color: var(--secondary-1-color) !important;
+}
+
+.dropdown-menu {
+    background-color: var(--primary-2-color) !important;
+}
+
+/*Class for logo*/
+.custom-logo {
+    margin-left: auto !important;
+}
+
+.custom-logo > img {
+    height: 30px;
+}
+
+
+
+@media (min-width: 768px) {
+    .custom-logo {
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%, 0);
+    }
+
+    .custom-logo > img {
+        height: 50px;
+    }
+
+    .w-md-50 {
+        width: 50% !important;
+    }
+}
+
+@media (min-width: 1024px) {
+    .modal-dialog {
+        max-width: 700px;
+        margin-right: auto;
+        margin-left: auto;
+    }
+}
+
+@media (min-width: 1440px) {
+    .modal-dialog {
+        max-width: 1000px;
+        margin-right: auto;
+        margin-left: auto;
+    }
+}
+
+/*Setting body details*/
+body {
+    background-color: var(--primary-1-color);
+    color: var(--secondary-1-color)
+}
+
+/*Tile class for times in Play*/
+.tile {
+    width: var(--width_perc) !important;
+    flex: 0 0 auto;
+    aspect-ratio: 1/.69;
+    min-width: 100px;
+    padding: .3rem !important;
+    min-width: 150px;
+    min-height: 150px;
+    transition: 400ms ease-in-out;
+}
+
+.tile:hover {
+    transform: scale(1.3);
+    z-index: 5;
+    transform-style: preserve-3d;
+}
+
+/*Setting a limit to card body of bingo*/
+.bingo-card-text {
+    min-height: 100px;
+    max-height: 150px;
+    overflow: hidden;
+}
+
+/*Overwriting color detail for card*/
+.card {
+    color: var(--secondary-1-color)
+}
+
+/*Default button details*/
+.btn-default {
+    background-color: var(--primary-2-color);
+    color: var(--secondary-1-color);
+    border: var(--secondary-1-color) 2px solid!important; /*Replace with custom variables*/
+
+    padding: 0.5rem;
+
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.5s,color 0.5s;
+}
+
+.btn-default:hover {
+    background-color: var(--secondary-1-color);
+    color: var(--primary-1-color) !important;
+}
+
+.btn-default:hover > a {
+    color: var(--primary-1-color) !important;
+}
+
+.btn-homepage {
+    background-color: var(--primary-2-color);
+    color: var(--secondary-1-color) !important;
+    border: var(--secondary-1-color) 2px solid; /*Replace with custom variables*/
+
+    padding: 0.5rem;
+
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.5s,color 0.5s;
+}
+
+.btn-homepage:hover {
+    background-color: var(--secondary-1-color);
+    color: var(--primary-1-color) !important;
+}
+
+.btn-homepage:hover > a {
+    color: var(--primary-1-color) !important;
+}
+
+.hover-switch:hover {
+    background-color: var(--secondary-1-color)!important;
+    color: var(--primary-1-color) !important;
+}
+
+.active-switch{
+    background-color: var(--secondary-1-color)!important;
+    color: var(--primary-1-color) !important;
+}
+
+/*Generic stuff*/
+.text-ellipsis {
+    text-overflow: ellipsis;
+}
+
+.underline-accent {
+    text-decoration: underline;
+    text-decoration-style: inherit;
+    text-decoration-color: var(--accent-color);
+}
