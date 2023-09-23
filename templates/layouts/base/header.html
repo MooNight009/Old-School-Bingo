@@ -5,7 +5,7 @@
     <nav class="navbar navbar-expand-md mb-3 py-3 bg-primary-2 rounded-5 rounded-top-0">
         <div class="container-fluid justify-content-start">
 
-            <a href="/" class="navbar-brand custom-logo">
+            <a href="{% url 'common:main' %}" class="navbar-brand custom-logo">
                 <img src="{% static 'logo.png' %}" alt="" style="">
             </a>
 
@@ -17,7 +17,7 @@
 
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
                 <a href="" class="d-none" id="back_button"><i class="fas fa-arrow-left color-secondary-1"></i></a>
-                <span class="d-none my-auto me-3 fs-4 rounded-5" id="header_name_p"></span>
+                <span class="d-none fs-4 rounded-5 my-auto me-3 ps-2" id="header_name_p"></span>
 
                 <span class="d-flex my-auto" id="header_details_div"></span>
 

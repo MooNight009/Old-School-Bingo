@@ -71,9 +71,9 @@ class Tile(models.Model):
         color = ''
         # If we have unapproved tiles
         if approved_count < completed_count:
-            color = 'border-warning-subtle'
+            color = 'border-red3'
         elif approved_count == total.count():
-            color = 'border-success'
+            color = 'border-green3'
         elif approved_count >= (total.count() / 2):
             color = 'border-success-subtle'
 

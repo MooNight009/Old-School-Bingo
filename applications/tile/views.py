@@ -98,7 +98,7 @@ class PlayTile(LoginRequiredMixin, PlayerAccessMixin, CreateView):
         if not (player.bingos.contains(team_tile.team.bingo) and player.teams.contains(
                 team_tile.team)) and not Moderator.objects.filter(bingo=team_tile.team.bingo, player=player).exists():
             return super(PlayTile, self).form_invalid(form)
-        if team_tile.tile.bingo.get_is_over() and not team_tile.tile.bingo.get_is_started():
+        if team_tile.tile.bingo.get_is_over():
             return super(PlayTile, self).form_invalid(form)
 
         return super(PlayTile, self).form_valid(form)

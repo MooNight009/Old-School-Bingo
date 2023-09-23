@@ -132,7 +132,7 @@ class EditBingoDiscordForm(forms.ModelForm):
                 webhook.send(f'You are now connected to the bingo **{self.instance.name}** from OldSchoolBingo.')
             except ValueError:
                 raise forms.ValidationError(
-                    {'discord_webhook': ['The webhook you entered is working. Make sure to follow the documentation.']})
+                    {'discord_webhook': ['The webhook you entered is not working. Make sure to follow the documentation.']})
 
         return cleaned_data
 

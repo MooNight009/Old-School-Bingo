@@ -54,7 +54,7 @@
         </div>
 
         {% if is_in_bingo %}
-            <div class="d-flex flex-wrap justify-content-center bg-primary-2 rounded-3 gap-5 mb-3">
+            <div class="d-flex flex-wrap justify-content-center bg-primary-2 rounded-3 gap-5 mb-3 py-3">
 {#                {% if bingo.get_is_started and not bingo.get_is_over %}#}
 {#                    <div class="align-self-center p-3">Bingo has started... To join or change teams contact a moderator</div>#}
 {#                {% elif not bingo.get_is_over %}#}
@@ -68,7 +68,7 @@
                                     <option value="{{ team.id }}" {{ user|is_user_in_team:team }}>{{ team.team_name }}</option>
                                 {% endfor %}
                             </select>
-                            <div class="d-flex justify-content-center mt-3">
+                            <div class="d-flex justify-content-center">
                                 <input class="btn-default rounded-3" type="submit" value="Join Team">
                             </div>
                         </form>

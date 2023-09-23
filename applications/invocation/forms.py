@@ -15,7 +15,7 @@ class EditWOSInvoForm(EditInvocationForm):
 
         widgets = {
             'type' : forms.Select(attrs={'class':'btn-default rounded-3'}),
-            'amount': forms.NumberInput(attrs={'class': 'form-control w-25'}),
+            'amount': forms.NumberInput(attrs={'class': 'form-control w-25', 'min':'1'}),
             'names': forms.TextInput(attrs={'class':'form-control w-25'}),
         }
 
