@@ -119,7 +119,7 @@ class TeamTile(models.Model):
     def get_tile_color(self):
         color = ''
         if self.is_mod_approved:
-            color = 'bg-success'
+            color = 'bg-green3'
         elif self.is_complete:
             color = 'bg-success-subtle'
 
@@ -130,9 +130,16 @@ class TeamTile(models.Model):
         if self.is_mod_approved:
             color = 'border-green3'
         elif self.is_complete:
-            color = 'border-warning'
+            color = 'border-success-subtle'
         else:
             color = 'border-red3'
+        return color
+
+    def get_check_mark_color(self):
+        if self.is_mod_approved:
+            color = 'color-green3'
+        elif self.is_complete:
+            color = 'color-accent'
 
         return color
 

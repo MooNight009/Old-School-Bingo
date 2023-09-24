@@ -17,7 +17,7 @@ from applications.tile.models import Tile, TeamTile
 class CreateBingo(LoginRequiredMixin, FormView):
     template_name = 'pages/bingo/create/create.html'
     form_class = BingoForm
-    success_url = '/'
+    success_url = '/main'
 
     def form_valid(self, form):
         bingo = form.save()
