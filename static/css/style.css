@@ -1,8 +1,8 @@
 :root {
-    --khaki-color: #C0A886; /* */
+    --khaki-color: #E8EDDF; /* */
     --fern-green-color: #24ED23; /* */
-    --alabaster-color: #F0EAE1; /* */
-    --dark-green-color: #1C2915; /* */
+    --alabaster-color: #E8EDDF; /* */
+    --dark-green-color: #242423; /* */
     --fire-brick-color: #E82423; /* */
     --cal-poly-green-color: #24ED23; /*green4*/
 
@@ -67,23 +67,26 @@
 }
 
 
-
 /*COLORS CSS*/
 /*Background*/
 .bg-primary-1 {
     background-color: var(--primary-1-color);
 }
+
 .bg-primary-2 {
     background-color: var(--primary-2-color);
 }
+
 .bg-secondary-1 {
-    background-color: var(--secondary-1-color)!important;
+    background-color: var(--secondary-1-color) !important;
 }
+
 .bg-secondary-2 {
-    background-color: var(--secondary-2-color)!important;
+    background-color: var(--secondary-2-color) !important;
 }
+
 .bg-accent {
-    background-color: var(--accent-color)!important;
+    background-color: var(--accent-color) !important;
 }
 
 
@@ -114,9 +117,6 @@
 .color-accent {
     color: var(--accent-color) !important;
 }
-
-
-
 
 
 /*BORDER CSS*/
@@ -158,6 +158,22 @@
 }
 
 
+.absolute {
+    position: absolute !important;
+}
+
+.top-60 {
+    top: 60% !important;
+}
+
+.left-50 {
+    left: 50% !important;
+}
+
+.scale-tile-checkmark {
+    scale: 7;
+}
+
 
 @media (min-width: 768px) {
     .custom-logo {
@@ -173,6 +189,10 @@
     .w-md-50 {
         width: 50% !important;
     }
+
+    /*.scale-tile-checkmark {*/
+    /*    scale: 15;*/
+    /*}*/
 }
 
 /*Large media*/
@@ -189,12 +209,13 @@
     }
 
     .rounded-start-lg-3 {
-        border-bottom-left-radius: 0.5rem!important;
-        border-top-left-radius: 0.5rem!important;
+        border-bottom-left-radius: 0.5rem !important;
+        border-top-left-radius: 0.5rem !important;
     }
+
     .rounded-end-lg-3 {
-        border-bottom-right-radius: 0.5rem!important;
-        border-top-right-radius: 0.5rem!important;
+        border-bottom-right-radius: 0.5rem !important;
+        border-top-right-radius: 0.5rem !important;
     }
 }
 
@@ -246,13 +267,13 @@ body {
 .btn-default {
     background-color: var(--primary-2-color);
     color: var(--secondary-1-color);
-    border: var(--secondary-1-color) 2px solid!important; /*Replace with custom variables*/
+    border: var(--secondary-1-color) 2px solid !important; /*Replace with custom variables*/
 
     padding: 0.5rem;
 
     text-align: center;
     text-decoration: none;
-    transition: background-color 0.5s,color 0.5s;
+    transition: background-color 0.5s, color 0.5s;
 }
 
 .btn-default:hover {
@@ -273,7 +294,7 @@ body {
 
     text-align: center;
     text-decoration: none;
-    transition: background-color 0.5s,color 0.5s;
+    transition: background-color 0.5s, color 0.5s;
 }
 
 .btn-homepage:hover {
@@ -286,12 +307,12 @@ body {
 }
 
 .hover-switch:hover {
-    background-color: var(--secondary-1-color)!important;
+    background-color: var(--secondary-1-color) !important;
     color: var(--primary-1-color) !important;
 }
 
-.active-switch{
-    background-color: var(--secondary-1-color)!important;
+.active-switch {
+    background-color: var(--secondary-1-color) !important;
     color: var(--primary-1-color) !important;
 }
 
