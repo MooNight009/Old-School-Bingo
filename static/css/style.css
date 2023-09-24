@@ -175,11 +175,26 @@
     }
 }
 
-@media (min-width: 1024px) {
+/*Large media*/
+@media (min-width: 992px) {
+    .absolute-center-lg {
+        position: absolute;
+        transform: translate(-50%, -50%);
+    }
+
     .modal-dialog {
         max-width: 700px;
         margin-right: auto;
         margin-left: auto;
+    }
+
+    .rounded-start-lg-3 {
+        border-bottom-left-radius: 0.5rem!important;
+        border-top-left-radius: 0.5rem!important;
+    }
+    .rounded-end-lg-3 {
+        border-bottom-right-radius: 0.5rem!important;
+        border-top-right-radius: 0.5rem!important;
     }
 }
 
