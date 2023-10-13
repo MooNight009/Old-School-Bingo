@@ -74,7 +74,6 @@ class SubmissionInvo(Invocation):
         team_tile.save()
 
 
-
 class WOMInvo(Invocation):
     TYPES = [
         ('XP', 'Experience'),
@@ -86,7 +85,6 @@ class WOMInvo(Invocation):
     amount = models.IntegerField(default=1)
     names = models.CharField(max_length=256, default='overall',
                              help_text='Name of skills or bosses to track. "overall" for all. Separate by comma')
-
 
     def update_complete(self, team_tile, username):
         bingo = self.tile.bingo
@@ -131,8 +129,11 @@ class WOMInvo(Invocation):
             self.update_approve(team_tile, username)
             team_tile.is_mod_approved = True
 
-
         team_tile.save()
+
+    def get_names(self):
+
+        return self.names.replace('_', ' ')
 
 
 BOSSES = ['abyssal_sire', 'alchemical_hydra', 'artio', 'barrows_chests', 'bryophyta', 'callisto', 'calvarion',
