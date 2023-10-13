@@ -11,7 +11,8 @@ class Tile(models.Model):
 
     name = models.CharField(max_length=64, default="Tile Name")
     description = models.TextField(max_length=512, default="Description")
-    img = models.ImageField(null=True, blank=True)  # TODO: SET PROPER PATH FOR STORAGE
+    img = models.ImageField(null=True, blank=True,
+                            help_text="Image associated with Tile. Recommended size: 270x200px")  # TODO: SET PROPER PATH FOR STORAGE
 
     bingo_location = models.IntegerField()
     score = models.IntegerField(default=1)

@@ -21,7 +21,7 @@ class Bingo(models.Model):
     name = models.CharField(max_length=64)
     description = models.TextField(max_length=2048)
     img = models.ImageField(null=True, blank=True,
-                            help_text="Image displayed in home page")  # TODO: SET PROPER PATH FOR STORAGE
+                            help_text="Image displayed in home page. Recommended size: 270x200px")  # TODO: SET PROPER PATH FOR STORAGE
 
     start_date = models.DateTimeField(help_text="Starting date and time of bingo. UTC not local timezone")
     end_date = models.DateTimeField(help_text="Starting date and time of bingo. UTC not local timezone")
