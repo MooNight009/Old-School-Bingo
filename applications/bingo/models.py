@@ -21,10 +21,10 @@ BINGO_TYPES = (
 
 
 class Bingo(models.Model):
-    name = models.CharField(max_length=64)
+    name = models.CharField(max_length=64, help_text='Text limit: 64 Characters')
     img = models.ImageField(null=True, blank=True, storage=PublicMediaStorage(),
-                            help_text="Image displayed in home page") # TODO: SET PROPER PATH FOR STORAGE
-    description = models.TextField(max_length=2048)
+                            help_text="Image displayed in home page. Recommended size: 270x200px") # TODO: SET PROPER PATH FOR STORAGE
+    description = models.TextField(max_length=2048, help_text='Text limit: 2048 Characters')
 
     start_date = models.DateTimeField(help_text="Starting date and time of bingo. UTC not local timezone")
     end_date = models.DateTimeField(help_text="Starting date and time of bingo. UTC not local timezone")
