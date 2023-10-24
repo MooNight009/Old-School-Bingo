@@ -8,7 +8,6 @@
         <div class="fs-1 mb-3 text-center" id="status"></div>
         <div class="fs-1 mb-3 text-center" id="time_left"></div>
         <p class="mb-3">{{ object.description|linebreaks }}</p>
-
         {% if is_in_bingo %}
             <a href="{% url 'bingo:bingo_home_page' object.pk %}" class="btn-default rounded-3 mx-auto">Bingo Home
                 Page</a>
@@ -23,6 +22,7 @@
                    data-bs-toggle="tooltip" data-bs-placement="top"
                    data-bs-title="For multiple accounts separate them by a ',' (comma). This information will be used for tiles that get data from WiseOldMan."></i>
                 </button>
+                <input type="text" hidden value="{{ request.GET.team_id }}" name="team_id" id="team_id_id">
                 <button type="submit" class="btn-default rounded-3 px-4">Join</button>
             </form>
         {% endif %}
