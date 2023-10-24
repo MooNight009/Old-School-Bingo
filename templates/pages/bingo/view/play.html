@@ -28,7 +28,7 @@
                             {% if team.team_name == 'General' %}
                                 <li><a href="{% url 'bingo:play_bingo_general' bingo.id %}"
                                        class="dropdown-item {% if current_team == team %}active-switch{% endif %}{{ user|user_access_check:team.pk }}">
-                                    {{ team.team_name }}</a>
+                                    Summary</a>
                                 </li>
                             {% else %}
                                 <li><a href="{% url 'bingo:play_bingo' bingo.id team.id %}"
