@@ -194,7 +194,13 @@ class BingoHomePage(LoginRequiredMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        teams = Team.objects.filter(bingo=self.object).exclude(team_name='General').order_by('-score')
+        teams = Team.objects.filter(bingo=self.object).exclude(team_name='General')
+        if self.object.is_team_public:
+            teams = teams.order_by('-score')
+        else:
+            teams = teams.order_by('team_name')
+            print('We here')
+        print(self.object)
         context['teams'] = teams
 
         user = self.request.user
@@ -214,8 +220,8 @@ class ActuallyJoinBingo(LoginRequiredMixin, RedirectView):
             player.bingos.add(bingo)
             player_details = PlayerBingoDetail.objects.get_or_create(player=player, bingo=bingo)[0]
             player_details.account_names = self.request.POST['account_names']
-            team = Team.objects.filter(pk=self.request.POST['team_id'])
-            if 'team_id' in self.request.POST and team.exists():
+            if 'team_id' in self.request.POST and len(self.request.POST['team_id']) > 0 and Team.objects.filter(pk=self.request.POST['team_id']).exists():
+                team = Team.objects.filter(pk=self.request.POST['team_id'])
                 if bingo.team_set.contains(team.get()):
                     player_details.team = team.get()
                 else:
