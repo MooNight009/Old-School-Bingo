@@ -42,7 +42,7 @@ class CreateUserForm(UserCreationForm):
 
     def save(self, *args, **kwargs):
         user = super().save(*args, **kwargs)
-        user.is_active = False
+        # user.is_active = False ######## SWITCH BACK LATER
         user.save()
         player = Player(user=user)
         player.save()
