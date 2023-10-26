@@ -214,8 +214,8 @@ class ActuallyJoinBingo(LoginRequiredMixin, RedirectView):
             player.bingos.add(bingo)
             player_details = PlayerBingoDetail.objects.get_or_create(player=player, bingo=bingo)[0]
             player_details.account_names = self.request.POST['account_names']
-            team = Team.objects.filter(pk=self.request.POST['team_id'])
-            if 'team_id' in self.request.POST and team.exists():
+            if 'team_id' in self.request.POST and len(self.request.POST['team_id']) > 0 and Team.objects.filter(pk=self.request.POST['team_id']).exists():
+                team = Team.objects.filter(pk=self.request.POST['team_id'])
                 if bingo.team_set.contains(team.get()):
                     player_details.team = team.get()
                 else:
