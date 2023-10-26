@@ -194,7 +194,13 @@ class BingoHomePage(LoginRequiredMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        teams = Team.objects.filter(bingo=self.object).exclude(team_name='General').order_by('-score')
+        teams = Team.objects.filter(bingo=self.object).exclude(team_name='General')
+        if self.object.is_team_public:
+            teams = teams.order_by('-score')
+        else:
+            teams = teams.order_by('team_name')
+            print('We here')
+        print(self.object)
         context['teams'] = teams
 
         user = self.request.user
