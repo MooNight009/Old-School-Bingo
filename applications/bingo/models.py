@@ -157,7 +157,7 @@ class Bingo(models.Model):
             max_score += tile.score
 
         if self.is_row_col_extra:
-            max_score += (self.board_size * 2)
+            max_score += (self.board_size * 2) + 1
 
         self.max_score = max_score
         self.save()
