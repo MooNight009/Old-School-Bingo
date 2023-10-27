@@ -23,9 +23,10 @@ class Invocation(models.Model):
         bingo = self.tile.bingo
         team_tile.is_mod_approved = not team_tile.is_mod_approved
 
+        discord_message = f'Moderator **{username}** set the status of **{team_tile.tile.name}** approval to **{team_tile.is_complete}**.'
         if bingo.notify_approval:
-            bingo.send_discord_message(
-                f'Moderator **{username}** set the status of **{team_tile.tile.name}** approval to **{team_tile.is_complete}**.')
+            bingo.send_discord_message(discord_message)
+        team_tile.team.send_discord_message(discord_message)
 
         if team_tile.is_mod_approved:
             team_tile.team.score += team_tile.tile.score  # Add a point for finishing the tile
@@ -64,9 +65,10 @@ class SubmissionInvo(Invocation):
         team_tile.is_complete = not team_tile.is_complete
         bingo = self.tile.bingo
 
+        discord_message = f'Player **{username}** in team **{team_tile.team.team_name}** set the status of **{team_tile.tile.name}** completion to **{team_tile.is_complete}**.'
         if bingo.notify_completion:
-            bingo.send_discord_message(
-                f'Player **{username}** set the status of **{team_tile.tile.name}** completion to **{team_tile.is_complete}**.')
+            bingo.send_discord_message(discord_message)
+        team_tile.team.send_discord_message(discord_message)
 
         if team_tile.is_complete:
             team_tile.completion_date = datetime.datetime.now(datetime.timezone.utc)
@@ -120,9 +122,10 @@ class WOMInvo(Invocation):
         if current_amount >= self.amount:
             team_tile.is_complete = True
 
+        discord_message = f'Player **{username}** in team **{team_tile.team.team_name}** refreshed **{team_tile.tile.name}** to achieve **{current_amount}**/{self.amount}.'
         if bingo.notify_completion:
-            bingo.send_discord_message(
-                f'Player **{username}** refreshed **{team_tile.tile.name}** to achieve **{current_amount}**/{self.amount}.')
+            bingo.send_discord_message(discord_message)
+        team_tile.team.send_discord_message(discord_message)
         #
         if team_tile.is_complete:
             team_tile.completion_date = datetime.datetime.now(datetime.timezone.utc)
