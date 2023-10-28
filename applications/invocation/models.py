@@ -114,7 +114,7 @@ class WOMInvo(Invocation):
                             current_amount += int(response.json()['data']['skills'][type_name]['experience']['gained'])
                     elif self.type == 'LV':
                         for type_name in type_names:
-                            current_amount += int(response.json()['data']['bosses'][type_name]['level']['gained'])
+                            current_amount += int(response.json()['data']['skills'][type_name]['level']['gained'])
                 else:
                     print(response.json())
 
