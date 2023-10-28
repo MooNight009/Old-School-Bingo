@@ -98,45 +98,66 @@
                                 data-bs-toggle="modal" data-bs-target="#refresh_modal_id">Refresh WiseOldMan
                         </button>
                     {% endif %}
+
+                    {#                    Allow mods to force complete a tile#}
+
+                    {% if user|is_moderator:teamtile.team.bingo.pk %}
+                        <div class="border border-3 border-secondary-1 rounded-3 align-self-center w-100  pb-3 mb-3">
+                            <div class="bg-secondary-1 color-primary-2 py-1 mb-3">Moderator view</div>
+                            {% if teamtile.is_mod_approved %}
+                                <div class="h4 color-green3">Approved</div>
+                                <button type="button" class="btn-default rounded"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#approve_modal_id">Force uncomplete
+                                </button>
+                            {% else %}
+                                <div class="h4 text-warning">Pending completion</div>
+                                <button type="button" class="btn-default rounded"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#approve_modal_id">Force complete
+                                </button>
+                            {% endif %}
+                        </div>
+                    {% endif %}
                 {% endif %}
+            </div>
         </div>
-    </div>
 
-    <form class="d-flex flex-wrap mb-3 py-3 rounded-4 bg-primary-2 justify-content-around" method="post"
-          enctype="multipart/form-data">
-        {% csrf_token %}
-        {% for field in form %}
-            <div class="d-flex me-3 align-items-center">
-                {% include 'layouts/innertemplates/field.html' %}
-            </div>
-        {% endfor %}
-
-        <input type="submit" class="btn-default rounded" value="Submit">
-    </form>
-
-    <div class="d-flex flex-wrap gap-3 justify-content-around">
-        {% for submission in submissions %}
-            <div class="col col-md-4 col-lg-3">
-                <div class="card rounded-3 h-100 bg-primary-2">
-                    <button type="button" data-bs-toggle="modal" data-bs-target="#image_modal_id"
-                            onclick="expand_image(this)" class="border-0 rounded-3 bg-none">
-                        <img id="submission_image_id" src="{{ submission.img.url }}" alt=""
-                             class="card-img-top">
-                    </button>
-
-                    <div class="card-body">
-                        <p id="submission_comment_id" class="card-text bingo-card-text">{{ submission.comment }}</p>
-                    </div>
-
-                    <div class="d-flex card-footer align-items-center justify-content-between">
-                        <p class="m-0">By <b id="submission_player_id">{{ submission.player.user.username }}</b></p>
-                        <p class="color-secondary-2 m-0" style="font-size: 9px">@{{ submission.date }}</p>
-                    </div>
-
+        <form class="d-flex flex-wrap mb-3 py-3 rounded-4 bg-primary-2 justify-content-around" method="post"
+              enctype="multipart/form-data">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="d-flex me-3 align-items-center">
+                    {% include 'layouts/innertemplates/field.html' %}
                 </div>
-            </div>
-        {% endfor %}
-    </div>
+            {% endfor %}
+
+            <input type="submit" class="btn-default rounded" value="Submit">
+        </form>
+
+        <div class="d-flex flex-wrap gap-3 justify-content-around">
+            {% for submission in submissions %}
+                <div class="col col-md-4 col-lg-3">
+                    <div class="card rounded-3 h-100 bg-primary-2">
+                        <button type="button" data-bs-toggle="modal" data-bs-target="#image_modal_id"
+                                onclick="expand_image(this)" class="border-0 rounded-3 bg-none">
+                            <img id="submission_image_id" src="{{ submission.img.url }}" alt=""
+                                 class="card-img-top">
+                        </button>
+
+                        <div class="card-body">
+                            <p id="submission_comment_id" class="card-text bingo-card-text">{{ submission.comment }}</p>
+                        </div>
+
+                        <div class="d-flex card-footer align-items-center justify-content-between">
+                            <p class="m-0">By <b id="submission_player_id">{{ submission.player.user.username }}</b></p>
+                            <p class="color-secondary-2 m-0" style="font-size: 9px">@{{ submission.date }}</p>
+                        </div>
+
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
     </div>
 
 

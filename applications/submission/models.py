@@ -15,10 +15,9 @@ class Submission(models.Model):
         super().save(*args, **kwargs)
 
         bingo = self.team_tile.tile.bingo
-        discord_message = f'Player **{self.player.user.username}** in team **{self.team_tile.team.team_name}** added submission to **{self.team_tile.tile.name}** with the comment "**{self.comment}"**.'
         if bingo.notify_approval:
-            bingo.send_discord_message(discord_message)
-        self.team_tile.team.send_discord_message(discord_message)
+            bingo.send_discord_message(f'Player **{self.player.user.username}** in team **{self.team_tile.team.team_name}** added submission to **{self.team_tile.tile.name}** with the comment "**{self.comment}"**.')
+        self.team_tile.team.send_discord_message(f'**{self.player.user.username}** added submission to **{self.team_tile.tile.name}** with the comment "**{self.comment}"**.')
 
         if self.img is not None:
             img = Image.open(self.img.path)
