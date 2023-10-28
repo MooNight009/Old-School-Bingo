@@ -98,10 +98,10 @@ class WOMInvo(Invocation):
             names = players_detail.account_names.split(',')
             for name in names:
                 update = requests.post(f'https://api.wiseoldman.net/v2/players/{name}/')
-                # if update.status_code != 200:
-                #     print(update.json())
-                #     print("We got an error in player " + name)
-
+                if update.status_code != 200:
+                    print("We got an error in player " + name)
+                    print(update.json())
+                print("Getting info for " + f'https://api.wiseoldman.net/v2/players/{name}/gained?startDate={bingo.start_date.strftime("%Y-%m-%dT%H:%M:%S")}&endDate={datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%S")}')
                 response = requests.get(
                     f'https://api.wiseoldman.net/v2/players/{name}/gained?startDate={bingo.start_date.strftime("%Y-%m-%dT%H:%M:%S")}&endDate={datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%S")}')
                 type_names = self.names.split(',')
@@ -114,8 +114,9 @@ class WOMInvo(Invocation):
                             current_amount += int(response.json()['data']['skills'][type_name]['experience']['gained'])
                     elif self.type == 'LV':
                         for type_name in type_names:
-                            current_amount += int(response.json()['data']['bosses'][type_name]['level']['gained'])
+                            current_amount += int(response.json()['data']['skills'][type_name]['level']['gained'])
                 else:
+                    print("We got an error in player " + name)
                     print(response.json())
 
         team_tile.score = current_amount

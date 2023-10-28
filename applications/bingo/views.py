@@ -199,8 +199,6 @@ class BingoHomePage(LoginRequiredMixin, DetailView):
             teams = teams.order_by('-score')
         else:
             teams = teams.order_by('team_name')
-            print('We here')
-        print(self.object)
         context['teams'] = teams
 
         user = self.request.user
