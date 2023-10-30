@@ -26,7 +26,7 @@ class Invocation(models.Model):
         discord_message = f'Moderator **{username}** set the status of **{team_tile.tile.name}** approval to **{team_tile.is_complete}**.'
         if bingo.notify_approval:
             bingo.send_discord_message(discord_message)
-        team_tile.team.send_discord_message(discord_message)
+            team_tile.team.send_discord_message(discord_message)
 
         if team_tile.is_mod_approved:
             team_tile.team.score += team_tile.tile.score  # Add a point for finishing the tile
@@ -123,11 +123,11 @@ class WOMInvo(Invocation):
 
         if bingo.notify_completion:
             bingo.send_discord_message(f'Player **{username}** in team **{team_tile.team.team_name}** refreshed **{team_tile.tile.name}** to achieve **{current_amount}**/{self.amount}.')
-        team_tile.team.send_discord_message(f'Tile **{team_tile.tile.name}** has been refreshed. You achieved : **{current_amount}**/{self.amount}.')
+            team_tile.team.send_discord_message(f'Tile **{team_tile.tile.name}** has been refreshed. You achieved : **{current_amount}**/{self.amount}.')
         #
         if team_tile.is_complete:
             team_tile.completion_date = datetime.datetime.now(datetime.timezone.utc)
-            super(WOMInvo, self).update_approve(team_tile, username='')
+            super(WOMInvo, self).update_approve(team_tile, username='_')
             team_tile.is_mod_approved = True
 
         team_tile.save()
