@@ -24,10 +24,10 @@
                 </div>
         </div>
     </div>
+{% endblock %}
 
-    {#    {% for message in messages %}#}
-    {#        <p>{{ message }}</p>#}
-    {#    {% endfor %}#}
-
-
+{% block js %}
+    <script>
+        document.querySelector('meta[name="description"]').setAttribute("content", "Create an account in Old School Bingo")
+    </script>
 {% endblock %}

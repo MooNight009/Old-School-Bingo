@@ -1,6 +1,9 @@
 {% extends 'layouts/base/base.html' %}
-{#{% load static %}#}
 {% load bingo_extras %}
+
+{#Prevent page from being indexed#}
+{% block head_extras %}
+    <meta name="robots" content="noindex">{% endblock %}
 
 {% block content %}
     {% include 'layouts/innertemplates/winner.html' with bingo=teamtile.team.bingo %}
