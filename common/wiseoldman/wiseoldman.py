@@ -3,8 +3,6 @@ import os
 
 import requests
 
-from local import API
-
 headers = {
     'User-Agent': os.environ['WOM_USER_AGENT'],
     'x-api-key': os.environ['WOM_API_KEY']
