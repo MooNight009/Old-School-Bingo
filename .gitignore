@@ -8,3 +8,4 @@ media/
 !.elasticbeanstalk/*.global.yml
 *.pyc
 test.py
+local/

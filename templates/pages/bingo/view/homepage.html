@@ -2,6 +2,10 @@
 {#{% load static %}#}
 {% load bingo_extras %}
 
+{#Prevent page from being indexed#}
+{% block head_extras %}
+    <meta name="robots" content="noindex">{% endblock %}
+
 {% block content %}
     <div class="d-flex flex-column">
         <div class="d-flex flex-column flex-md-row mb-3">

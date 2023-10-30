@@ -6,6 +6,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.db import models
 
 from applications.submission.models import Achievement
+from common.wiseoldman import wiseoldman
 
 
 class Invocation(models.Model):
@@ -26,7 +27,7 @@ class Invocation(models.Model):
         discord_message = f'Moderator **{username}** set the status of **{team_tile.tile.name}** approval to **{team_tile.is_complete}**.'
         if bingo.notify_approval:
             bingo.send_discord_message(discord_message)
-        team_tile.team.send_discord_message(discord_message)
+            team_tile.team.send_discord_message(discord_message)
 
         if team_tile.is_mod_approved:
             team_tile.team.score += team_tile.tile.score  # Add a point for finishing the tile
@@ -89,6 +90,7 @@ class WOMInvo(Invocation):
 
     def update_complete(self, team_tile, username):
         bingo = self.tile.bingo
+        type_names = self.names.split(',')
 
         # Update wom details
         players_details = bingo.playerbingodetail_set.all().filter(team=team_tile.team)
@@ -96,14 +98,9 @@ class WOMInvo(Invocation):
         for players_detail in players_details:
             names = players_detail.account_names.split(',')
             for name in names:
-                update = requests.post(f'https://api.wiseoldman.net/v2/players/{name}/')
-                if update.status_code != 200:
-                    print("We got an error in player " + name)
-                    print(update.json())
-                print("Getting info for " + f'https://api.wiseoldman.net/v2/players/{name}/gained?startDate={bingo.start_date.strftime("%Y-%m-%dT%H:%M:%S")}&endDate={datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%S")}')
-                response = requests.get(
-                    f'https://api.wiseoldman.net/v2/players/{name}/gained?startDate={bingo.start_date.strftime("%Y-%m-%dT%H:%M:%S")}&endDate={datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%S")}')
-                type_names = self.names.split(',')
+                wiseoldman.update_user(name)
+
+                response = wiseoldman.get_gained(name, start_date=bingo.start_date.strftime("%Y-%m-%dT%H:%M:%S"))
                 if response.status_code == 200:
                     if self.type == 'KC':
                         for type_name in type_names:
@@ -114,9 +111,6 @@ class WOMInvo(Invocation):
                     elif self.type == 'LV':
                         for type_name in type_names:
                             current_amount += int(response.json()['data']['skills'][type_name]['level']['gained'])
-                else:
-                    print("We got an error in player " + name)
-                    print(response.json())
 
         team_tile.score = current_amount
         if current_amount >= self.amount:

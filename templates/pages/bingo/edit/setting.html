@@ -1,6 +1,10 @@
 {% extends 'layouts/base/base.html' %}
 {#{% load static %}#}
 
+{#Prevent page from being indexed#}
+{% block head_extras %}
+    <meta name="robots" content="noindex">{% endblock %}
+
 {% block content %}
     <div class="flex-column">
         {% include 'pages/bingo/edit/innertemplates/menu.html' %}
