@@ -7,3 +7,4 @@ media/
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
 test.py
+local/
