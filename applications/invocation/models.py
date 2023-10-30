@@ -67,7 +67,7 @@ class SubmissionInvo(Invocation):
 
         if bingo.notify_completion:
             bingo.send_discord_message(f'Player **{username}** in team **{team_tile.team.team_name}** set the status of **{team_tile.tile.name}** completion to **{team_tile.is_complete}**.')
-        team_tile.team.send_discord_message(f'**{username}** set the status of **{team_tile.tile.name}** completion to **{team_tile.is_complete}**.')
+            team_tile.team.send_discord_message(f'**{username}** set the status of **{team_tile.tile.name}** completion to **{team_tile.is_complete}**.')
 
         if team_tile.is_complete:
             team_tile.completion_date = datetime.datetime.now(datetime.timezone.utc)
@@ -124,11 +124,11 @@ class WOMInvo(Invocation):
 
         if bingo.notify_completion:
             bingo.send_discord_message(f'Player **{username}** in team **{team_tile.team.team_name}** refreshed **{team_tile.tile.name}** to achieve **{current_amount}**/{self.amount}.')
-        team_tile.team.send_discord_message(f'Tile **{team_tile.tile.name}** has been refreshed. You achieved : **{current_amount}**/{self.amount}.')
+            team_tile.team.send_discord_message(f'Tile **{team_tile.tile.name}** has been refreshed. You achieved : **{current_amount}**/{self.amount}.')
         #
         if team_tile.is_complete:
             team_tile.completion_date = datetime.datetime.now(datetime.timezone.utc)
-            super(WOMInvo, self).update_approve(team_tile, username='')
+            super(WOMInvo, self).update_approve(team_tile, username='_')
             team_tile.is_mod_approved = True
 
         team_tile.save()
