@@ -8,8 +8,10 @@
 {% block content %}
     <div class="flex-column">
         {% include 'pages/bingo/edit/innertemplates/menu.html' %}
-
         <div class="bg-primary-2 rounded-3 mb-3 p-2">
+            <div class="ms-3 mb-3">
+                <img src="{{ bingo.get_img_url }}" alt="">
+            </div>
             <form action="" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 {{ form.non_field_errors }}

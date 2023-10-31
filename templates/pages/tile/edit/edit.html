@@ -10,6 +10,9 @@
         {% include 'pages/tile/edit/innertemplates/menu.html' %}
 
         <div class="bg-primary-2 rounded-3 p-2">
+            <div class="ms-3 mb-3">
+                <img src="{{ tile.get_url }}" alt="">
+            </div>
             <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 {{ form.non_field_errors }}
