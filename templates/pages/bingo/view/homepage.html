@@ -200,5 +200,8 @@
         {#Set Details on header#}
         show_back_button("{% url 'common:main' %}");
 
+        {#Set the page title#}
+        document.querySelector('title').innerText = `{{ bingo.name }} Homepage - Old School Bingo`
+
     </script>
 {% endblock %}

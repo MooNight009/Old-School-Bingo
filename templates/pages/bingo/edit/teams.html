@@ -42,5 +42,8 @@
 
         set_edit_bingo_active_tab('teams_id')
         show_header_name("{{ bingo.name }}")
+
+        {#Set the page title#}
+        document.querySelector('title').innerText = `Edit {{ bingo.name }} Teams - Old School Bingo`
     </script>
 {% endblock %}

@@ -258,6 +258,9 @@
         {#    Set the back button   #}
         show_back_button("{% url 'bingo:play_bingo' teamtile.team.bingo.pk teamtile.team.pk %}");
         show_header_name("{{ teamtile.team.bingo.name }}")
+
+        {#Set the page title#}
+        document.querySelector('title').innerText = `{{ teamtile.tile.name }} in {{ teamtile.tile.bingo.name }} - Old School Bingo`
     </script>
 
 {% endblock %}

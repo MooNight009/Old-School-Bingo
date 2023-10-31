@@ -38,5 +38,8 @@
 
         set_edit_bingo_active_tab('discord_id');
         show_header_name("{{ bingo.name }}")
+
+        {#Set the page title#}
+        document.querySelector('title').innerText = `Edit {{ bingo.name }} Discord - Old School Bingo`
     </script>
 {% endblock %}

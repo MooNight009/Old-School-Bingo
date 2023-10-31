@@ -39,5 +39,8 @@
 
         set_edit_bingo_active_tab('board_id')
         show_header_name("{{ bingo.name }}")
+
+        {#Set the page title#}
+        document.querySelector('title').innerText = `Edit {{ bingo.name }} Board - Old School Bingo`
     </script>
 {% endblock %}
