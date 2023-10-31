@@ -10,7 +10,7 @@
         {% include 'pages/bingo/edit/innertemplates/menu.html' %}
 
         <div class="d-flex flex-column bg-primary-2 pt-2">
-            <h5 class="p-2">{{ bingo.name }}</h5>
+{#            <h5 class="p-2">{{ bingo.name }}</h5>#}
             <div class="overflow-auto">
                 <div class="row h-100 p-0 m-0" style="min-width: {{ bingo.get_div_width }}px;">
                     {% for tile in bingo.get_tiles %}
@@ -38,5 +38,6 @@
         show_back_button("{% url 'common:main' %}");
 
         set_edit_bingo_active_tab('board_id')
+        show_header_name("{{ bingo.name }}")
     </script>
 {% endblock %}
