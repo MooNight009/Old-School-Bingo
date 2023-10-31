@@ -13,6 +13,7 @@ import os.path
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+from local import KEY
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -20,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '***REMOVED***'
+SECRET_KEY = KEY.DJANGO_SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -83,28 +84,16 @@ WSGI_APPLICATION = 'OSRSPG.wsgi.application'
 
 # PostgreSQL Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
-if 'RDS_DB_NAME' in os.environ:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': os.environ['RDS_DB_NAME'],
-            'USER': os.environ['RDS_USERNAME'],
-            'PASSWORD': os.environ['RDS_PASSWORD'],
-            'HOST': os.environ['RDS_HOSTNAME'],
-            'PORT': os.environ['RDS_PORT'],
-        }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': KEY.LOCAL_DATABASE_NAME,
+        'USER': 'postgres',
+        'PASSWORD': KEY.LOCAL_DATABASE_PASSWORD,
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': '***REMOVED***',
-            'USER': 'postgres',
-            'PASSWORD': '***REMOVED***',
-            'HOST': 'localhost',
-            'PORT': '5432',
-        }
-    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -159,6 +148,6 @@ LOGIN_REDIRECT_URL = '/'
 
 # Email details
 EMAIL_BACKEND = 'django_ses.SESBackend'
-AWS_ACCESS_KEY_ID = '***REMOVED***'
-AWS_SECRET_ACCESS_KEY = '***REMOVED***'
-AWS_DEFAULT_REGION = '***REMOVED***'
+AWS_ACCESS_KEY_ID = KEY.AWS_ACCESS_KEY_ID
+AWS_SECRET_ACCESS_KEY = KEY.AWS_SECRET_ACCESS_KEY
+AWS_DEFAULT_REGION = KEY.AWS_DEFAULT_REGION
