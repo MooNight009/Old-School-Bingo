@@ -33,5 +33,8 @@
         show_header_name('{{ tile.name }}')
 
         set_edit_bingo_active_tab('wom_id')
+
+        {#Set the page title#}
+        document.querySelector('title').innerText = `Edit {{ tile.name }} Invocation in {{ tile.bingo.name }} - Old School Bingo`
     </script>
 {% endblock %}

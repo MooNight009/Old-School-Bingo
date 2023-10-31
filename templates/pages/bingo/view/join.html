@@ -94,5 +94,8 @@
         {#Set Details on header#}
         show_back_button("{% url 'common:main' %}");
 
+        {#Set the page title#}
+        document.querySelector('title').innerText = `Join {{ bingo.name }} - Old School Bingo`
+
     </script>
 {% endblock %}

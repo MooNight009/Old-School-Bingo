@@ -111,5 +111,8 @@
 {% block js %}
     <script>
         show_header_div(`<a href="{% url 'bingo:create_bingo' %}" class="btn-default rounded-3">Create Bingo</a>`)
+
+        {#Set the page title#}
+        document.querySelector('title').innerText = `My Bingo - Old School Bingo`
     </script>
 {% endblock %}
