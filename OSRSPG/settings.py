@@ -16,15 +16,11 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ['RDS_SECRET_KEY_DJANGO']
 
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
+# TODO: Remove any unnecessary hosts
 ALLOWED_HOSTS = [
     'oldschoolbingo-test.***REMOVED***.elasticbeanstalk.com',
     'ec2-3-74-227-28.***REMOVED***.compute.amazonaws.com',
@@ -110,17 +106,6 @@ if 'RDS_DB_NAME' in os.environ:
             'PORT': os.environ['RDS_PORT'],
         }
     }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': '***REMOVED***',
-            'USER': 'postgres',
-            'PASSWORD': '***REMOVED***',
-            'HOST': 'localhost',
-            'PORT': '5432',
-        }
-    }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -146,7 +131,7 @@ AUTH_PASSWORD_VALIDATORS = [
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
-
+# TODO: Do I need to remove the following two?
 USE_I18N = True
 
 USE_TZ = True
@@ -156,8 +141,6 @@ USE_TZ = True
 
 print(os.environ)
 if 'RDS_USE_S3' in os.environ:  # TODO: Use a better detection method AND combine with database
-    # if True:
-    print('got here')
     # aws settings
     AWS_ACCESS_KEY_ID = os.environ['RDS_AWS_ACCESS_KEY_ID']
     AWS_SECRET_ACCESS_KEY = os.environ['RDS_AWS_SECRET_ACCESS_KEY']
@@ -180,6 +163,8 @@ if 'RDS_USE_S3' in os.environ:  # TODO: Use a better detection method AND combin
     MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{PUBLIC_MEDIA_LOCATION}/'
     DEFAULT_FILE_STORAGE = 'applications.defaults.storage_backends.PublicMediaStorage'
 else:
+    # TODO: Check if this is necessary or triggered at all
+    print('Is line 182 in settings.py triggered?')
     STATIC_ROOT = os.path.join(BASE_DIR, "..", "www", "static")
     STATIC_URL = '/static/'
     STATICFILES_DIRS = [
@@ -202,9 +187,6 @@ LOGIN_REDIRECT_URL = '/'
 
 # Email details
 EMAIL_BACKEND = 'django_ses.SESBackend'
-# AWS_ACCESS_KEY_ID = os.environ['RDS_SES_AWS_ACCESS_KEY_ID']
-# AWS_SECRET_ACCESS_KEY = os.environ['RDS_SES_AWS_SECRET_ACCESS_KEY']
-# AWS_DEFAULT_REGION = os.environ['RDS_AWS_S3_REGION_NAME']
 
 
 # Upload limit
