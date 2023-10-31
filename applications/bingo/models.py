@@ -21,10 +21,10 @@ BINGO_TYPES = (
 
 
 class Bingo(models.Model):
-    name = models.CharField(max_length=64)
+    name = models.CharField(max_length=64, help_text='Text limit: 64 Characters')
     img = models.ImageField(null=True, blank=True, storage=PublicMediaStorage(),
-                            help_text="Image displayed in home page") # TODO: SET PROPER PATH FOR STORAGE
-    description = models.TextField(max_length=2048)
+                            help_text="Image displayed in home page. Recommended size: 270x200px") # TODO: SET PROPER PATH FOR STORAGE
+    description = models.TextField(max_length=2048, help_text='Text limit: 2048 Characters')
 
     start_date = models.DateTimeField(help_text="Starting date and time of bingo. UTC not local timezone")
     end_date = models.DateTimeField(help_text="Starting date and time of bingo. UTC not local timezone")
@@ -102,7 +102,8 @@ class Bingo(models.Model):
             change = self.end_date <= datetime.datetime.now(datetime.timezone.utc)
             if change != self.is_over:
                 self.is_over = change
-                self.is_team_public - True
+                self.is_team_public = True
+                self.is_public = True
                 self.save()
         return self.is_over
 
@@ -157,7 +158,7 @@ class Bingo(models.Model):
             max_score += tile.score
 
         if self.is_row_col_extra:
-            max_score += (self.board_size * 2)
+            max_score += (self.board_size * 2) + 1
 
         self.max_score = max_score
         self.save()

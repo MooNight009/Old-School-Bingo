@@ -6,6 +6,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.db import models
 
 from applications.submission.models import Achievement
+from common.wiseoldman import wiseoldman
 
 
 class Invocation(models.Model):
@@ -23,9 +24,10 @@ class Invocation(models.Model):
         bingo = self.tile.bingo
         team_tile.is_mod_approved = not team_tile.is_mod_approved
 
+        discord_message = f'Moderator **{username}** set the status of **{team_tile.tile.name}** approval to **{team_tile.is_complete}**.'
         if bingo.notify_approval:
-            bingo.send_discord_message(
-                f'Moderator **{username}** set the status of **{team_tile.tile.name}** approval to **{team_tile.is_complete}**.')
+            bingo.send_discord_message(discord_message)
+            team_tile.team.send_discord_message(discord_message)
 
         if team_tile.is_mod_approved:
             team_tile.team.score += team_tile.tile.score  # Add a point for finishing the tile
@@ -65,14 +67,13 @@ class SubmissionInvo(Invocation):
         bingo = self.tile.bingo
 
         if bingo.notify_completion:
-            bingo.send_discord_message(
-                f'Player **{username}** set the status of **{team_tile.tile.name}** completion to **{team_tile.is_complete}**.')
+            bingo.send_discord_message(f'Player **{username}** in team **{team_tile.team.team_name}** set the status of **{team_tile.tile.name}** completion to **{team_tile.is_complete}**.')
+            team_tile.team.send_discord_message(f'**{username}** set the status of **{team_tile.tile.name}** completion to **{team_tile.is_complete}**.')
 
         if team_tile.is_complete:
             team_tile.completion_date = datetime.datetime.now(datetime.timezone.utc)
 
         team_tile.save()
-
 
 
 class WOMInvo(Invocation):
@@ -87,9 +88,9 @@ class WOMInvo(Invocation):
     names = models.CharField(max_length=256, default='overall',
                              help_text='Name of skills or bosses to track. "overall" for all. Separate by comma')
 
-
     def update_complete(self, team_tile, username):
         bingo = self.tile.bingo
+        type_names = self.names.split(',')
 
         # Update wom details
         players_details = bingo.playerbingodetail_set.all().filter(team=team_tile.team)
@@ -97,14 +98,9 @@ class WOMInvo(Invocation):
         for players_detail in players_details:
             names = players_detail.account_names.split(',')
             for name in names:
-                update = requests.post(f'https://api.wiseoldman.net/v2/players/{name}/')
-                # if update.status_code != 200:
-                #     print(update.json())
-                #     print("We got an error in player " + name)
+                wiseoldman.update_user(name)
 
-                response = requests.get(
-                    f'https://api.wiseoldman.net/v2/players/{name}/gained?startDate={bingo.start_date.strftime("%Y-%m-%dT%H:%M:%S")}&endDate={datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%S")}')
-                type_names = self.names.split(',')
+                response = wiseoldman.get_gained(name, start_date=bingo.start_date.strftime("%Y-%m-%dT%H:%M:%S"))
                 if response.status_code == 200:
                     if self.type == 'KC':
                         for type_name in type_names:
@@ -114,25 +110,31 @@ class WOMInvo(Invocation):
                             current_amount += int(response.json()['data']['skills'][type_name]['experience']['gained'])
                     elif self.type == 'LV':
                         for type_name in type_names:
-                            current_amount += int(response.json()['data']['bosses'][type_name]['level']['gained'])
-                else:
-                    print(response.json())
+                            current_amount += int(response.json()['data']['skills'][type_name]['level']['gained'])
 
         team_tile.score = current_amount
         if current_amount >= self.amount:
             team_tile.is_complete = True
 
         if bingo.notify_completion:
-            bingo.send_discord_message(
-                f'Player **{username}** refreshed **{team_tile.tile.name}** to achieve **{current_amount}**/{self.amount}.')
+            bingo.send_discord_message(f'Player **{username}** in team **{team_tile.team.team_name}** refreshed **{team_tile.tile.name}** to achieve **{current_amount}**/{self.amount}.')
+            team_tile.team.send_discord_message(f'Tile **{team_tile.tile.name}** has been refreshed. You achieved : **{current_amount}**/{self.amount}.')
         #
         if team_tile.is_complete:
             team_tile.completion_date = datetime.datetime.now(datetime.timezone.utc)
-            self.update_approve(team_tile, username)
+            super(WOMInvo, self).update_approve(team_tile, username='_')
             team_tile.is_mod_approved = True
 
-
         team_tile.save()
+
+    def update_approve(self, team_tile, username=None):
+        super(WOMInvo, self).update_approve(team_tile, username)
+        team_tile.is_complete = team_tile.is_mod_approved
+        team_tile.save()
+
+    def get_names(self):
+
+        return self.names.replace('_', ' ')
 
 
 BOSSES = ['abyssal_sire', 'alchemical_hydra', 'artio', 'barrows_chests', 'bryophyta', 'callisto', 'calvarion',

@@ -8,8 +8,8 @@ class SubmissionForm(forms.ModelForm):
         model = Submission
         fields = ['img', 'comment']
         widgets = {
-            'img': forms.FileInput(attrs={'class': 'form-control bg-alabaster border-green4'}),
-            'comment': forms.TextInput(attrs={'class': 'form-control bg-alabaster border-green4'})
+            'img': forms.FileInput(attrs={'class': 'form-control bg-secondary-1 border-0'}),
+            'comment': forms.TextInput(attrs={'class': 'form-control bg-secondary-1 border-0'})
         }
         labels = {
             'img': 'Image:',

@@ -1,6 +1,10 @@
 {% extends 'layouts/base/base.html' %}
 {#{% load static %}#}
 
+{#Prevent page from being indexed#}
+{% block head_extras %}
+    <meta name="robots" content="noindex">{% endblock %}
+
 {% block content %}
     <div class="flex-column">
         {% include 'pages/bingo/edit/innertemplates/menu.html' %}
@@ -23,7 +27,7 @@
             <button type="button" class="btn-default rounded-3"
                     data-bs-toggle="modal" data-bs-target="#delete_modal_id">Delete
             </button>
-            <a href="{% url 'bingo:launch_bingo' bingo.id %}" class="btn-default rounded-3">LAUNCH Bingo</a>
+{#            <a href="{% url 'bingo:launch_bingo' bingo.id %}" class="btn-default rounded-3">LAUNCH Bingo</a>#}
         </div>
     </div>
 

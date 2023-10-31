@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth import authenticate, password_validation
+from django.contrib.auth import authenticate
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
@@ -26,6 +26,10 @@ class CreateUserForm(UserCreationForm):
             'email': forms.EmailInput(attrs={'class': 'form-control'})
         }
 
+        help_texts = {
+            'username': 'This name is what you will be shown as in the website and is different from your OSRS account names. Letters, digits and @/./+/-/_ only.'
+        }
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['email'].required = True
@@ -42,7 +46,7 @@ class CreateUserForm(UserCreationForm):
 
     def save(self, *args, **kwargs):
         user = super().save(*args, **kwargs)
-        user.is_active = False
+        # user.is_active = False ######## SWITCH BACK LATER
         user.save()
         player = Player(user=user)
         player.save()
@@ -98,15 +102,15 @@ class ResetPasswordForm(forms.Form):
         min_length = 8
 
         if len(password1) < min_length:
-            raise forms.ValidationError({'password1':[f'Password must be at least {min_length} characters long.']})
+            raise forms.ValidationError({'password1': [f'Password must be at least {min_length} characters long.']})
 
         # check for digit
         if not any(char.isdigit() for char in password1):
-            raise forms.ValidationError({'password1':['Password must contain at least 1 digit.']})
+            raise forms.ValidationError({'password1': ['Password must contain at least 1 digit.']})
 
         # check for letter
         if not any(char.isalpha() for char in password1):
-            raise forms.ValidationError({'password1':['Password must contain at least 1 letter.']})
+            raise forms.ValidationError({'password1': ['Password must contain at least 1 letter.']})
 
         if cleaned_data['password1'] != cleaned_data['password2']:
             raise forms.ValidationError({'password2': ['The two password fields didn’t match']})

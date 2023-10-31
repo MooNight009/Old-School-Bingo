@@ -276,16 +276,36 @@ body {
 
     text-align: center;
     text-decoration: none;
-    transition: background-color 0.5s, color 0.5s;
+    transition: background-color 0.5s, color 0.5s, border 0.5s;
 }
 
 .btn-default:hover {
     background-color: var(--secondary-1-color);
     color: var(--primary-1-color) !important;
+    /*border: var(--primary-1-color) 2px solid !important;*/
 }
 
 .btn-default:hover > a {
     color: var(--primary-1-color) !important;
+}
+
+/*Default button details*/
+.btn-default-inverse {
+    background-color: var(--secondary-1-color);
+    color: var(--primary-1-color);
+    border: var(--primary-1-color) 2px solid !important;
+
+    padding: 0.5rem;
+
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.5s, color 0.5s, border 0.5s;
+}
+
+.btn-default-inverse:hover {
+    background-color: var(--primary-1-color) !important;
+    color: var(--secondary-1-color) !important;
+    border: var(--secondary-1-color) 2px solid !important;
 }
 
 .btn-homepage {

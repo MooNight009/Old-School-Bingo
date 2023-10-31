@@ -13,9 +13,11 @@ from applications.invocation.models import SubmissionInvo
 class Tile(models.Model):
     bingo = models.ForeignKey('bingo.Bingo', on_delete=models.CASCADE)
 
-    name = models.CharField(max_length=64, default="Tile Name")
-    img = models.ImageField(null=True, blank=True, storage=PublicMediaStorage())  # TODO: SET PROPER PATH FOR STORAGE
-    description = models.TextField(max_length=512, default="Description")
+    name = models.CharField(max_length=64, default="Tile Name",
+                            help_text='Text limit: 64 Characters, Recommended less than 16')
+    img = models.ImageField(null=True, blank=True, storage=PublicMediaStorage(),
+                            help_text="Image associated with Tile. Recommended size: 270x200px")  # TODO: SET PROPER PATH FOR STORAGE
+    description = models.TextField(max_length=512, default="Description", help_text='Text limit: 512 Characters')
 
     bingo_location = models.IntegerField()
     score = models.IntegerField(default=1)

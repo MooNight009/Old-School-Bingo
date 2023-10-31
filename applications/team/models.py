@@ -1,3 +1,4 @@
+from discord import SyncWebhook
 from django.db import models
 
 from applications.tile.models import TeamTile
@@ -10,6 +11,9 @@ class Team(models.Model):
     team_name = models.CharField(max_length=64)
     score = models.IntegerField(default=0)
     ranking = models.IntegerField(default=1)
+
+    discord_webhook = models.CharField(blank=True, null=True, max_length=256,
+                                       help_text="Webhook URL for your channel. Leave empty if you don't want to use.")
 
     bingo = models.ForeignKey('bingo.Bingo', on_delete=models.CASCADE)
 
@@ -77,3 +81,11 @@ class Team(models.Model):
                 team.ranking = current_rank
                 team.save()
             current_rank += tmp_teams.count()
+
+    def send_discord_message(self, message):
+        try:
+            if self.discord_webhook is not None and len(self.discord_webhook) != 0:
+                webhook = SyncWebhook.from_url(self.discord_webhook)
+                webhook.send(message)
+        except ValueError:
+            print("Sending discord message failed")  # TODO: Better error logging method

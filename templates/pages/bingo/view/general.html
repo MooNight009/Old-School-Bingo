@@ -1,6 +1,10 @@
 {% extends 'layouts/base/base.html' %}
 {% load bingo_extras %}
 
+{#Prevent page from being indexed#}
+{% block head_extras %}
+    <meta name="robots" content="noindex">{% endblock %}
+
 {% block content %}
     {% include 'layouts/innertemplates/winner.html' %}
 
@@ -21,14 +25,14 @@
                     <button class="btn-default fs-3 w-100 border-0 rounded-3 rounded-bottom-0 dropdown-toggle"
                             type="button"
                             data-bs-toggle="dropdown">
-                        {{ current_team.team_name }}
+                        Summary
                     </button>
                     <ul class="dropdown-menu bg-alabaster w-100">
                         {% for team in teams %}
                             {% if team.team_name == 'General' %}
                                 <li><a href="{% url 'bingo:play_bingo_general' bingo.id %}"
                                        class="dropdown-item {% if current_team == team %}active-switch{% endif %}{{ user|user_access_check:team.pk }}">
-                                    {{ team.team_name }}</a>
+                                    Summary</a>
                                 </li>
                             {% else %}
                                 <li><a href="{% url 'bingo:play_bingo' bingo.id team.id %}"
