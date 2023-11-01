@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth import authenticate
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.hashers import check_password
 from django.contrib.auth.models import User
 
 # TODO: Write clean methods for each part
@@ -58,14 +59,24 @@ class LoginForm(forms.Form):
     password = forms.CharField(label='Password', widget=forms.PasswordInput(attrs={'class': 'form-control'}))
 
     def clean(self):
+        print("Here>")
         username = self.cleaned_data['username']
         password = self.cleaned_data['password']
         if username and password:
+            get_user = User.objects.filter(username=username)
+            if not get_user.exists():
+                raise forms.ValidationError({'username': ['Username is wrong']})
+
+            get_password_check = check_password(password, get_user.get().password)
+            if not get_password_check:
+                raise forms.ValidationError({'password': ['Password is wrong']})
+
             user = authenticate(username=username, password=password)
             if not user:
-                raise forms.ValidationError('Username or password is wrong. ')
+                raise forms.ValidationError('Make sure you account is activated.')
             return super().clean()
-        raise forms.ValidationError('Error')
+
+        raise forms.ValidationError('Make sure password and username are entered.')
 
 
 class ForgotPasswordForm(forms.Form):
