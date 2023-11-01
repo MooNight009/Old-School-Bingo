@@ -11,6 +11,11 @@ class TeamForm(forms.ModelForm):
         model = Team
         fields = ['team_name', 'discord_webhook']
 
+        widgets = {
+            'team_name' : forms.TextInput(attrs={'class':'form-control w-25 me-2'}),
+            'discord_webhook' : forms.TextInput(attrs={'class':'form-control w-25 me-2'})
+        }
+
     def clean(self):
         cleaned_data = super().clean()
         print('cleaned data')
