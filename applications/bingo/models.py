@@ -23,8 +23,8 @@ class Bingo(models.Model):
     img = models.ImageField(null=True, blank=True,
                             help_text="Image displayed in home page. Recommended size: 270x200px")  # TODO: SET PROPER PATH FOR STORAGE
 
-    start_date = models.DateTimeField(help_text="Starting date and time of bingo. UTC not local timezone")
-    end_date = models.DateTimeField(help_text="Starting date and time of bingo. UTC not local timezone")
+    start_date = models.DateTimeField(help_text="Starting date and time of bingo.")
+    end_date = models.DateTimeField(help_text="Starting date and time of bingo.")
     is_game_over_on_finish = models.BooleanField(default=False,
                                                  help_text="Does the game finish when a team reaches maximum points? (Not implemented)")
 
@@ -68,7 +68,7 @@ class Bingo(models.Model):
         super().save(*args, **kwargs)
         if self.img is not None:
             img = Image.open(self.img.path)
-            img.resize((270, 200))
+            img = img.resize((270, 200))
             img.save(self.img.path, format='PNG', quality=60, optimize=True)
 
     # TODO: Actually implement method
