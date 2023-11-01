@@ -8,6 +8,7 @@
 
             <form method="post" action="">
             {% csrf_token %}
+                {% include 'layouts/innertemplates/formerrors.html' %}
                 {% for field in form %}
                     <div class="pb-2">
                         {% include 'layouts/innertemplates/field.html' %}
