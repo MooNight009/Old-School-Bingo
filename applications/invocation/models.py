@@ -51,7 +51,7 @@ class Invocation(models.Model):
 
         # Finish the game
         if bingo.is_game_over_on_finish:
-            if team_tile.team.score == bingo.max_score:
+            if team_tile.team.score >= bingo.max_score:
                 bingo.is_over = True
                 bingo.is_team_public = True
                 bingo.is_public = True
