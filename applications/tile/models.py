@@ -38,7 +38,7 @@ class Tile(models.Model):
         super().save(*args, **kwargs)
         if self.img is not None and self.img.name is not None and len(self.img.name) != 0:
             img = Image.open(self.img.path)
-            img.thumbnail((270, 200))
+            img = img.resize((270, 200))
             img.save(self.img.path, format='PNG', quality=60, optimize=True)
 
         # Make board ready if all tiles are ready
