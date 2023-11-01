@@ -43,7 +43,7 @@ class Tile(models.Model):
         if self.img is not None and self.img.name is not None and len(self.img.name) != 0:
             memfile = BytesIO()
             img = Image.open(self.img)
-            img.thumbnail((270, 200))
+            img = img.resize((270, 200))
             img.save(memfile, format='PNG', quality=60, optimize=True)
             imageFile = default_storage.open(self.img.name, 'wb')
             imageFile.write(memfile.getvalue())
