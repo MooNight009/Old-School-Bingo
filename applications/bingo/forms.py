@@ -81,6 +81,9 @@ class EditBingoForm(forms.ModelForm):
             'max_players_in_team': forms.NumberInput(attrs={'class': 'form-control w-25'}),
         }
 
+        localized_fields = ['start_date', 'end_date']
+        
+
     def clean(self):
         clean = super(EditBingoForm, self).clean()
 
@@ -89,10 +92,7 @@ class EditBingoForm(forms.ModelForm):
 
         # Disable changing start date if it's started
         # TODO: Disable the option to begin with
-        print(self.instance.is_started)
         if self.instance.get_is_started():
-            print(clean['start_date'])
-            print(self.instance.start_date)
             clean['start_date'] = self.instance.start_date
         # Make sure the new start date is not before today
         elif clean['start_date'] <= datetime.datetime.now(datetime.timezone.utc):

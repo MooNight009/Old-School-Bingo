@@ -30,9 +30,12 @@
                             <td>{{ player.user.username }}</td>
                             <td>
                                 <select name="team_id" id="" class="form-select" form="player_{{ player.id }}_id">
-                                    {% if player.user|get_user_bingo_team:bingo == -1 %}
-                                        <option value="-1" disabled selected>No Team Selected</option>
-                                    {% endif %}
+                                    {% for team in teams %}
+                                        {% if team.team_name == 'General' %}
+                                            <option value="{{ team.id }} {{ player|is_player_in_team:team }}">No Team</option>
+                                        {% endif %}
+                                    {% endfor %}
+
                                     {% for team in teams %}
                                         {% if team.team_name != 'General' %}
                                             <option value="{{ team.id }}" {{ player|is_player_in_team:team }}>{{ team.team_name }}</option>

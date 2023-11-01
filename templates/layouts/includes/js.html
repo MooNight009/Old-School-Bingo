@@ -35,6 +35,12 @@
         navigator.clipboard.writeText(link)
     }
 
+    {#Formats the date to yyyy-MM-ddThh:mm#}
+    function get_formatted_date(date){
+        let d = date.getFullYear() + '-' + ("0"+(date.getMonth()+1)).slice(-2) + '-'+ ("0" + date.getDate()).slice(-2)+ 'T' + ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2)
+        return d
+    }
+
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
     const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
 </script>

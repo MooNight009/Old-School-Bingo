@@ -5,7 +5,8 @@
     <div class="bg-primary-2 rounded-3 p-2 mb-5">
         <h1>Create Bingo</h1>
 
-        <form method="POST" action="" enctype="multipart/form-data">
+        <form method="POST" action="" onsubmit="back_to_utc()"
+              enctype="multipart/form-data">
             {% csrf_token %}
             {{ form.non_field_error }}
             {% for field in form %}
@@ -30,6 +31,18 @@
 
 {% block js %}
     <script>
+        {#Localize the timezone#}
+        document.querySelector('#id_start_date').min = get_formatted_date(new Date())
+        document.querySelector('#id_end_date').min = get_formatted_date(new Date())
+
+        {#Change dates back to UTC#}
+        function back_to_utc(){
+            let end_date = (new Date(document.querySelector('#id_end_date').value))
+            document.querySelector('#id_end_date').value = end_date.toISOString().slice(0, 16)
+            let start_date = (new Date(document.querySelector('#id_start_date').value))
+            document.querySelector('#id_start_date').value = start_date.toISOString().slice(0, 16)
+        }
+
         document.querySelector('meta[name="description"]').setAttribute("content", "Create your dream bingo.")
         document.querySelector('title').innerText = 'Create Bingo - Old School Bingo'
     </script>

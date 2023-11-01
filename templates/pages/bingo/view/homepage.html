@@ -169,11 +169,9 @@
                 tag = 'Ending in '
             }
             if ((end_date - now) <= 0 && time_left <= 0) {
-                console.log('got here')
                 document.getElementById('time_left').innerHTML = ''
                 return clearInterval(interval)
             }
-            console.log("Did we continue")
 
             let days = Math.floor(time_left / 86400);
             let hours = Math.floor((time_left - (days * 86400)) / 3600);

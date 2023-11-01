@@ -16,13 +16,14 @@
             {{ form.non_form_errors }}
             {% for team_form in form %}
                 {{ team_form.non_field_errors }}
-                <div class="mb-1">
-                    {% if 'General' not in team_form %}
+{#                {{ team_form }}#}
+                <div class="d-flex flex-wrap align-items-baseline mb-1">
+                    {% if team_form.team_name.value != 'General' %}
                         {% for field in team_form %}
                             {% include 'layouts/innertemplates/field.html' %}
                         {% endfor %}
                         {% if team_form.id.value != None%}
-                            <input type="button" class="bg-accent color-secondary-1 text-center rounded-3 py-1"
+                            <input type="button" class="bg-accent color-secondary-1 text-center rounded-3 ms-2 py-1"
                                    onclick="copy_link('https://oldschoolbingo.com{{ bingo.get_join_link }}?team_id={{ team_form.id.value }}')"
                                     value="Copy invite link">
                         {% endif %}
