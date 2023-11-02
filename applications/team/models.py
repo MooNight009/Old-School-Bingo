@@ -35,9 +35,9 @@ class Team(models.Model):
             return ''
 
         for player in self.player_set.all():
-            player.teams.remove(self)
-            player.teams.add(Team.objects.get(bingo=self.bingo, team_name='General'))
-            player.save()
+            player_bingo_detail = player.playerbingodetail_set.filter(bingo=self.bingo)
+            player_bingo_detail.team = Team.objects.get(bingo=self.bingo, team_name='General')
+            player_bingo_detail.save()
         return super().delete(*args, **kwargs)
 
     def get_ranking(self):
@@ -89,3 +89,6 @@ class Team(models.Model):
                 webhook.send(message)
         except ValueError:
             print("Sending discord message failed")  # TODO: Better error logging method
+
+    def get_player_count(self):
+        return self.playerbingodetail_set.all().count()

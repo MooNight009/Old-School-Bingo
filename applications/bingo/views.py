@@ -258,16 +258,9 @@ class UpdatePlayerDetail(LoginRequiredMixin, UserIsModeratorMixin, RedirectView)
         # Make sure a team is selected and not empty
         if self.request.POST.get('team_id', False):
             team = Team.objects.filter(pk=self.request.POST['team_id']).get()
-
-            # TODO: Older methods, remove later on
-            joined_teams = player.teams.filter(bingo=bingo)
-            for joined_team in joined_teams:
-                player.teams.remove(joined_team)
-            player.teams.add(team)
-            # New method
             player_detail.team = team
 
-        player_detail.account_names = self.request.POST.get('account_names', player.user.username)
+        player_detail.account_names = self.request.POST.get('account_names', '')
         player_detail.save()
 
         return reverse('bingo:edit_bingo_players', kwargs={'pk': kwargs['pk']})
@@ -277,18 +270,16 @@ class UpdatePlayerDetail(LoginRequiredMixin, UserIsModeratorMixin, RedirectView)
 class ChangeTeam(LoginRequiredMixin, RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         bingo = Bingo.objects.get(pk=kwargs['pk'])
-        if bingo.get_is_started():
+        if bingo.get_is_started() or not bingo.can_players_create_team:
             return reverse('bingo:bingo_home_page', kwargs={'pk': bingo.id})
         team = Team.objects.get(pk=self.request.POST['selected_team_id'])
 
         player = Player.objects.get(user=self.request.user)
-        joined_teams = player.teams.filter(bingo=bingo)
-        players_in_team_count = Player.objects.filter(teams__in=[team]).count()
-        # TODO: Make sure this works as intended
-        if bingo.max_players_in_team == 0 or bingo.max_players_in_team > players_in_team_count:
-            for joined_team in joined_teams:
-                player.teams.remove(joined_team)
-            player.teams.add(team)
+        player_bingo_details = player.playerbingodetail_set.filter(bingo=bingo).get()
+
+        if bingo.max_players_in_team == 0 or bingo.max_players_in_team > team.get_player_count():
+            player_bingo_details.team = team
+            player_bingo_details.save()
 
         return reverse('bingo:bingo_home_page', kwargs={'pk': bingo.id})
 
@@ -298,7 +289,7 @@ class CreateTeam(LoginRequiredMixin, RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         bingo = Bingo.objects.filter(pk=kwargs['pk']).get()
         new_team_name = self.request.POST['new_team_name']
-        if bingo.get_is_started():
+        if bingo.get_is_started() or not bingo.can_players_create_team:
             return reverse('bingo:bingo_home_page', kwargs={'pk': bingo.id})
 
         if not Team.objects.filter(bingo=bingo, team_name=new_team_name).exists():
@@ -309,8 +300,9 @@ class CreateTeam(LoginRequiredMixin, RedirectView):
             # Add user to team
             user = self.request.user
             player = Player.objects.filter(user=user).get()
-            player.teams.remove(player.teams.get(bingo=bingo))
-            player.teams.add(team)
+            player_bingo_detail = player.playerbingodetail_set.filter(bingo=bingo).get()
+            player_bingo_detail.team = team
+            player_bingo_detail.save()
 
         return reverse('bingo:bingo_home_page', kwargs={'pk': bingo.id})
 
