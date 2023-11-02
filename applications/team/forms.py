@@ -18,9 +18,6 @@ class TeamForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
-        print('cleaned data')
-        print(cleaned_data)
-        print(cleaned_data['discord_webhook'])
 
         if Team.objects.filter(bingo=self.instance.bingo, team_name=cleaned_data['team_name']).exclude(
                 id=self.instance.id).exists():

@@ -27,8 +27,6 @@ SECRET_KEY = KEY.DJANGO_SECRET_KEY
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    'oldschoolbingo-test.***REMOVED***.elasticbeanstalk.com',
-    'localhost',
     '192.168.0.158'
 ]
 
