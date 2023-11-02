@@ -22,12 +22,8 @@ DEBUG = False
 
 # TODO: Remove any unnecessary hosts
 ALLOWED_HOSTS = [
-    'oldschoolbingo-test.***REMOVED***.elasticbeanstalk.com',
-    'ec2-3-74-227-28.***REMOVED***.compute.amazonaws.com',
-    '172.31.3.70',
     'oldschoolbingo.com',
     'www.oldschoolbingo.com',
-    '192.168.0.158'
 ]
 
 # Application definition
