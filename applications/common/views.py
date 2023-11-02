@@ -21,7 +21,7 @@ class BingosView(TemplateView):
             bingos = Bingo.objects.all()
 
             moderating_bingos = bingos.filter(moderator_bingo__player=player)
-            joined_bingo = bingos.filter(player=player)
+            joined_bingo = bingos.filter(playerbingodetail__player=player)
             public_bingos = bingos.filter(is_public=True, is_over=False).exclude(pk__in=moderating_bingos).exclude(
                 pk__in=joined_bingo)
 
