@@ -1,5 +1,3 @@
-import datetime
-
 # Create your views here.
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse
@@ -10,8 +8,7 @@ from applications.invocation.forms import EditWOSInvoForm
 from applications.invocation.models import SubmissionInvo, WOMInvo
 from applications.player.models import Player, Moderator
 from applications.submission.forms import SubmissionForm
-from applications.submission.models import Submission, Achievement
-from applications.team.models import Team
+from applications.submission.models import Submission
 from applications.tile.forms import EditTileForm
 from applications.tile.models import Tile, TeamTile
 
@@ -91,15 +88,21 @@ class PlayTile(LoginRequiredMixin, PlayerAccessMixin, CreateView):
             Add Player and TeamTile to the submission
         """
         player = Player.objects.get(user=self.request.user)
-        form.instance.player = player
         team_tile = TeamTile.objects.get(pk=self.kwargs['pk'])
-        form.instance.team_tile = team_tile
 
-        if not (player.bingos.contains(team_tile.team.bingo) and player.teams.contains(
-                team_tile.team)) and not Moderator.objects.filter(bingo=team_tile.team.bingo, player=player).exists():
-            return super(PlayTile, self).form_invalid(form)
+        # Check if player is a moderator
+        if not Moderator.objects.filter(bingo=team_tile.team.bingo, player=player).exists():
+            # Check if player is in the team
+            if not player.playerbingodetail_set.all().filter(
+                    team=team_tile.team).exists():
+                return super(PlayTile, self).form_invalid(form)
+
+        # Don't Allow adding anything if bingo is over
         if team_tile.tile.bingo.get_is_over():
             return super(PlayTile, self).form_invalid(form)
+
+        form.instance.player = player
+        form.instance.team_tile = team_tile
 
         return super(PlayTile, self).form_valid(form)
 
@@ -115,15 +118,15 @@ class CompleteTile(LoginRequiredMixin, PlayerAccessMixin, RedirectView):
         team_tile = TeamTile.objects.get(pk=kwargs['pk'])
 
         bingo = team_tile.tile.bingo
-        if bingo.get_is_over() or not bingo.get_is_started():
+        if bingo.get_is_over():
             return reverse('tile:play_tile', kwargs={'pk': team_tile.id})
 
         # Make the player is mod or part of team
         player = Player.objects.get(user=self.request.user)
-        if not (player.bingos.contains(bingo) and player.teams.contains(
-                team_tile.team) and not team_tile.is_complete) and not Moderator.objects.filter(bingo=bingo,
-                                                                                                player=player).exists():
-            return reverse('tile:play_tile', kwargs={'pk': team_tile.id})
+        if not Moderator.objects.filter(bingo=bingo, player=player).exists():
+            if not player.playerbingodetail_set.filter(bingo=bingo,
+                                                       team=team_tile.team).exists() or team_tile.is_complete:
+                return reverse('tile:play_tile', kwargs={'pk': team_tile.id})
 
         # Update tile completion
         team_tile.tile.invocation.update_complete(team_tile, self.request.user.username)
@@ -145,5 +148,3 @@ class ApproveTile(LoginRequiredMixin, RedirectView):
         team_tile.tile.invocation.update_approve(team_tile, self.request.user.username)
 
         return reverse('tile:play_tile', kwargs={'pk': team_tile.pk})
-
-
