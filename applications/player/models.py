@@ -7,8 +7,6 @@ from applications.team.models import Team
 
 class Player(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
-    bingos = models.ManyToManyField(Bingo)
-    teams = models.ManyToManyField(Team)
 
 
 class Moderator(models.Model):
