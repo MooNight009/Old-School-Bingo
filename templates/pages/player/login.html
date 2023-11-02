@@ -1,5 +1,6 @@
 {% extends 'layouts/base/base.html' %}
-{#{% load static %}#}
+{% block title %}Login - Old School Bingo{% endblock %}
+{% block description %}Login to Old School Bingo{% endblock %}
 
 {% block content %}
     <div class="d-flex">
@@ -30,11 +31,4 @@
     {% for message in messages %}
         <p>{{ message }}</p>
     {% endfor %}
-{% endblock %}
-
-{% block js %}
-    <script>
-        document.querySelector('meta[name="description"]').setAttribute("content", "Login to Old School Bingo")
-        document.querySelector('title').innerText = `Login - Old School Bingo`
-    </script>
 {% endblock %}

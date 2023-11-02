@@ -1,6 +1,7 @@
 {% extends 'layouts/base/base.html' %}
 {#{% load static %}#}
 {% load bingo_extras %}
+{% block title %}Join {{ bingo.name }} - Old School Bingo{% endblock %}
 
 {#Prevent page from being indexed#}
 {% block head_extras %}
@@ -93,9 +94,5 @@
 
         {#Set Details on header#}
         show_back_button("{% url 'common:main' %}");
-
-        {#Set the page title#}
-        document.querySelector('title').innerText = `Join {{ bingo.name }} - Old School Bingo`
-
     </script>
 {% endblock %}

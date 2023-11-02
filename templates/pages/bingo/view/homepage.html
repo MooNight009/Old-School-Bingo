@@ -1,6 +1,7 @@
 {% extends 'layouts/base/base.html' %}
 {#{% load static %}#}
 {% load bingo_extras %}
+{% block title %}{{ bingo.name }} Homepage - Old School Bingo{% endblock %}
 
 {#Prevent page from being indexed#}
 {% block head_extras %}
@@ -197,9 +198,6 @@
 
         {#Set Details on header#}
         show_back_button("{% url 'common:main' %}");
-
-        {#Set the page title#}
-        document.querySelector('title').innerText = `{{ bingo.name }} Homepage - Old School Bingo`
 
     </script>
 {% endblock %}

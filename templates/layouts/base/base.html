@@ -21,11 +21,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description"
-{#          content="Host your bingo without the hassle of managing multiple discords or excel sheets. OldSchool Bingo takes care of the tedious for you so you can enjoy playing as much as possible.">#}
-          content="Run a bingo not a discord brothel with Old School Bingo. Make an engaging bingo with very little effort because we're here.">
+          content="{% block description %} {% endblock %}">
     <link rel="shortcut icon" href="{% static 'favicon/favicon-16x16.png' %}" type="image/x-icon">
 
-    <title>Old School Bingo</title>
+    <title>{% block title %} {% endblock %}</title>
 
     {% include 'layouts/includes/css.html' %}
     {% block head_extras %} {% endblock %}
