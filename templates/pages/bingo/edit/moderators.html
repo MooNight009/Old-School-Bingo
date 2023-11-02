@@ -1,6 +1,6 @@
 {% extends 'layouts/base/base.html' %}
-{#{% load static %}#}
 {% load bingo_extras %}
+{% block title %}Edit {{ bingo.name }} Moderators - Old School Bingo{% endblock %}
 
 {#Prevent page from being indexed#}
 {% block head_extras %}
@@ -48,8 +48,5 @@
 
         set_edit_bingo_active_tab('moderators_id');
         show_header_name("{{ bingo.name }}")
-
-        {#Set the page title#}
-        document.querySelector('title').innerText = `Edit {{ bingo.name }} Moderators - Old School Bingo`
     </script>
 {% endblock %}

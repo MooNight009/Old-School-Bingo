@@ -1,5 +1,5 @@
 {% extends 'layouts/base/base.html' %}
-{#{% load static %}#}
+{% block title %}Edit {{ tile.name }} Invocation in {{ tile.bingo.name }} - Old School Bingo{% endblock %}
 
 {#Prevent page from being indexed#}
 {% block head_extras %}
@@ -30,11 +30,8 @@
     <script>
         {#    Set the back button   #}
         show_back_button("{% url 'bingo:edit_bingo_board' object.bingo.id %}");
-        show_header_name('{{ tile.name }}')
+        show_header_name("{{ tile.name }}")
 
         set_edit_bingo_active_tab('wom_id')
-
-        {#Set the page title#}
-        document.querySelector('title').innerText = `Edit {{ tile.name }} Invocation in {{ tile.bingo.name }} - Old School Bingo`
     </script>
 {% endblock %}
