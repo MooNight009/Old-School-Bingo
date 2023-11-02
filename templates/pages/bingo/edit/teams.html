@@ -27,6 +27,8 @@
                                    onclick="copy_link('https://oldschoolbingo.com{{ bingo.get_join_link }}?team_id={{ team_form.id.value }}')"
                                     value="Copy invite link">
                         {% endif %}
+                    {% else %}
+                        <div class="" style="display: none">{{ team_form }}</div>
                     {% endif %}
                 </div>
             {% endfor %}
