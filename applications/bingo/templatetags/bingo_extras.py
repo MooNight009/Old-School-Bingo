@@ -31,15 +31,10 @@ def get_user_bingo_team(user, bingo):
 
     team_id = -1
     # Is the player in bingo
-    if player.bingos.contains(bingo):
-        team = player.teams.filter(bingo=bingo).exclude(team_name='General')
-        if team.exists():
-            team_id = team.get().id
-    # # Is the player a moderator
-    # elif Moderator.objects.filter(player=player, bingo=bingo).exists():
-    #     team = Team.objects.filter(bingo=bingo).first()
-    #     if team is not None:
-    #         team_id = team.id
+    player_detail = player.playerbingodetail_set.filter(bingo=bingo)
+    if player_detail.exists():
+        if player_detail.get().team.team_name != 'General':
+            team_id = player_detail.get().team.id
 
     return team_id
 
@@ -48,11 +43,13 @@ def get_user_bingo_team(user, bingo):
 def get_player_bingo_team(player, bingo):
     # player = Player.objects.get(user=user)
     team_id = -1
+
     # Is the player in bingo
-    if player.bingos.contains(bingo):
-        team = player.teams.filter(bingo=bingo).exclude(team_name='General')
-        if team.exists():
-            team_id = team.get().id
+    player_detail = player.playerbingodetail_set.filter(bingo=bingo)
+    if player_detail.exists():
+        if player_detail.get().team.team_name != 'General':
+            team_id = player_detail.get().team.id
+
     # Is the player a moderator
     elif Moderator.objects.filter(player=player, bingo=bingo):
         team = Team.objects.filter(bingo=bingo).first()
@@ -68,14 +65,9 @@ def get_user_bingo_id_team(user, bingo_pk):
     player = Player.objects.filter(user=user).get()
     team_id = -1
     # Is the player in bingo
-    if player.bingos.contains(bingo):
-        team = player.teams.filter(bingo=bingo).get()
-        team_id = team.id
-    # # Is the player a moderator
-    # elif Moderator.objects.filter(player=player, bingo=bingo):
-    #     team = Team.objects.filter(bingo=bingo).first()
-    #     if team is not None:
-    #         team_id = team.id
+    player_detail = player.playerbingodetail_set.filter(bingo=bingo)
+    if player_detail.exists():
+        team_id = player_detail.get().team.id
 
     return team_id
 
@@ -102,7 +94,7 @@ def is_moderator(user, bingo_pk):
 def get_player_bingo_team_name(player, bingo_pk):
     team_name = player.teams.get(bingo_id=bingo_pk).team_name
 
-    return team_name if team_name!= 'General' else 'No team'
+    return team_name if team_name != 'General' else 'No team'
 
 
 # New filters
