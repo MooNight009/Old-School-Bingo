@@ -1,3 +1,5 @@
+import uuid
+
 from django.contrib.auth.models import User
 from django.db import models
 
@@ -6,15 +8,18 @@ from applications.team.models import Team
 
 
 class Player(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
 
 
 class Moderator(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     player = models.ForeignKey(Player, on_delete=models.CASCADE, null=True, related_name='moderator_player')
     bingo = models.ForeignKey(Bingo, on_delete=models.CASCADE, null=False, related_name='moderator_bingo')
 
 
 class PlayerBingoDetail(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     """
         Stores details for every player's bingo
     """

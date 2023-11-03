@@ -1,9 +1,10 @@
+import uuid
 from PIL import Image
 from django.db import models
 
 
 class Submission(models.Model):
-    # img
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     date = models.DateTimeField(auto_now=True)
     comment = models.CharField(max_length=256)
     img = models.ImageField()  # TODO: SET PROPER PATH FOR STORAGE
@@ -25,14 +26,13 @@ class Submission(models.Model):
             img.save(self.img.path, format='PNG', quality=60, optimize=True)
 
 
-class Reaction(models.Model):
-    # reaction = null;
-    player = models.ForeignKey('player.Player', on_delete=models.CASCADE)
-    submission = models.ForeignKey('submission.Submission', on_delete=models.CASCADE)
+# class Reaction(models.Model):
+#     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+#     player = models.ForeignKey('player.Player', on_delete=models.CASCADE)
+#     submission = models.ForeignKey('submission.Submission', on_delete=models.CASCADE)
 
 
 class Achievement(models.Model):
-    # status = models.CharField(max_length=32, null=False)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     date = models.DateTimeField(auto_now=True)
     team_tile = models.ForeignKey('tile.TeamTile', on_delete=models.CASCADE)
-    # player = models.ForeignKey('player.Player', on_delete=models.CASCADE)

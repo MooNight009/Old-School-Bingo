@@ -1,4 +1,5 @@
 import datetime
+import uuid
 
 import requests
 from PIL import Image
@@ -18,6 +19,7 @@ BINGO_TYPES = (
 
 
 class Bingo(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=64, help_text='Text limit: 64 Characters')
     description = models.TextField(max_length=2048, help_text='Text limit: 2048 Characters')
     img = models.ImageField(null=True, blank=True,

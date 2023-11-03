@@ -1,3 +1,5 @@
+import uuid
+
 from PIL import Image
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
@@ -7,6 +9,7 @@ from applications.invocation.models import SubmissionInvo
 
 
 class Tile(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     bingo = models.ForeignKey('bingo.Bingo', on_delete=models.CASCADE)
 
     name = models.CharField(max_length=64, default="Tile Name",
@@ -27,7 +30,7 @@ class Tile(models.Model):
     invocation_type = models.CharField(max_length=3, default='SBM', choices=INVOCATION_TYPES)
 
     content_type = models.ForeignKey(ContentType, on_delete=models.SET_NULL, null=True)
-    object_id = models.PositiveIntegerField()
+    object_id = models.UUIDField()
     invocation = GenericForeignKey('content_type', 'object_id')
 
     def save(self, *args, **kwargs):
@@ -89,6 +92,7 @@ class Tile(models.Model):
 
 
 class TeamTile(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     is_current = models.BooleanField(default=True)
     is_skipped = models.BooleanField(default=False)
 
@@ -143,6 +147,6 @@ class TeamTile(models.Model):
             return ''
 
 
-class SpecialTile(models.Model):
-    # action
-    pass
+# class SpecialTile(models.Model):
+#     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+#     pass

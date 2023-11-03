@@ -1,4 +1,5 @@
 import datetime
+import uuid
 from abc import abstractmethod
 
 import requests
@@ -10,6 +11,7 @@ from common.wiseoldman import wiseoldman
 
 
 class Invocation(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     tile = models.OneToOneField('tile.Tile', on_delete=models.CASCADE, null=True)
 
     class Meta:
