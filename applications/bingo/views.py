@@ -6,6 +6,7 @@ from django.views.generic import FormView, RedirectView, DetailView, ListView, U
 from applications.bingo.forms import *
 from applications.bingo.models import Bingo
 from applications.common.mixins import UserIsModeratorMixin, PlayerAccessMixin
+from applications.common.validators import check_string_special_free
 from applications.player.models import Player, Moderator, PlayerBingoDetail
 from applications.submission.models import Achievement, Submission
 from applications.team.forms import TeamFormSet
@@ -214,7 +215,10 @@ class ActuallyJoinBingo(LoginRequiredMixin, RedirectView):
         bingo = Bingo.objects.filter(pk=kwargs['pk']).get()
         player = Player.objects.filter(user=self.request.user).get()
         player_details = PlayerBingoDetail.objects.get_or_create(player=player, bingo=bingo)
+
         if player_details[1]:
+            if not check_string_special_free(self.request.POST['account_names']):
+                return reverse("bingo:bingo_home_page", kwargs={'pk': bingo.id})
             player_details = player_details[0]
             player_details.account_names = self.request.POST['account_names']
 
@@ -254,9 +258,12 @@ class UpdatePlayerDetail(LoginRequiredMixin, UserIsModeratorMixin, RedirectView)
         player = Player.objects.get(pk=kwargs['player_pk'])
         player_detail = PlayerBingoDetail.objects.get(player=player, bingo=bingo)
 
+        if not check_string_special_free(self.request.POST['account_names']):
+            return reverse('bingo:edit_bingo_players', kwargs={'pk': kwargs['pk']})
+
         # Make sure a team is selected and not empty
         if self.request.POST.get('team_id', False):
-            team = Team.objects.filter(pk=self.request.POST['team_id']).get()
+            team = Team.objects.filter(id=self.request.POST['team_id']).get()
             player_detail.team = team
 
         player_detail.account_names = self.request.POST.get('account_names', '')
@@ -288,6 +295,10 @@ class CreateTeam(LoginRequiredMixin, RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         bingo = Bingo.objects.filter(pk=kwargs['pk']).get()
         new_team_name = self.request.POST['new_team_name']
+
+        if not check_string_special_free(new_team_name):
+            return reverse('bingo:bingo_home_page', kwargs={'pk': bingo.id})
+
         if bingo.get_is_started() or not bingo.can_players_create_team:
             return reverse('bingo:bingo_home_page', kwargs={'pk': bingo.id})
 

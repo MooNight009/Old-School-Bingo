@@ -2,8 +2,10 @@ import datetime
 
 from discord import SyncWebhook
 from django import forms
+from django.contrib.auth.validators import UnicodeUsernameValidator
 
 from applications.bingo.models import Bingo
+from applications.common.validators import validate_string_special_free, validate_discord_link
 from applications.common.widgets import DateTimeWidget
 
 
@@ -14,6 +16,7 @@ class BingoForm(forms.ModelForm):
                   'board_size', 'is_row_col_extra', 'is_public', 'is_team_public', 'can_players_create_team',
                   'max_players_in_team']
         exclude = ['is_ready', 'max_score', 'is_started', 'is_over']
+
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control w-25'}),
             'description': forms.Textarea(attrs={'class': 'form-control w-50'}),
@@ -50,6 +53,16 @@ class BingoForm(forms.ModelForm):
 
         return clean
 
+    def clean_name(self):
+        name = self.cleaned_data['name']
+        validate_string_special_free(name)
+        return name
+
+    def clean_description(self):
+        description = self.cleaned_data['description']
+        validate_string_special_free(description)
+        return description
+
 
 class EditBingoForm(forms.ModelForm):
     """
@@ -82,7 +95,7 @@ class EditBingoForm(forms.ModelForm):
         }
 
         localized_fields = ['start_date', 'end_date']
-        
+
 
     def clean(self):
         clean = super(EditBingoForm, self).clean()
@@ -106,6 +119,15 @@ class EditBingoForm(forms.ModelForm):
 
         return clean
 
+    def clean_name(self):
+        name = self.cleaned_data['name']
+        validate_string_special_free(name)
+        return name
+
+    def clean_description(self):
+        description = self.cleaned_data['description']
+        validate_string_special_free(description)
+        return description
 
 class EditBingoDiscordForm(forms.ModelForm):
     class Meta:
@@ -124,20 +146,28 @@ class EditBingoDiscordForm(forms.ModelForm):
         }
 
     def clean(self):
-        cleaned_data = super().clean()
+        cleaned_data = super(EditBingoDiscordForm, self).clean()
+        if 'discord_webhook' not in cleaned_data:
+            if 'discord_webhook' in self._errors:
+                return cleaned_data
 
         if ('discord_webhook' in self.changed_data or 'enable_discord' in self.changed_data) and cleaned_data['enable_discord']:
             try:
                 webhook = SyncWebhook.from_url(cleaned_data['discord_webhook'])
-                webhook.send(f'You are now connected to the bingo **{self.instance.name}** from OldSchoolBingo.')
+                webhook.send(f'You are now connected to the bingo **{self.instance.name}** from Old School Bingo.')
             except ValueError:
                 raise forms.ValidationError(
                     {'discord_webhook': ['The webhook you entered is not working. Make sure to follow the documentation.']})
 
         return cleaned_data
 
+    def clean_discord_webhook(self):
+        discord_webhook = self.cleaned_data['discord_webhook']
+        validate_discord_link(discord_webhook)
+        return discord_webhook
+
 
 class ModeratorForm(forms.Form):
     player_name = forms.CharField(
-        max_length=32, required=True, widget=forms.TextInput(attrs={'class': 'form-control'})
+        max_length=32, validators=[validate_string_special_free], required=True, widget=forms.TextInput(attrs={'class': 'form-control'})
     )
