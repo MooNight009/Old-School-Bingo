@@ -1,3 +1,5 @@
+import uuid
+
 from discord import SyncWebhook
 from django.db import models
 
@@ -8,6 +10,7 @@ from applications.tile.models import TeamTile
 
 
 class Team(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     team_name = models.CharField(max_length=64)
     score = models.IntegerField(default=0)
     ranking = models.IntegerField(default=1)
@@ -18,13 +21,11 @@ class Team(models.Model):
     bingo = models.ForeignKey('bingo.Bingo', on_delete=models.CASCADE)
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
-        is_new = False
-        if not self.pk:
-            is_new = True
+        is_new = self._state.adding
+        if is_new:
             if Team.objects.filter(bingo=self.bingo).order_by('-ranking').exists():
                 self.ranking = Team.objects.filter(bingo=self.bingo).order_by('-ranking').first().ranking + 1
         super().save(force_insert=force_insert, force_update=force_update, using=using, update_fields=update_fields)
-
         if is_new:
             for tile in self.bingo.get_tiles():
                 team_tile = TeamTile(team=self, tile=tile)
@@ -35,9 +36,9 @@ class Team(models.Model):
             return ''
 
         for player in self.player_set.all():
-            player.teams.remove(self)
-            player.teams.add(Team.objects.get(bingo=self.bingo, team_name='General'))
-            player.save()
+            player_bingo_detail = player.playerbingodetail_set.filter(bingo=self.bingo)
+            player_bingo_detail.team = Team.objects.get(bingo=self.bingo, team_name='General')
+            player_bingo_detail.save()
         return super().delete(*args, **kwargs)
 
     def get_ranking(self):
@@ -89,3 +90,6 @@ class Team(models.Model):
                 webhook.send(message)
         except ValueError:
             print("Sending discord message failed")  # TODO: Better error logging method
+
+    def get_player_count(self):
+        return self.playerbingodetail_set.all().count()

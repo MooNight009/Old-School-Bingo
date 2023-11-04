@@ -1,4 +1,5 @@
 import datetime
+import uuid
 
 from io import BytesIO
 import requests
@@ -21,6 +22,7 @@ BINGO_TYPES = (
 
 
 class Bingo(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=64, help_text='Text limit: 64 Characters')
     img = models.ImageField(null=True, blank=True, storage=PublicMediaStorage(),
                             help_text="Image displayed in home page. Recommended size: 270x200px") # TODO: SET PROPER PATH FOR STORAGE

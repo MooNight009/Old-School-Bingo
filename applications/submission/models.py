@@ -1,3 +1,4 @@
+import uuid
 from io import BytesIO
 
 from PIL import Image
@@ -8,7 +9,7 @@ from applications.defaults.storage_backends import PublicMediaStorage
 
 
 class Submission(models.Model):
-    # img
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     date = models.DateTimeField(auto_now=True)
     comment = models.CharField(max_length=256)
 
@@ -22,8 +23,10 @@ class Submission(models.Model):
 
         bingo = self.team_tile.tile.bingo
         if bingo.notify_approval:
-            bingo.send_discord_message(f'Player **{self.player.user.username}** in team **{self.team_tile.team.team_name}** added submission to **{self.team_tile.tile.name}** with the comment "**{self.comment}"**.')
-            self.team_tile.team.send_discord_message(f'**{self.player.user.username}** added submission to **{self.team_tile.tile.name}** with the comment "**{self.comment}"**.')
+            bingo.send_discord_message(
+                f'Player **{self.player.user.username}** in team **{self.team_tile.team.team_name}** added submission to **{self.team_tile.tile.name}** with the comment "**{self.comment}"**.')
+            self.team_tile.team.send_discord_message(
+                f'**{self.player.user.username}** added submission to **{self.team_tile.tile.name}** with the comment "**{self.comment}"**.')
 
         if self.img is not None:
             memfile = BytesIO()
@@ -36,14 +39,13 @@ class Submission(models.Model):
             imageFile.close()
 
 
-class Reaction(models.Model):
-    # reaction = null;
-    player = models.ForeignKey('player.Player', on_delete=models.CASCADE)
-    submission = models.ForeignKey('submission.Submission', on_delete=models.CASCADE)
+# class Reaction(models.Model):
+#     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+#     player = models.ForeignKey('player.Player', on_delete=models.CASCADE)
+#     submission = models.ForeignKey('submission.Submission', on_delete=models.CASCADE)
 
 
 class Achievement(models.Model):
-    # status = models.CharField(max_length=32, null=False)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     date = models.DateTimeField(auto_now=True)
     team_tile = models.ForeignKey('tile.TeamTile', on_delete=models.CASCADE)
-    # player = models.ForeignKey('player.Player', on_delete=models.CASCADE)
