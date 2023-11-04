@@ -18,7 +18,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ['RDS_SECRET_KEY_DJANGO']
 
-DEBUG = False
+DEBUG = True
 
 # TODO: Remove any unnecessary hosts
 ALLOWED_HOSTS = [
