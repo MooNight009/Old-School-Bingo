@@ -1,22 +1,22 @@
 {% autoescape off %}
-    Hi {{ user.username }},
+Hi {{ user.username }},
 
-    Thank you for creating an account with Old School Bingo! We're thrilled to have you on board.
+Thank you for creating an account with Old School Bingo! We're thrilled to have you on board.
 
-    To complete your registration and start enjoying the benefits of Old School Bingo, please confirm your email address by clicking the following link:
+To complete your registration and start enjoying the benefits of Old School Bingo, please confirm your email address by clicking the following link:
 
-    http://{{ domain }}{% url 'player:activate' uidb64=uid token=token %}
+http://{{ domain }}{% url 'player:activate' uidb64=uid token=token %}
 
-    If the link above doesn't work, you can also copy and paste the link into your web browser
+If the link above doesn't work, you can also copy and paste the link into your web browser
 
-    By confirming your email, you'll gain access to a world of bingo technology.
+By confirming your email, you'll gain access to a world of bingo technology.
 
-    If you have any questions or need assistance you can ask on Discord:
+If you have any questions or need assistance you can ask on Discord:
 
-    https://discord.gg/fpKeEWMHjE
+https://discord.gg/fpKeEWMHjE
 
-    We're excited to have you as part of our community and look forward to providing you with an exceptional experience at Old School Bingo.
+We're excited to have you as part of our community and look forward to providing you with an exceptional experience at Old School Bingo.
 
-    May the bingo be with you,
-    Old School Bingo creator
+May the bingo be with you,
+Old School Bingo creator
 {% endautoescape %}
