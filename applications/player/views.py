@@ -32,14 +32,16 @@ class LoginView(FormView):
 class RegisterView(FormView):
     template_name = 'pages/player/register.html'
     form_class = CreateUserForm
-    success_url = '/'
+
+    def get_success_url(self):
+        return reverse('player:registration_confirmation')
 
     def form_valid(self, form):
         user = form.save()
         if user is not None:
             # Send confirmation email
             current_site = get_current_site(self.request)
-            mail_subject = 'Activate your blog account.'
+            mail_subject = 'Welcome to Old School Bingo - Confirm Your Account'
             message = render_to_string('layouts/mails/acc_active_email.html', {
                 'user': user,
                 'domain': current_site.domain,
@@ -49,7 +51,7 @@ class RegisterView(FormView):
             send_mail(
                 mail_subject,
                 message,
-                'info@oldschoolbingo.com',
+                'Old School Bingo info@oldschoolbingo.com',
                 [form.cleaned_data['email']]
             )
 
@@ -70,14 +72,16 @@ class AccountView(TemplateView):
 class ForgotPasswordView(FormView):
     template_name = 'pages/player/forgot_password.html'
     form_class = ForgotPasswordForm
-    success_url = '/'
+
+    def get_success_url(self):
+        return reverse('player:reset_password_confirmation')
 
     def form_valid(self, form):
         user = User.objects.filter(email=form.cleaned_data['email']).first()
 
         # Send password reset email
         current_site = get_current_site(self.request)
-        mail_subject = 'Password change in OldSchool Bingo'
+        mail_subject = 'Old School Bingo - Reset your password'
         message = render_to_string('layouts/mails/password_reset.html', {
             'user': user,
             'domain': current_site.domain,
@@ -87,7 +91,7 @@ class ForgotPasswordView(FormView):
         send_mail(
             mail_subject,
             message,
-            'info@oldschoolbingo.com',
+            'Old School Bingo <info@oldschoolbingo.com>',
             [form.cleaned_data['email']]
         )
 
@@ -113,6 +117,11 @@ class ResetPasswordView(FormView):
 
         return super().form_valid(form)
 
+class RegistrationConfirmationView(TemplateView):
+    template_name = 'pages/player/resitrationconfirmation.html'
+
+class PWResetConfirmationView(TemplateView):
+    template_name = 'pages/player/resetpasswordconfirmation.html'
 
 class ActivateView(RedirectView):
     """

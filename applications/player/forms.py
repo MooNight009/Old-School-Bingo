@@ -5,6 +5,7 @@ from django.contrib.auth.hashers import check_password
 from django.contrib.auth.models import User
 
 # TODO: Write clean methods for each part
+from applications.common.validators import validate_string_special_free
 from applications.player.models import Player
 
 
@@ -55,11 +56,11 @@ class CreateUserForm(UserCreationForm):
 
 
 class LoginForm(forms.Form):
-    username = forms.CharField(label='Username', max_length=32, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    username = forms.CharField(label='Username', validators=[validate_string_special_free], max_length=32,
+                               widget=forms.TextInput(attrs={'class': 'form-control'}))
     password = forms.CharField(label='Password', widget=forms.PasswordInput(attrs={'class': 'form-control'}))
 
     def clean(self):
-        print("Here>")
         username = self.cleaned_data['username']
         password = self.cleaned_data['password']
         if username and password:

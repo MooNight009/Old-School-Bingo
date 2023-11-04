@@ -22,7 +22,8 @@
                 {% csrf_token %}
                 <label for="account_names_id" class="form-label text-nowrap me-3">OSRS account names</label>
                 <input type="text" name="account_names" id="account_names_id" class="form-control w-25 me-2"
-                       value="{{ request.user.username }}">
+                       value="{{ request.user.username }}" pattern="^[\w.@+\-]+$"
+                       title="Only letters, numbers, ., @, +, and - are allowed">
                 <i class="fa-solid fa-circle-exclamation color-accent align-self-center me-3"
                    data-bs-toggle="tooltip" data-bs-placement="top"
                    data-bs-title="For multiple accounts separate them by a ',' (comma). This information will be used for tiles that get data from WiseOldMan."></i>

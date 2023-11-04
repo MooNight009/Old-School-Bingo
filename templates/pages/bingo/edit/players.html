@@ -25,14 +25,16 @@
                 {% with player|get_player_bingo_detail:bingo as player_detail %}
                     <tr class="align-middle">
                         <form action="{% url 'bingo:update_player_detail' view.kwargs.pk player.id %}" method="post"
-                              class="d-flex" nams="{{ player|get_player_bingo_team:bingo }}" id="player_{{ player.id }}_id">
+                              class="d-flex" nams="{{ player|get_player_bingo_team:bingo }}"
+                              id="player_{{ player.id }}_id">
                             {% csrf_token %}
                             <td>{{ player.user.username }}</td>
                             <td>
                                 <select name="team_id" id="" class="form-select" form="player_{{ player.id }}_id">
                                     {% for team in teams %}
                                         {% if team.team_name == 'General' %}
-                                            <option value="{{ team.id }} {{ player|is_player_in_team:team }}">No Team</option>
+                                            <option value="{{ team.id }}" {{ player|is_player_in_team:team }}>No Team
+                                            </option>
                                         {% endif %}
                                     {% endfor %}
 
@@ -44,7 +46,9 @@
                                 </select>
                             </td>
                             <td>
-                                <input type="text" name="account_names" class="form-control" value="{{ player_detail.account_names }}">
+                                <input type="text" name="account_names" pattern="^[\w.@+\-]+$"
+                                       class="form-control" value="{{ player_detail.account_names }}"
+                                       title="Only letters, numbers, ., @, +, and - are allowed">
                             </td>
                             <td>
                                 <input type="submit" class="btn-default rounded-3 ms-3" value="Update">
