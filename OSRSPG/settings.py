@@ -18,11 +18,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ['RDS_SECRET_KEY_DJANGO']
 
-DEBUG = True
+DEBUG = False
 
 # TODO: Remove any unnecessary hosts
 ALLOWED_HOSTS = [
-    os.environ['EB_DOMAIN']
+    'oldschoolbingo.com',
+    'www.oldschoolbingo.com',
 ]
 
 # Application definition
