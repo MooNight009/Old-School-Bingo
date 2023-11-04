@@ -72,7 +72,9 @@ class AccountView(TemplateView):
 class ForgotPasswordView(FormView):
     template_name = 'pages/player/forgot_password.html'
     form_class = ForgotPasswordForm
-    success_url = '/'
+
+    def get_success_url(self):
+        return reverse('player:reset_password_confirmation')
 
     def form_valid(self, form):
         user = User.objects.filter(email=form.cleaned_data['email']).first()
@@ -116,7 +118,10 @@ class ResetPasswordView(FormView):
         return super().form_valid(form)
 
 class RegistrationConfirmationView(TemplateView):
-    template_name = 'pages/player/checkemail.html'
+    template_name = 'pages/player/resitrationconfirmation.html'
+
+class PWResetConfirmationView(TemplateView):
+    template_name = 'pages/player/resetpasswordconfirmation.html'
 
 class ActivateView(RedirectView):
     """
