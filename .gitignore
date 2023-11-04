@@ -1,6 +1,7 @@
 db.sqlite3
 *.pyc
 media/
+.idea/
 
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
