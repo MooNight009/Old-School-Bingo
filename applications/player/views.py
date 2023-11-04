@@ -32,7 +32,9 @@ class LoginView(FormView):
 class RegisterView(FormView):
     template_name = 'pages/player/register.html'
     form_class = CreateUserForm
-    success_url = '/'
+
+    def get_success_url(self):
+        return reverse('player:registration_confirmation')
 
     def form_valid(self, form):
         user = form.save()
@@ -113,6 +115,8 @@ class ResetPasswordView(FormView):
 
         return super().form_valid(form)
 
+class RegistrationConfirmationView(TemplateView):
+    template_name = 'pages/player/checkemail.html'
 
 class ActivateView(RedirectView):
     """

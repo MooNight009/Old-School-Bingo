@@ -2,13 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="14ddb24e-c495-419b-9419-b1215605eeee" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/OSRSPG.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/pages/player/checkemail.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/OSRSPG.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/OSRSPG.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/applications/player/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/applications/player/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/applications/player/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/applications/player/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/pages/common/403.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/pages/common/403.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/pages/common/404.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/pages/common/404.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,30 +48,30 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/aamaj/PycharmProjects/OSRSPG&quot;,
-    &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "DefaultHtmlFileTemplate": "HTML File",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "C:/Users/aamaj/PycharmProjects/OSRSPG/templates/pages/player",
+    "list.type.of.created.stylesheet": "CSS",
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;sqlite&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "sqlite"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\aamaj\PycharmProjects\OSRSPG\templates\pages\player" />
       <recent name="C:\Users\aamaj\PycharmProjects\OSRSPG\applications\tile" />
       <recent name="C:\Users\aamaj\PycharmProjects\OSRSPG\applications\team" />
       <recent name="C:\Users\aamaj\PycharmProjects\OSRSPG\applications\submission" />
       <recent name="C:\Users\aamaj\PycharmProjects\OSRSPG\applications\player" />
-      <recent name="C:\Users\aamaj\PycharmProjects\OSRSPG\applications\invocation" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\aamaj\PycharmProjects\OSRSPG" />
@@ -185,6 +186,8 @@
       <workItem from="1699116428410" duration="64000" />
       <workItem from="1699116494767" duration="141000" />
       <workItem from="1699116647037" duration="249000" />
+      <workItem from="1699116906792" duration="850000" />
+      <workItem from="1699119083396" duration="1175000" />
     </task>
     <servers />
   </component>

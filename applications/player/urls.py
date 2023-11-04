@@ -12,4 +12,5 @@ urlpatterns = [
     path('forgot_password', ForgotPasswordView.as_view(), name='forgot_password'),
     path('activate/<uidb64>/<token>', ActivateView.as_view(), name='activate'),
     path('reset_password/<uidb64>/<token>', ResetPasswordView.as_view(), name='reset_password'),
+    path('registration_confirmation/', RegistrationConfirmationView.as_view(), name='registration_confirmation')
 ]
