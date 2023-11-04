@@ -22,8 +22,7 @@ DEBUG = False
 
 # TODO: Remove any unnecessary hosts
 ALLOWED_HOSTS = [
-    'oldschoolbingo.com',
-    'www.oldschoolbingo.com',
+    os.environ['EB_DOMAIN']
 ]
 
 # Application definition
@@ -183,7 +182,6 @@ LOGIN_REDIRECT_URL = '/'
 
 # Email details
 EMAIL_BACKEND = 'django_ses.SESBackend'
-
 
 # Upload limit
 DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880  # 5 MB
