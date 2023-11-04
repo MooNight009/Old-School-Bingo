@@ -1,5 +1,6 @@
 from django import forms
 
+from applications.common.validators import validate_string_special_free
 from applications.invocation.models import WOMInvo, BOSSES, SKILLS
 
 
@@ -37,3 +38,9 @@ class EditWOSInvoForm(EditInvocationForm):
                     raise forms.ValidationError({'names': [f'{name} is not a skill name. Available names are {SKILLS}']})
 
         return cleaned_data
+
+
+    def clean_names(self):
+        names = self.cleaned_data['names']
+        validate_string_special_free(names)
+        return names
