@@ -41,7 +41,7 @@ class RegisterView(FormView):
         if user is not None:
             # Send confirmation email
             current_site = get_current_site(self.request)
-            mail_subject = 'Activate your blog account.'
+            mail_subject = 'Welcome to Old School Bingo - Confirm Your Account'
             message = render_to_string('layouts/mails/acc_active_email.html', {
                 'user': user,
                 'domain': current_site.domain,
@@ -51,7 +51,7 @@ class RegisterView(FormView):
             send_mail(
                 mail_subject,
                 message,
-                'info@oldschoolbingo.com',
+                'Old School Bingo info@oldschoolbingo.com',
                 [form.cleaned_data['email']]
             )
 
@@ -61,7 +61,22 @@ class RegisterView(FormView):
 
 class LogoutView(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
-        logout(self.request)
+        # logout(self.request)
+        user = self.request.user
+        current_site = get_current_site(self.request)
+        mail_subject = 'Welcome to Old School Bingo - Confirm Your Account'
+        message = render_to_string('layouts/mails/acc_active_email.html', {
+            'user': user,
+            'domain': current_site.domain,
+            'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+            'token': account_activation_token.make_token(user),
+        })
+        send_mail(
+            mail_subject,
+            message,
+            'Old School Bingo <info@oldschoolbingo.com>',
+            ['aamajedi@gmail.com']
+        )
         return reverse('common:homepage')
 
 
