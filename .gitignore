@@ -8,3 +8,4 @@ media/
 !.elasticbeanstalk/*.global.yml
 test.py
 local/
+.idea/workspace.xml
