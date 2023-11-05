@@ -2,7 +2,8 @@
 {% load static %}
 {% load bingo_extras %}
 {% block title %}Old School Bingo{% endblock %}
-{% block description %}Run a bingo not a discord brothel with Old School Bingo. Make an engaging bingo with very little effort because we're here.{% endblock %}
+{% block description %}Run a bingo not a discord brothel with Old School Bingo. Make an engaging bingo with very little
+    effort because we're here.{% endblock %}
 
 {% block content %}
     <div class="">
@@ -27,9 +28,15 @@
         </div>
 
 
-        <div id="bingo_id" class="d-flex border-accent py-5 justify-content-center">
-            <a href="{% url 'common:main' %}"
-               class="btn-default-inverse bg-secondary-1 color-primary-2 border-3 fs-4 py-3 px-5 rounded-3">Play now</a>
+        <div id="bingo_id" class="d-flex flex-wrap border-accent py-5 justify-content-around">
+            <a href="{% url 'bingo:create_bingo' %}" style="min-width: 175px"
+               class="btn-default-inverse bg-secondary-1 color-primary-2 border-3 fs-4 py-3 px-4 rounded-3">Create
+                bingo</a>
+            <a href="{% url 'common:main' %}" style="min-width: 175px"
+               class="btn-default-inverse bg-secondary-1 color-primary-2 border-3 fs-4 py-3 px-4 rounded-3">Play now</a>
+            <a href="#" style="min-width: 175px"
+               class="btn-default-inverse bg-secondary-1 color-primary-2 border-3 fs-4 py-3 px-4 rounded-3">FAQ</a>
+
         </div>
 
         <div class="d-flex flex-column flex-md-row border border-3 rounded-3 mb-5">
@@ -110,10 +117,4 @@
             </div>
         </div>
     </div>
-{% endblock %}
-
-{% block js %}
-    <script>
-        show_header_div(`<a href="{% url 'common:main' %}" class="btn-default rounded-3">Play</a>`)
-    </script>
 {% endblock %}

@@ -2,7 +2,6 @@ import datetime
 
 from discord import SyncWebhook
 from django import forms
-from django.contrib.auth.validators import UnicodeUsernameValidator
 
 from applications.bingo.models import Bingo
 from applications.common.validators import validate_string_special_free, validate_discord_link
@@ -10,6 +9,11 @@ from applications.common.widgets import DateTimeWidget
 
 
 class BingoForm(forms.ModelForm):
+    """
+        This form is used when creating a bingo
+        TODO: Update to include minimum required setting
+    """
+
     class Meta:
         model = Bingo
         fields = ['name', 'description', 'img', 'start_date', 'end_date', 'is_game_over_on_finish', 'board_type',
@@ -66,21 +70,20 @@ class BingoForm(forms.ModelForm):
 
 class EditBingoForm(forms.ModelForm):
     """
-        Form used for editing the bingo
+        Form used for editing the bingo setting
     """
 
     class Meta:
         model = Bingo
         fields = ['name', 'description', 'img', 'start_date', 'end_date', 'is_game_over_on_finish',
-                  'is_row_col_extra', 'is_public', 'is_team_public', 'can_players_create_team',
-                  'max_players_in_team']
+                  'is_row_col_extra', 'can_players_create_team',
+                  'max_players_in_team', 'is_public', 'is_team_public']
         exclude = ['is_ready', 'max_score', 'board_size', 'board_type', 'is_started', 'is_over']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control w-25'}),
             'description': forms.Textarea(attrs={'class': 'form-control w-50'}),
             'img': forms.FileInput(attrs={'class': 'form-control w-25'}),
 
-            # 'start_date': forms.SelectDateWidget(),
             'start_date': DateTimeWidget(attrs={'class': 'btn-default rounded-3'}),
             'end_date': DateTimeWidget(attrs={'class': 'btn-default rounded-3'}),
             'is_game_over_on_finish': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
@@ -96,12 +99,26 @@ class EditBingoForm(forms.ModelForm):
 
         localized_fields = ['start_date', 'end_date']
 
+    def __init__(self, *args, **kwargs):
+        super(EditBingoForm, self).__init__(*args, **kwargs)
+        if self.instance.is_started:
+            self.fields['start_date'].disabled = True
+
+        if self.instance.is_over:
+            self.fields['end_date'].disabled = True
+            self.fields['name'].disabled = True
+            self.fields['description'].disabled = True
+            self.fields['img'].disabled = True
+            self.fields['is_game_over_on_finish'].disabled = True
+            self.fields['is_row_col_extra'].disabled = True
+            self.fields['can_players_create_team'].disabled = True
+            self.fields['max_players_in_team'].disabled = True
 
     def clean(self):
         clean = super(EditBingoForm, self).clean()
 
-        if self.instance.get_is_over():
-            raise forms.ValidationError('Bingo is over. You can not change anything anymore.')
+        # if self.instance.get_is_over():
+        #     raise forms.ValidationError('Bingo is over. You can not change anything anymore.')
 
         # Disable changing start date if it's started
         # TODO: Disable the option to begin with
@@ -129,6 +146,7 @@ class EditBingoForm(forms.ModelForm):
         validate_string_special_free(description)
         return description
 
+
 class EditBingoDiscordForm(forms.ModelForm):
     class Meta:
         model = Bingo
@@ -151,13 +169,15 @@ class EditBingoDiscordForm(forms.ModelForm):
             if 'discord_webhook' in self._errors:
                 return cleaned_data
 
-        if ('discord_webhook' in self.changed_data or 'enable_discord' in self.changed_data) and cleaned_data['enable_discord']:
+        if ('discord_webhook' in self.changed_data or 'enable_discord' in self.changed_data) and cleaned_data[
+            'enable_discord']:
             try:
                 webhook = SyncWebhook.from_url(cleaned_data['discord_webhook'])
                 webhook.send(f'You are now connected to the bingo **{self.instance.name}** from Old School Bingo.')
             except ValueError:
                 raise forms.ValidationError(
-                    {'discord_webhook': ['The webhook you entered is not working. Make sure to follow the documentation.']})
+                    {'discord_webhook': [
+                        'The webhook you entered is not working. Make sure to follow the documentation.']})
 
         return cleaned_data
 
@@ -169,5 +189,6 @@ class EditBingoDiscordForm(forms.ModelForm):
 
 class ModeratorForm(forms.Form):
     player_name = forms.CharField(
-        max_length=32, validators=[validate_string_special_free], required=True, widget=forms.TextInput(attrs={'class': 'form-control'})
+        max_length=32, validators=[validate_string_special_free], required=True,
+        widget=forms.TextInput(attrs={'class': 'form-control'})
     )

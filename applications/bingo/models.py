@@ -95,8 +95,8 @@ class Bingo(models.Model):
                     names = players_detail.account_names.split(',')
                     for name in names:
                         response = requests.post(f'https://api.wiseoldman.net/v2/players/{name}/')
-                        if response.status_code!= 200:
-                            print("We got an error in player "+ name)
+                        if response.status_code != 200:
+                            print("We got an error in player " + name)
         return self.is_started
 
     def get_is_over(self):
@@ -142,6 +142,8 @@ class Bingo(models.Model):
                     first_team = team
 
             self.winner = first_team
+        elif top_teams.count() == 0:
+            top_teams = self.team_set.filter(team_name='General')
 
         self.winner = top_teams.first()
         self.save()
@@ -160,7 +162,7 @@ class Bingo(models.Model):
             max_score += tile.score
 
         if self.is_row_col_extra:
-            max_score += (self.board_size * 2) + 1
+            max_score += (self.board_size * 2)
 
         self.max_score = max_score
         self.save()

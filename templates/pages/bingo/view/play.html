@@ -83,6 +83,13 @@
 
 {% block js %}
     <script>
+        {#Localize the times#}
+        let achievements = document.querySelectorAll('[name ="achievement_date"]')
+        for (let i = 0; i< achievements.length; i++) {
+            let start_date = (new Date(achievements[i].innerText))
+            achievements[i].innerText = get_formatted_date(start_date)
+        }
+
         {#Make sure size in the same on both divs#}
         let board = document.getElementById('board_id');
         let canvas_board = document.getElementById('canvas_board_id');

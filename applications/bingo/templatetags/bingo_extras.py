@@ -77,7 +77,7 @@ def user_access_check(user, team_pk):
     team = Team.objects.get(pk=team_pk)
     player = Player.objects.get(user=user)
 
-    if not team.bingo.is_public and not Moderator.objects.filter(player=player, bingo=team.bingo):
+    if not Moderator.objects.filter(player=player, bingo=team.bingo):
         if not team.bingo.is_team_public:
             if not player.playerbingodetail_set.filter(team=team).exists():
                 return 'disabled'

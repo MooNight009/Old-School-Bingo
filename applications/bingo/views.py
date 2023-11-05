@@ -25,7 +25,9 @@ class CreateBingo(LoginRequiredMixin, FormView):
         moderator = Moderator(player=player, bingo=bingo)
         moderator.save()
         for i in range(1, bingo.board_size ** 2 + 1):
-            tile = Tile.objects.create(bingo_location=i, score=1, bingo=bingo)
+            Tile.objects.create(bingo_location=i, score=1, bingo=bingo)
+
+        bingo.calculate_max_score()
         Team.objects.create(team_name='General', bingo=bingo)
         return super().form_valid(form)
 
@@ -347,7 +349,7 @@ class PlayBingoGeneral(LoginRequiredMixin, UserPassesTestMixin, DetailView):
 
         return Moderator.objects.filter(player__user=self.request.user,
                                         bingo_id=self.kwargs['pk']).exists() or (
-                       bingo.is_team_public and bingo.is_started)
+                       bingo.is_team_public and bingo.is_started) or (bingo.is_public and bingo.is_over)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

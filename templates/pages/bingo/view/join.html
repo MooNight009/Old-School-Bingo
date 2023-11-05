@@ -13,7 +13,7 @@
         <div class="fs-1 mb-3 text-center" id="status"></div>
         <div class="fs-1 mb-3 text-center" id="time_left"></div>
         <p class="mb-3">{{ object.description|linebreaks }}</p>
-        {% if is_in_bingo %}
+        {% if is_in_bingo or bingo.is_over %}
             <a href="{% url 'bingo:bingo_home_page' object.pk %}" class="btn-default rounded-3 mx-auto">Bingo Home
                 Page</a>
         {% else %}
@@ -22,7 +22,7 @@
                 {% csrf_token %}
                 <label for="account_names_id" class="form-label text-nowrap me-3">OSRS account names</label>
                 <input type="text" name="account_names" id="account_names_id" class="form-control w-25 me-2"
-                       value="{{ request.user.username }}" pattern="^[\w.@+\-]+$"
+                       value="{{ request.user.username }}" pattern="^[\w.@+ \-]+$"
                        title="Only letters, numbers, ., @, +, and - are allowed">
                 <i class="fa-solid fa-circle-exclamation color-accent align-self-center me-3"
                    data-bs-toggle="tooltip" data-bs-placement="top"
