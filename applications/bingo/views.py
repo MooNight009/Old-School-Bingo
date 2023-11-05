@@ -25,7 +25,9 @@ class CreateBingo(LoginRequiredMixin, FormView):
         moderator = Moderator(player=player, bingo=bingo)
         moderator.save()
         for i in range(1, bingo.board_size ** 2 + 1):
-            tile = Tile.objects.create(bingo_location=i, score=1, bingo=bingo)
+            Tile.objects.create(bingo_location=i, score=1, bingo=bingo)
+
+        bingo.calculate_max_score()
         Team.objects.create(team_name='General', bingo=bingo)
         return super().form_valid(form)
 
