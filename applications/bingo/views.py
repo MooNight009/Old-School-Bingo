@@ -348,7 +348,7 @@ class PlayBingoGeneral(LoginRequiredMixin, UserPassesTestMixin, DetailView):
 
         return Moderator.objects.filter(player__user=self.request.user,
                                         bingo_id=self.kwargs['pk']).exists() or (
-                       bingo.is_team_public and bingo.is_started)
+                       bingo.is_team_public and bingo.is_started) or (bingo.is_public and bingo.is_over)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
