@@ -10,7 +10,7 @@
     <div class="flex-column">
         {% include 'pages/bingo/edit/innertemplates/menu.html' %}
 
-        <table class="table">
+        <table class="table" id="players_table">
             <thead>
             <tr>
                 <th scope="col">Player Name</th>
@@ -46,7 +46,7 @@
                                 </select>
                             </td>
                             <td>
-                                <input type="text" name="account_names" pattern="^[\w.@+\-]+$"
+                                <input type="text" name="account_names" pattern="^[\w.@+ \-]+$"
                                        class="form-control" value="{{ player_detail.account_names }}"
                                        title="Only letters, numbers, ., @, +, and - are allowed">
                             </td>
@@ -69,6 +69,14 @@
 
 {% block js %}
     <script>
+        new DataTable('#players_table', {
+
+            columnDefs: [
+                {orderable: false, targets: [1, 2, 3, 4]},
+                {searchable: false, targets: [3, 4]}
+            ],
+        })
+
         {#    Set the back button   #}
         show_back_button("{% url 'common:main' %}");
 

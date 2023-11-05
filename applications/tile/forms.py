@@ -4,21 +4,21 @@ from applications.common.validators import validate_string_special_free
 from applications.invocation.models import Invocation
 from applications.tile.models import Tile
 
-
-class TileForm(forms.ModelForm):
-    class Meta:
-        model = Tile
-        fields = ['name', 'description']
-
-    def clean_name(self):
-        name = self.cleaned_data['name']
-        validate_string_special_free(name)
-        return name
-
-    def clean_description(self):
-        description = self.cleaned_data['description']
-        validate_string_special_free(description)
-        return description
+# TODO: If no bug arose from this delete
+# class TileForm(forms.ModelForm):
+#     class Meta:
+#         model = Tile
+#         fields = ['name', 'description']
+#
+#     def clean_name(self):
+#         name = self.cleaned_data['name']
+#         validate_string_special_free(name)
+#         return name
+#
+#     def clean_description(self):
+#         description = self.cleaned_data['description']
+#         validate_string_special_free(description)
+#         return description
 
 
 class EditTileForm(forms.ModelForm):
@@ -33,6 +33,15 @@ class EditTileForm(forms.ModelForm):
             'score': forms.NumberInput(attrs={'class':'form-control w-25'}),
             'invocation_type': forms.Select(attrs={'class':'btn-default rounded-3'})
         }
+
+    def __init__(self, *args, **kwargs):
+        super(EditTileForm, self).__init__(*args, **kwargs)
+        if self.instance.bingo.is_over:
+            self.fields['name'].disabled = True
+            self.fields['description'].disabled = True
+            self.fields['img'].disabled = True
+            self.fields['score'].disabled = True
+            self.fields['invocation_type'].disabled = True
 
     def clean_name(self):
         name = self.cleaned_data['name']
