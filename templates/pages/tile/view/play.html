@@ -155,7 +155,8 @@
 
                         <div class="d-flex card-footer align-items-center justify-content-between">
                             <p class="m-0">By <b id="submission_player_id">{{ submission.player.user.username }}</b></p>
-                            <p class="color-secondary-2 m-0" style="font-size: 9px">@{{ submission.date }}</p>
+                            <p class="color-secondary-2 m-0" style="font-size: 9px">@<span
+                                    name="achievement_date">{{ submission.date|date:'c' }}</span></p>
                         </div>
 
                     </div>
@@ -241,6 +242,13 @@
 
 {% block js %}
     <script>
+        {#Localize the times#}
+        let achievements = document.querySelectorAll('[name ="achievement_date"]')
+        for (let i = 0; i < achievements.length; i++) {
+            let start_date = (new Date(achievements[i].innerText))
+            achievements[i].innerText = get_formatted_date(start_date)
+        }
+
         function expand_image(e) {
             let parent = e.parentElement.parentElement
 
