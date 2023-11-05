@@ -31,7 +31,6 @@ urlpatterns = [
 # Implemented urls
 urlpatterns += [
     path('', include('applications.player.urls', namespace='player')),
-    path('', include('applications.defaults.urls', namespace='defaults')),
     path('', include('applications.bingo.urls', namespace='bingo')),
     path('', include('applications.tile.urls', namespace='tile')),
     path('', include('applications.common.urls', namespace='common'))
