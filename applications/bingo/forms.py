@@ -117,8 +117,8 @@ class EditBingoForm(forms.ModelForm):
     def clean(self):
         clean = super(EditBingoForm, self).clean()
 
-        if self.instance.get_is_over():
-            raise forms.ValidationError('Bingo is over. You can not change anything anymore.')
+        # if self.instance.get_is_over():
+        #     raise forms.ValidationError('Bingo is over. You can not change anything anymore.')
 
         # Disable changing start date if it's started
         # TODO: Disable the option to begin with
