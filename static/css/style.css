@@ -139,6 +139,11 @@
     background-color: var(--accent-color) !important;
 }
 
+.dropdown-item:disabled, .dropdown-item.disabled {
+    /*color: var(--cal-poly-green-color) !important;*/
+    opacity: 50%;
+}
+
 .table > :not(caption) > * > * {
     background-color: var(--primary-2-color) !important;
     color: var(--secondary-1-color) !important;
