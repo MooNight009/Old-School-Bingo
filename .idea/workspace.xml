@@ -2,12 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="14ddb24e-c495-419b-9419-b1215605eeee" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/applications/bingo/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/applications/bingo/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/applications/bingo/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/applications/bingo/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/applications/common/mixins.py" beforeDir="false" afterPath="$PROJECT_DIR$/applications/common/mixins.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/layouts/innertemplates/winner.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/layouts/innertemplates/winner.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/pages/bingo/view/join.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/pages/bingo/view/join.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/applications/bingo/templatetags/bingo_extras.py" beforeDir="false" afterPath="$PROJECT_DIR$/applications/bingo/templatetags/bingo_extras.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
