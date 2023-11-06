@@ -176,7 +176,7 @@ class JoinBingo(FormView):
     template_name = 'pages/bingo/view/join.html'
 
     def get_success_url(self):
-        return reverse('bingo:join_bingo', kwargs={'pk': self.kwargs['pk']})
+        return reverse('bingo:bingo_home_page', kwargs={'pk': self.kwargs['pk']})
 
     def form_valid(self, form):
         bingo = Bingo.objects.filter(pk=self.kwargs['pk']).get()
@@ -218,6 +218,7 @@ class JoinBingo(FormView):
         return context
 
 
+# TODO : Delete method
 class ActuallyJoinBingo(LoginRequiredMixin, RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         bingo = Bingo.objects.filter(pk=kwargs['pk']).get()
@@ -285,12 +286,7 @@ class UpdatePlayerDetail(LoginRequiredMixin, UserIsModeratorMixin, RedirectView)
         player = Player.objects.get(pk=kwargs['player_pk'])
         player_detail = PlayerBingoDetail.objects.get(player=player, bingo=bingo)
 
-        if validate_name_list(self.request.POST['account_names'])!= None:
-            return
-            # print(self.request.POST)
-            # print(self.request.POST['account_names'])
-            print(validate_name_list(self.request.POST['account_names']))
-            # print("Did it fail?")
+        if validate_name_list(self.request.POST['account_names']) is not None:
             return reverse('bingo:edit_bingo_players', kwargs={'pk': kwargs['pk']})
 
         # Make sure a team is selected and not empty

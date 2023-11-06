@@ -13,7 +13,7 @@ def validate_string_special_free(value):
 
 def validate_name_list(value):
     regex = r"^[\w, -]+\Z"
-    if not re.match(regex, value):
+    if len(value)!= 0 and not re.match(regex, value):
         raise ValidationError(
             "This field may only contain letters, numbers, space, and '-'"
         )

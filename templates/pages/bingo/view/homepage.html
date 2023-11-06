@@ -27,10 +27,11 @@
                 {% if user|get_user_bingo_team:bingo != -1 %}
                     {% with user|get_user_bingo_detail:bingo as player_bingo_detail %}
                         <div class="d-flex flex-column align-self-center text-center w-100">
+                            <span>Your details</span>
                             <span>Team : <b>{{ player_bingo_detail.team.team_name }}</b></span>
                             <span>OSRS accounts : <b>{{ player_bingo_detail.account_names }}</b></span>
                         </div>
-                        {% if bingo.can_players_create_team %}
+                        {% if bingo.can_players_create_team and not bingo.get_is_started %}
                             <div class="d-flex flex-column w-100">
                                 {% include 'pages/bingo/view/innertemplates/joindiv.html' %}
                             </div>

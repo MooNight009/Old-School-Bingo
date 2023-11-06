@@ -29,6 +29,6 @@ class PlayerBingoDetail(models.Model):
     team = models.ForeignKey(Team, on_delete=models.CASCADE, null=True)
 
     def save(self, *args, **kwargs):
-        if self.account_names == '':
-            self.account_names = self.player.user.username
+        # if self.account_names == '':
+        #     self.account_names = self.player.user.username
         super().save(*args, **kwargs)
