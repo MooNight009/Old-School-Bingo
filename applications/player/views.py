@@ -51,7 +51,7 @@ class RegisterView(FormView):
             send_mail(
                 mail_subject,
                 message,
-                'Old School Bingo info@oldschoolbingo.com',
+                'Old School Bingo <info@oldschoolbingo.com>',
                 [form.cleaned_data['email']]
             )
 
