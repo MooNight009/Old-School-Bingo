@@ -190,7 +190,7 @@ class JoinBingo(DetailView):
         return context
 
 
-class BingoHomePage(LoginRequiredMixin, DetailView):
+class BingoHomePage(DetailView):
     model = Bingo
     template_name_field = 'bingo'
     template_name = 'pages/bingo/view/homepage.html'
@@ -204,10 +204,6 @@ class BingoHomePage(LoginRequiredMixin, DetailView):
             teams = teams.order_by('team_name')
 
         context['teams'] = teams
-
-        user = self.request.user
-        player = Player.objects.get(user=user)
-        context['is_in_bingo'] = player.playerbingodetail_set.filter(bingo=self.object).exists()
 
         context['players'] = Player.objects.filter(playerbingodetail__bingo=self.object)
         return context
@@ -284,6 +280,10 @@ class ChangeTeam(LoginRequiredMixin, RedirectView):
         team = Team.objects.get(pk=self.request.POST['selected_team_id'])
 
         player = Player.objects.get(user=self.request.user)
+        print(player)
+        print(player.playerbingodetail_set.all())
+        print(bingo)
+        print(player.playerbingodetail_set.filter(bingo=bingo))
         player_bingo_details = player.playerbingodetail_set.filter(bingo=bingo).get()
 
         if bingo.max_players_in_team == 0 or bingo.max_players_in_team > team.get_player_count():

@@ -9,59 +9,138 @@
 
 {% block content %}
     <div class="d-flex flex-column">
-        <div class="d-flex flex-column flex-md-row mb-3">
-            <div class="d-flex flex-column col col-md-8 col-lg-9 mb-3 mb-lg-0">
-                <div class="d-flex flex-column bg-primary-2 rounded-3 p-2 me-md-3">
-                    <div class="h1 mb-2">{{ object.name }}</div>
-                    {% if object.get_is_over %}
-                        <div class="text-center text-success fs-3 mb-3 my-auto">Winner
-                            is {{ object.get_winner.team_name }}</div>
-                        <a href="{% url 'bingo:play_bingo_general' object.pk %}"
-                           class="btn-default rounded-3 align-self-center px-5 mb-3 my-auto">View board</a>
-                    {% elif object.get_is_started %}
-                        <div class="text-center text-success fs-3 mb-3 my-auto">Bingo has started</div>
-                        {% if user|get_user_bingo_team:bingo != -1 %}
-                            <a href="{% url 'bingo:play_bingo' bingo.id user|get_user_bingo_team:bingo %}"
-                               class="btn-default rounded-3 align-self-center px-5 mb-3 my-auto">Play</a>
-                        {% else %}
-                            <div class="text-center text-danger fs-4 mb-3 my-auto">Contact a moderator to join a team
+        <div class="d-flex flex-column flex-md-row mb-3 gap-3">
+            <div class="flex-fill bg-primary-2 rounded-3 p-2">
+                <h1 class="mb-2 pb-4">{{ bingo.name }}</h1>
+                <div class="fs-1 mb-2 text-center" id="time_left"></div>
+            </div>
+            <div class="d-flex justify-content-center bg-primary-2 rounded-3 p-2">
+                <img src="{{ bingo.get_img_url }}" alt="">
+            </div>
+        </div>
+
+        <div class="d-flex flex-column flex-md-row bg-primary-2 rounded-3 mb-3 p-2">
+            {% if bingo.get_is_over %}
+                <div class="text-center text-success fs-3 m-auto">Winner
+                    is team <b>{{ object.get_winner.team_name }}</b></div>
+            {% else %}
+                {% if user|get_user_bingo_team:bingo != -1 %}
+                    {% with user|get_user_bingo_detail:bingo as player_bingo_detail %}
+                        <div class="d-flex flex-column align-self-center text-center w-100">
+                            <span>Team : <b>{{ player_bingo_detail.team.team_name }}</b></span>
+                            <span>OSRS accounts : <b>{{ player_bingo_detail.account_names }}</b></span>
+                        </div>
+                        {% if bingo.can_players_create_team %}
+                            <div class="d-flex flex-column w-100">
+                                {% include 'pages/bingo/view/innertemplates/joindiv.html' %}
                             </div>
                         {% endif %}
+                    {% endwith %}
+
+                {% else %}
+                    {% if user|get_user_bingo_id_team:bingo.id == -1 %}
+                        <a href="{% url 'bingo:join_bingo' object.pk %}" class="btn-default rounded-3 mx-auto">Join
+                            Bingo</a>
+                    {% else %}
+                        {% if bingo.get_is_started or not bingo.can_players_create_team %}
+                            <p class="text-danger fs-4 mb-3 m-auto">
+                                Bingo has started, contact a moderator to join a team
+                            </p>
+                        {% else %}
+                            {% include 'pages/bingo/view/innertemplates/joindiv.html' %}
+                        {% endif %}
                     {% endif %}
-                    <div class="fs-1 mb-2 text-center" id="time_left"></div>
+                {% endif %}
+            {% endif %}
+        </div>
 
-                    <p class="">{{ object.description|linebreaks }}</p>
-                </div>
+        <div id="bingo_id" class="d-flex flex-wrap border-accent py-5 justify-content-around">
+            {% if user|is_moderator:bingo.id %}
+                <a href="{% url 'bingo:play_bingo_general' object.pk %}" style="min-width: 175px"
+                   class="btn-default-inverse bg-secondary-1 color-primary-2 border-3 fs-4 py-3 px-4 rounded-3">Bingo
+                    Summary</a>
+            {% else %}
+                {% if bingo.get_is_started %}
+                    {% if bingo.is_team_public %}
+                        <a href="{% url 'bingo:play_bingo_general' object.pk %}" style="min-width: 175px"
+                           class="btn-default-inverse bg-secondary-1 color-primary-2 border-3 fs-4 py-3 px-4
+                           rounded-3">Bingo Summary</a>
+                    {% endif %}
+
+                    {% if user|get_user_bingo_team:bingo != -1 %}
+                        <a href="{% url 'bingo:play_bingo' bingo.id user|get_user_bingo_team:bingo %}"
+                           style="min-width: 175px"
+                           class="btn-default-inverse bg-secondary-1 color-primary-2 border-3 fs-4 py-3 px-4 rounded-3">Play</a>
+                    {% elif not bingo.get_is_over %}
+                        <div class="text-center text-danger fs-4 mb-3 my-auto">
+                            Bingo has started, contact a moderator to join a team
+                        </div>
+                    {% endif %}
+                {% endif %}
+            {% endif %}
+        </div>
+
+        <div class="d-flex flex-column flex-md-row mb-3 gap-3">
+            <div class="flex-fill bg-primary-2 rounded-3 p-2">
+                <p>{{ bingo.description|linebreaks }}</p>
             </div>
+            <div class="d-flex flex-column bg-primary-2 rounded-3 text-center p-2">
+                <span>Start date</span>
+                <b name="dates" class="pb-3">{{ bingo.start_date|date:'c' }}</b>
+                <span>End date</span>
+                <b name="dates" class="pb-3">{{ bingo.end_date|date:'c' }}</b>
+                <span>Are teams public</span>
+                <b>{{ bingo.is_team_public }}</b>
+            </div>
+        </div>
 
-            <div class="d-flex flex-column text-center align-self-center bg-primary-2 rounded-3 col col-md-4 col-lg-3 pb-3">
-                <div class="h3">Teams</div>
-                <table class="table mb-0">
+        <div class="d-flex flex-column flex-lg-row gap-3">
+            <div class="w-lg-50 flex-fill rounded-3 bg-primary-2 p-2 pb-3 mb-3">
+                <h3 class="text-center pb-2 my-3">Players</h3>
+                <table class="table text-center mb-0" id="players_table">
                     <thead>
                     <tr>
-                        <th>Rank</th>
+                        <th>Player</th>
+                        <th>team</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for player in players %}
+                        <tr>
+                            <td>{{ player.user.username }}</td>
+                            <td>{{ player|get_player_bingo_team_name:bingo.pk }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="w-lg-50 flex-fill rounded-3 bg-primary-2 p-2 pb-3 mb-3">
+                <h3 class="text-center pb-2 my-3">Teams</h3>
+                <table class="table text-center mb-0" id="team_table">
+                    <thead>
+                    <tr>
+                        {% if bingo.is_team_public %}
+                            <th>Rank</th>
+                        {% endif %}
                         <th>Team</th>
-                        <th>Score</th>
+                        {% if bingo.is_team_public %}
+                            <th>Score</th>
+                        {% endif %}
                     </tr>
                     </thead>
                     <tbody>
                     {% for team in teams %}
                         <tr>
-                            <td>
-                                {% if bingo.is_team_public %}
-                                    {{ team.get_ranking }}
-                                {% else %}
-                                    ?
-                                {% endif %}
-                            </td>
+
+                            {% if bingo.is_team_public %}
+                                <td>{{ team.get_ranking }}</td>
+                            {% endif %}
+
                             <td>{{ team.team_name }}</td>
-                            <td>
-                                {% if bingo.is_team_public %}
-                                    {{ team.score }}
-                                {% else %}
-                                    ?
-                                {% endif %}
-                            </td>
+                            {% if bingo.is_team_public %}
+                                <td>{{ team.score }}</td>
+                            {% endif %}
                         </tr>
                     {% endfor %}
 
@@ -69,83 +148,27 @@
                 </table>
             </div>
         </div>
-
-        {% if is_in_bingo %}
-            <div class="d-flex flex-wrap justify-content-center bg-primary-2 rounded-3 gap-5 mb-3 py-3">
-                {#                {% if bingo.get_is_started and not bingo.get_is_over %}#}
-                {#                    <div class="align-self-center p-3">Bingo has started... To join or change teams contact a moderator</div>#}
-                {#                {% elif not bingo.get_is_over %}#}
-                {% if not bingo.get_is_over %}
-                    {% if teams|length != 0 %}
-                        <form action="{% url 'bingo:change_team' object.id %}" method="post"
-                              class="d-flex align-items-baseline gap-3">
-                            {% csrf_token %}
-                            <select name="selected_team_id" id="" class="form-select bg-alabaster border-green4">
-                                {% for team in teams %}
-                                    <option value="{{ team.id }}" {{ user|is_user_in_team:team }}>{{ team.team_name }}</option>
-                                {% endfor %}
-                            </select>
-                            <div class="d-flex justify-content-center">
-                                <input class="btn-default rounded-3" type="submit" value="Join Team">
-                            </div>
-                        </form>
-                    {% else %}
-                        <div class="align-self-center">No team available yet!</div>
-                    {% endif %}
-                    {% if bingo.can_players_create_team %}
-                        <form action="{% url 'bingo:create_team' object.id %}" method="post"
-                              class="d-flex align-items-baseline gap-3">
-                            {% csrf_token %}
-                            <div class="mb-3">
-                                <input type="text" class="form-control bg-alabaster border-green4" name="new_team_name"
-                                       placeholder="Enter desired name..." pattern="^[\w.@+ \-]+$"
-                                       title="Only letters, numbers, ., @, +, and - are allowed">
-                            </div>
-                            <div class="d-flex justify-content-center mt-3">
-                                <input class="btn-default rounded-3" type="submit" value="Create Team">
-                            </div>
-                        </form>
-                    {% endif %}
-                {% endif %}
-            </div>
-        {% else %}
-            <a href="{% url 'bingo:join_bingo' object.pk %}" class="btn-default rounded-3 mx-auto mb-3">Join
-                Bingo</a>
-        {% endif %}
-
-
-        <div class="text-center rounded-3 pb-3 mb-3 bg-primary-2">
-            <div class="h3 my-3">Players in bingo</div>
-            <table class="table mb-0">
-                <thead>
-                <tr>
-                    <th>Player</th>
-                    <th class="border-end">team</th>
-                    <th>Player</th>
-                    <th>team</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    {% for player in players %}
-                        {% if forloop.counter0|divisibleby:2 %}
-                            </tr>
-                            <tr>
-                        {% endif %}
-                        <td>{{ player.user.username }}</td>
-                        <td class="border-end">{{ player|get_player_bingo_team_name:bingo.pk }}</td>
-                    {% endfor %}
-                    </tr>
-                </tbody>
-            </table>
-        </div>
     </div>
-
-
 {% endblock %}
 
 {% block js %}
     <script>
+        {#Localizing times#}
+        let achievements = document.querySelectorAll('[name ="dates"]')
+        for (let i = 0; i < achievements.length; i++) {
+            let start_date = (new Date(achievements[i].innerText))
+            achievements[i].innerText = get_formatted_date(start_date).replace('T', ' ')
+        }
+
+        {# Making the tables datatables #}
+        new DataTable('#players_table', {
+            "lengthChange": false
+        })
+        new DataTable('#team_table', {
+            "lengthChange": false
+        })
+
+
         let start_date = new Date({{ bingo.start_date|date:"U" }} * 1000
         )
         ;
@@ -171,7 +194,7 @@
                 tag = 'Ending in '
             }
             if ((end_date - now) <= 0 && time_left <= 0) {
-                document.getElementById('time_left').innerHTML = ''
+                document.getElementById('time_left').innerHTML = 'Bingo has ended'
                 return clearInterval(interval)
             }
 

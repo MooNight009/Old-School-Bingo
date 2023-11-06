@@ -222,6 +222,10 @@
         border-bottom-right-radius: 0.5rem !important;
         border-top-right-radius: 0.5rem !important;
     }
+
+    .w-lg-50 {
+        width: 50% !important;
+    }
 }
 
 @media (min-width: 1440px) {

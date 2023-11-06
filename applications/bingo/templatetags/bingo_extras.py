@@ -9,6 +9,8 @@ register = template.Library()
 
 @register.filter(name='is_user_in_team')
 def is_user_in_team(user, team):
+    if user.is_anonymous:
+        return ''
     player = Player.objects.get(user=user)
     output = ''
     if player.playerbingodetail_set.filter(team=team).exists():
@@ -26,6 +28,8 @@ def is_player_in_team(player, team):
 
 @register.filter(name='get_user_bingo_team')
 def get_user_bingo_team(user, bingo):
+    if user.is_anonymous:
+        return -1
     player = Player.objects.get(user=user)
 
     team_id = -1
@@ -42,7 +46,6 @@ def get_user_bingo_team(user, bingo):
 def get_player_bingo_team(player, bingo):
     # player = Player.objects.get(user=user)
     team_id = -1
-
     # Is the player in bingo
     player_detail = player.playerbingodetail_set.filter(bingo=bingo)
     if player_detail.exists():
@@ -51,7 +54,7 @@ def get_player_bingo_team(player, bingo):
 
     # Is the player a moderator
     # TODO: Better method than just calling the first team
-    elif Moderator.objects.filter(player=player, bingo=bingo):
+    if team_id == -1 and Moderator.objects.filter(player=player, bingo=bingo):
         team = Team.objects.filter(bingo=bingo).first()
         if team is not None:
             team_id = team.id
@@ -61,8 +64,11 @@ def get_player_bingo_team(player, bingo):
 
 @register.filter(name='get_user_bingo_id_team')
 def get_user_bingo_id_team(user, bingo_pk):
-    bingo = Bingo.objects.filter(pk=bingo_pk)
-    player = Player.objects.filter(user=user).get()
+    if user.is_anonymous:
+        return -1
+
+    bingo = Bingo.objects.get(id=bingo_pk)
+    player = Player.objects.get(user=user)
     team_id = -1
     # Is the player in bingo
     player_detail = player.playerbingodetail_set.filter(bingo=bingo)
@@ -74,6 +80,8 @@ def get_user_bingo_id_team(user, bingo_pk):
 
 @register.filter(name='user_access_check')
 def user_access_check(user, team_pk):
+    if user.is_anonymous:
+        return ''
     team = Team.objects.get(pk=team_pk)
     player = Player.objects.get(user=user)
 
@@ -87,6 +95,8 @@ def user_access_check(user, team_pk):
 
 @register.filter(name='is_moderator')
 def is_moderator(user, bingo_pk):
+    if user.is_anonymous:
+        return False
     return Moderator.objects.filter(player__user=user, bingo_id=bingo_pk).exists()
 
 
@@ -102,4 +112,11 @@ def get_player_bingo_team_name(player, bingo_pk):
 @register.filter(name='get_player_bingo_detail')
 def get_player_bingo_detail(player, bingo):
     player_bingo_detail = PlayerBingoDetail.objects.filter(player=player, bingo=bingo)
+    return None if not player_bingo_detail.exists() else player_bingo_detail.get()
+
+@register.filter(name='get_user_bingo_detail')
+def get_user_bingo_detail(user, bingo):
+    if user.is_anonymous:
+        return None
+    player_bingo_detail = PlayerBingoDetail.objects.filter(player__user=user, bingo=bingo)
     return None if not player_bingo_detail.exists() else player_bingo_detail.get()

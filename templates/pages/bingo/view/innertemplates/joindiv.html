@@ -1,0 +1,35 @@
+{% load bingo_extras %}
+
+{% if teams|length != 0 %}
+    <form action="{% url 'bingo:change_team' bingo.id %}" method="post"
+          class="d-flex align-items-baseline gap-3 mx-auto">
+        {% csrf_token %}
+        <select name="selected_team_id" id=""
+                class="form-select">
+            {% for team in teams %}
+                <option value="{{ team.id }}" {{ user|is_user_in_team:team }}>{{ team.team_name }}</option>
+            {% endfor %}
+        </select>
+        <div class="d-flex justify-content-center">
+            <input class="btn-default rounded-3" type="submit" value="Join Team">
+        </div>
+    </form>
+{% else %}
+    <div class="align-self-center">No team available yet!</div>
+{% endif %}
+
+{% if bingo.can_players_create_team %}
+    <form action="{% url 'bingo:create_team' bingo.id %}" method="post"
+          class="d-flex align-items-baseline gap-3 mx-auto">
+        {% csrf_token %}
+        <div class="">
+            <input type="text" class="form-control"
+                   name="new_team_name"
+                   placeholder="Enter desired name..." pattern="^[\w.@+ \-]+$"
+                   title="Only letters, numbers, ., @, +, and - are allowed">
+        </div>
+        <div class="d-flex justify-content-center">
+            <input class="btn-default rounded-3" type="submit" value="Create Team">
+        </div>
+    </form>
+{% endif %}
