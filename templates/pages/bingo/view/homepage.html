@@ -60,6 +60,10 @@
                 <a href="{% url 'bingo:play_bingo_general' object.pk %}" style="min-width: 175px"
                    class="btn-default-inverse bg-secondary-1 color-primary-2 border-3 fs-4 py-3 px-4 rounded-3">Bingo
                     Summary</a>
+                <a href="{% url 'bingo:edit_bingo_board' object.pk %}" style="min-width: 175px"
+                   class="btn-default-inverse bg-secondary-1 color-primary-2 border-3 fs-4 py-3 px-4 rounded-3">Edit
+                    Bingo
+                </a>
             {% else %}
                 {% if bingo.get_is_started %}
                     {% if bingo.is_team_public %}
