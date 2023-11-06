@@ -171,47 +171,53 @@ class DeleteTeam(LoginRequiredMixin, UserIsModeratorMixin, RedirectView):
         return url
 
 
-class JoinBingo(DetailView):
-    model = Bingo
+class JoinBingo(FormView):
+    form_class = JoinBingoForm
     template_name = 'pages/bingo/view/join.html'
+
+    def get_success_url(self):
+        return reverse('bingo:bingo_home_page', kwargs={'pk': self.kwargs['pk']})
+
+    def form_valid(self, form):
+        bingo = Bingo.objects.filter(pk=self.kwargs['pk']).get()
+        player = Player.objects.filter(user=self.request.user).get()
+        player_details = PlayerBingoDetail.objects.get_or_create(player=player, bingo=bingo)
+
+        if player_details[1]:
+            player_details = player_details[0]
+            player_details.account_names = self.request.POST['account_names']
+
+            if 'team_id' in self.request.POST and len(self.request.POST['team_id']) > 0 and Team.objects.filter(
+                    pk=self.request.POST['team_id']).exists():
+                team = Team.objects.get(pk=self.request.POST['team_id'])
+                if bingo.team_set.contains(team.get()) and not team.is_full():
+                    player_details.team = team.get()
+                else:
+                    player_details.team = bingo.team_set.get(team_name='General')
+            else:
+                player_details.team = bingo.team_set.get(team_name='General')
+
+            player_details.save()
+        return super(JoinBingo, self).form_valid(form)
 
     def get_context_data(self, **kwargs):
         context = super(JoinBingo, self).get_context_data(**kwargs)
-        teams = Team.objects.filter(bingo=self.object).exclude(team_name='General')
+        bingo = Bingo.objects.get(id=self.kwargs['pk'])
+        teams = Team.objects.filter(bingo=bingo).exclude(team_name='General')
+        context['bingo'] = bingo
         context['teams'] = teams
 
         user = self.request.user
         if not user.is_anonymous:
             player = Player.objects.get(user=user)
-            context['is_in_bingo'] = player.playerbingodetail_set.filter(bingo=self.object).exists()
+            context['is_in_bingo'] = player.playerbingodetail_set.filter(bingo=bingo).exists()
         else:
             context['is_in_bingo'] = False
 
         return context
 
 
-class BingoHomePage(LoginRequiredMixin, DetailView):
-    model = Bingo
-    template_name_field = 'bingo'
-    template_name = 'pages/bingo/view/homepage.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        teams = Team.objects.filter(bingo=self.object).exclude(team_name='General')
-        if self.object.is_team_public:
-            teams = teams.order_by('-score')
-        else:
-            teams = teams.order_by('team_name')
-        context['teams'] = teams
-
-        user = self.request.user
-        player = Player.objects.get(user=user)
-        context['is_in_bingo'] = player.playerbingodetail_set.filter(bingo=self.object).exists()
-
-        context['players'] = Player.objects.filter(playerbingodetail__bingo=self.object)
-        return context
-
-
+# TODO : Delete method
 class ActuallyJoinBingo(LoginRequiredMixin, RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         bingo = Bingo.objects.filter(pk=kwargs['pk']).get()
@@ -224,7 +230,8 @@ class ActuallyJoinBingo(LoginRequiredMixin, RedirectView):
             player_details = player_details[0]
             player_details.account_names = self.request.POST['account_names']
 
-            if 'team_id' in self.request.POST and len(self.request.POST['team_id']) > 0 and Team.objects.filter(pk=self.request.POST['team_id']).exists():
+            if 'team_id' in self.request.POST and len(self.request.POST['team_id']) > 0 and Team.objects.filter(
+                    pk=self.request.POST['team_id']).exists():
                 team = Team.objects.filter(pk=self.request.POST['team_id'])
                 if bingo.team_set.contains(team.get()):
                     player_details.team = team.get()
@@ -239,6 +246,25 @@ class ActuallyJoinBingo(LoginRequiredMixin, RedirectView):
         return url
 
 
+class BingoHomePage(DetailView):
+    model = Bingo
+    template_name_field = 'bingo'
+    template_name = 'pages/bingo/view/homepage.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        teams = Team.objects.filter(bingo=self.object).exclude(team_name='General')
+        if self.object.is_team_public:
+            teams = teams.order_by('-score')
+        else:
+            teams = teams.order_by('team_name')
+
+        context['teams'] = teams
+
+        context['players'] = Player.objects.filter(playerbingodetail__bingo=self.object)
+        return context
+
+
 class KickPlayer(LoginRequiredMixin, UserIsModeratorMixin, RedirectView):
     """
         Redirect for kicking player from bingo
@@ -248,7 +274,6 @@ class KickPlayer(LoginRequiredMixin, UserIsModeratorMixin, RedirectView):
         player = Player.objects.get(pk=self.kwargs['player_pk'])
         bingo = Bingo.objects.get(pk=self.kwargs['pk'])
         print(PlayerBingoDetail.objects.filter(player=player, bingo=bingo).delete())
-
 
         return reverse('bingo:edit_bingo_players', kwargs={'pk': self.kwargs['pk']})
 
@@ -260,13 +285,14 @@ class UpdatePlayerDetail(LoginRequiredMixin, UserIsModeratorMixin, RedirectView)
         player = Player.objects.get(pk=kwargs['player_pk'])
         player_detail = PlayerBingoDetail.objects.get(player=player, bingo=bingo)
 
-        if not check_string_special_free(self.request.POST['account_names']):
+        if validate_name_list(self.request.POST['account_names']) is not None:
             return reverse('bingo:edit_bingo_players', kwargs={'pk': kwargs['pk']})
 
         # Make sure a team is selected and not empty
         if self.request.POST.get('team_id', False):
             team = Team.objects.filter(id=self.request.POST['team_id']).get()
-            player_detail.team = team
+            if not team.is_full():
+                player_detail.team = team
 
         player_detail.account_names = self.request.POST.get('account_names', '')
         player_detail.save()
