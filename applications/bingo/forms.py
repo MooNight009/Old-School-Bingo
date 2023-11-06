@@ -4,8 +4,9 @@ from discord import SyncWebhook
 from django import forms
 
 from applications.bingo.models import Bingo
-from applications.common.validators import validate_string_special_free, validate_discord_link
+from applications.common.validators import validate_string_special_free, validate_discord_link, validate_name_list
 from applications.common.widgets import DateTimeWidget
+from common.wiseoldman.wiseoldman import update_user, get_user
 
 
 class BingoForm(forms.ModelForm):
@@ -192,3 +193,22 @@ class ModeratorForm(forms.Form):
         max_length=32, validators=[validate_string_special_free], required=True,
         widget=forms.TextInput(attrs={'class': 'form-control'})
     )
+
+
+class JoinBingoForm(forms.Form):
+    account_names = forms.CharField(
+        max_length=32, validators=[validate_name_list], required=True,
+        widget=forms.TextInput(attrs={'class': 'form-control w-50'}),
+        help_text="For multiple accounts separate them by a ',"
+                  "' (comma). This information will be used for tiles that get data from WiseOldMan.")
+
+    def clean_account_names(self):
+        account_names = self.cleaned_data['account_names']
+        for account_name in account_names.split(','):
+            if len(account_name) != 0:
+                account = get_user(account_name)
+                if account.status_code != 200 or account.status_code != 200:
+                    raise forms.ValidationError([f'No account found with the name {account_name}. Make '
+                                                 f'sure you typed the name correctly or leave the field empty'])
+
+        return account_names

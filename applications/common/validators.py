@@ -10,6 +10,15 @@ def validate_string_special_free(value):
             "This field may only contain letters, numbers, and the characters '@', '.', '+', '-', or '_'"
         )
 
+
+def validate_name_list(value):
+    regex = r"^[\w, -]+\Z"
+    if not re.match(regex, value):
+        raise ValidationError(
+            "This field may only contain letters, numbers, space, and '-'"
+        )
+
+
 def check_string_special_free(value):
     regex = r"^[\w.@+ -]+\Z"
     return re.match(regex, value)
