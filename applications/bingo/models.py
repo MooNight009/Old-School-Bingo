@@ -38,16 +38,16 @@ class Bingo(models.Model):
     is_over = models.BooleanField(default=False)  # Is the game over
 
     is_public = models.BooleanField(default=False,
-                                    help_text="Can someone who hasn't joined the bingo see it? (Not implemented)")  # Is the game public
+                                    help_text="Make the bingo visible from main page")  # Is the game public
     is_team_public = models.BooleanField(default=False,
-                                         help_text="Can a player view other teams' boards? (Not fully tested)")  # Status of team public
+                                         help_text="Can players view other teams' boards?")  # Status of team public
     is_row_col_extra = models.BooleanField(default=True,
                                            help_text="Do teams get extra points for completing a row or column?")  # Whether players get extra point for finishing a full row/column
 
     can_players_create_team = models.BooleanField(default=True,
                                                   help_text="Can the players create the own teams?")
-    max_players_in_team = models.IntegerField(default=0,
-                                              help_text="If players can create their teams what is the maximum team size? (0 Means no limit)")
+    max_players_in_team = models.IntegerField(default=10,
+                                              help_text="What is the maximum number of players in a team")
 
     board_type = models.CharField(max_length=16, choices=BINGO_TYPES, default='square',
                                   help_text="Board type (Not implemented)")

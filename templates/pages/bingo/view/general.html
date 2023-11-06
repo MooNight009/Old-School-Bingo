@@ -103,7 +103,7 @@
         let achievements = document.querySelectorAll('[name ="achievement_date"]')
         for (let i = 0; i< achievements.length; i++) {
             let start_date = (new Date(achievements[i].innerText))
-            achievements[i].innerText = get_formatted_date(start_date)
+            achievements[i].innerText = get_formatted_date(start_date).replace('T', ' ')
         }
 
         {#Make sure size in the same on both divs#}

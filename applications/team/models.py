@@ -93,3 +93,6 @@ class Team(models.Model):
 
     def get_player_count(self):
         return self.playerbingodetail_set.all().count()
+
+    def is_full(self):
+        return self.get_player_count() >= self.bingo.max_players_in_team and self.bingo.max_players_in_team != 0

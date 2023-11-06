@@ -13,6 +13,10 @@ def update_user(name):
     response = requests.post(f'https://api.wiseoldman.net/v2/players/{name}/')
     return check_response(response)
 
+def get_user(name):
+    response = requests.get(f'https://api.wiseoldman.net/v2/players/{name}/')
+    return check_response(response)
+
 
 def get_gained(name, start_date, end_date=None):
     # Set end_date to current if None
@@ -24,6 +28,6 @@ def get_gained(name, start_date, end_date=None):
 
 
 def check_response(response):
-    if response.status_code != 200 or response.status_code != 201:
-        print(response.json())
+    # if response.status_code != 200 or response.status_code != 201:
+    #     print(response.json())
     return response

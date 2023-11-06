@@ -48,10 +48,7 @@ class PlayerAccessMixin(UserPassesTestMixin):
         if not bingo.is_started and not Moderator.objects.filter(player=player, bingo=bingo).exists():
             return False
 
-        if bingo.is_public and bingo.is_team_public:
-            return True
-
-        elif bingo.is_public and bingo.is_over:
+        if bingo.is_team_public:
             return True
 
         elif player is not None:
