@@ -292,7 +292,8 @@ class UpdatePlayerDetail(LoginRequiredMixin, UserIsModeratorMixin, RedirectView)
         # Make sure a team is selected and not empty
         if self.request.POST.get('team_id', False):
             team = Team.objects.filter(id=self.request.POST['team_id']).get()
-            player_detail.team = team
+            if not team.is_full():
+                player_detail.team = team
 
         player_detail.account_names = self.request.POST.get('account_names', '')
         player_detail.save()
