@@ -144,7 +144,9 @@ class EditBingoForm(forms.ModelForm):
 
     def clean_description(self):
         description = self.cleaned_data['description']
+        print("We here")
         validate_string_special_free(description)
+        print("But not here")
         return description
 
 
