@@ -12,7 +12,7 @@ from applications.submission.models import Achievement, Submission
 from applications.team.forms import TeamFormSet
 from applications.team.models import Team
 from applications.tile.models import Tile, TeamTile
-from common.wiseoldman.wiseoldman import create_competition, update_team, remove_player
+from common.wiseoldman.wiseoldman import create_competition, update_team, delete_competition
 
 
 class CreateBingo(LoginRequiredMixin, FormView):
@@ -159,8 +159,9 @@ class EditBingoDiscord(LoginRequiredMixin, UserIsModeratorMixin, UpdateView):
 class DeleteBoard(LoginRequiredMixin, UserIsModeratorMixin, RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         bingo = Bingo.objects.filter(pk=kwargs['pk']).get()
-        bingo.delete()
-        print("Deleting board disabled")
+        if Moderator.objects.filter(player__user=self.request.user, bingo=bin()).exists():
+            delete_competition(bingo)
+            bingo.delete()
         return "/"
 
 

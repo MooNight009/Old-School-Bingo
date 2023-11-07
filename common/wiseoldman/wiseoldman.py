@@ -82,7 +82,6 @@ def update_team(team, older_name=None):
     account_names = []
     for player in players:
         account_names += player.account_names.split(',')
-    print(account_names)
 
     # Delete the team
     data = {
@@ -92,9 +91,6 @@ def update_team(team, older_name=None):
     data_json = json.dumps(data)
     response_delete = requests.delete(f'https://api.wiseoldman.net/v2/competitions/{team.bingo.competition_id}/teams',
                                       headers=headers, data=data_json)
-    print(response_delete)
-    print(response_delete.text)
-    print('to dleete')
 
     # Create another team
     data = {
@@ -110,9 +106,6 @@ def update_team(team, older_name=None):
     response_create = requests.post(f'https://api.wiseoldman.net/v2/competitions/{team.bingo.competition_id}/teams',
                                     headers=headers, data=data_json)
 
-    print(response_create)
-    print(response_create.text)
-    print('to dleete')
 
     return response_delete, response_create
 
@@ -137,19 +130,16 @@ def update_team_tile(team_tile):
     return score
 
 
-def remove_player(player_details):
-    print(player_details.account_names.split(','))
+def remove_team(team):
     data = {
-        "verificationCode": player_details.bingo.competition_verification_code,
-        "participants": player_details.account_names.split(',')
+        "verificationCode": team.bingo.competition_verification_code,
+        "teamNames": [team.team_name]
     }
     data_json = json.dumps(data)
-    response = requests.delete(
-        f'https://api.wiseoldman.net/v2/competitions/{player_details.bingo.competition_id}/participants',
-        headers=headers, data=data_json)
+    response_delete = requests.delete(f'https://api.wiseoldman.net/v2/competitions/{team.bingo.competition_id}/teams',
+                                      headers=headers, data=data_json)
 
-    print(response)
-    print(response.json())
+    return response_delete
 
 
 # TODO: Add delete() of a bingo model

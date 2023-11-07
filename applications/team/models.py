@@ -7,7 +7,7 @@ from applications.tile.models import TeamTile
 
 
 # from applications.player.models import Player
-from common.wiseoldman.wiseoldman import update_team
+from common.wiseoldman.wiseoldman import update_team, remove_team
 
 
 class Team(models.Model):
@@ -44,10 +44,11 @@ class Team(models.Model):
         if self.team_name == 'General':
             return ''
 
-        for player in self.player_set.all():
-            player_bingo_detail = player.playerbingodetail_set.filter(bingo=self.bingo)
+        for player_bingo_detail in self.playerbingodetail_set.all():
             player_bingo_detail.team = Team.objects.get(bingo=self.bingo, team_name='General')
             player_bingo_detail.save()
+
+        remove_team(self)
         return super().delete(*args, **kwargs)
 
     def get_ranking(self):
