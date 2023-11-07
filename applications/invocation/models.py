@@ -8,6 +8,7 @@ from django.db import models
 
 from applications.submission.models import Achievement
 from common.wiseoldman import wiseoldman
+from common.wiseoldman.wiseoldman import update_team_tile
 
 
 class Invocation(models.Model):
@@ -96,26 +97,26 @@ class WOMInvo(Invocation):
 
         # Update wom details
         players_details = bingo.playerbingodetail_set.all().filter(team=team_tile.team)
-        current_amount = 0
-        for players_detail in players_details:
-            names = players_detail.account_names.split(',')
-            for name in names:
-                wiseoldman.update_user(name)
+        # current_amount = 0
+        # for players_detail in players_details:
+        #     names = players_detail.account_names.split(',')
+        #     for name in names:
+        #         wiseoldman.update_user(name)
+        #
+        #         response = wiseoldman.get_gained(name, start_date=bingo.start_date.strftime("%Y-%m-%dT%H:%M:%S"))
+        #         if response.status_code == 200:
+        #             if self.type == 'KC':
+        #                 for type_name in type_names:
+        #                     current_amount += int(response.json()['data']['bosses'][type_name]['kills']['gained'])
+        #             elif self.type == 'XP':
+        #                 for type_name in type_names:
+        #                     current_amount += int(response.json()['data']['skills'][type_name]['experience']['gained'])
+        #             elif self.type == 'LV':
+        #                 for type_name in type_names:
+        #                     current_amount += int(response.json()['data']['skills'][type_name]['level']['gained'])
 
-                response = wiseoldman.get_gained(name, start_date=bingo.start_date.strftime("%Y-%m-%dT%H:%M:%S"))
-                if response.status_code == 200:
-                    if self.type == 'KC':
-                        for type_name in type_names:
-                            current_amount += int(response.json()['data']['bosses'][type_name]['kills']['gained'])
-                    elif self.type == 'XP':
-                        for type_name in type_names:
-                            current_amount += int(response.json()['data']['skills'][type_name]['experience']['gained'])
-                    elif self.type == 'LV':
-                        for type_name in type_names:
-                            current_amount += int(response.json()['data']['skills'][type_name]['level']['gained'])
-
-        team_tile.score = current_amount
-        if current_amount >= self.amount:
+        team_tile.score = update_team_tile(self)
+        if team_tile.score >= self.amount:
             team_tile.is_complete = True
 
         if bingo.notify_completion:

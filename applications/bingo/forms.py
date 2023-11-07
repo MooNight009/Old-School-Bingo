@@ -27,19 +27,11 @@ class BingoForm(forms.ModelForm):
             'description': forms.Textarea(attrs={'class': 'form-control w-50'}),
             'img': forms.FileInput(attrs={'class': 'form-control w-25', 'required': 'required'}),
 
-            # 'start_date': forms.SelectDateWidget(),
             'start_date': DateTimeWidget(attrs={'class': 'btn-default rounded-3'}),
             'end_date': DateTimeWidget(attrs={'class': 'btn-default rounded-3'}),
-            # 'is_game_over_on_finish': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
 
             'board_size': forms.NumberInput(attrs={'class': 'form-control w-25'}),
             'board_type': forms.Select(attrs={'class': 'btn-default rounded-3'}),
-            # 'is_row_col_extra': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
-
-            # 'is_public': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
-            # 'is_team_public': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
-
-            # 'can_players_create_team': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'max_players_in_team': forms.NumberInput(attrs={'class': 'form-control w-25'}),
         }
 

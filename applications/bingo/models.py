@@ -66,6 +66,9 @@ class Bingo(models.Model):
 
     winner = models.OneToOneField('team.Team', on_delete=models.SET_NULL, null=True, related_name='bingo_winner_team')
 
+    competition_id = models.CharField(max_length=64, default="")
+    competition_verification_code = models.CharField(max_length=64, default="")
+
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         if self.img is not None:

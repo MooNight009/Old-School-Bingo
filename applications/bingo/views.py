@@ -12,6 +12,7 @@ from applications.submission.models import Achievement, Submission
 from applications.team.forms import TeamFormSet
 from applications.team.models import Team
 from applications.tile.models import Tile, TeamTile
+from common.wiseoldman.wiseoldman import create_competition, update_team, remove_player
 
 
 class CreateBingo(LoginRequiredMixin, FormView):
@@ -21,6 +22,7 @@ class CreateBingo(LoginRequiredMixin, FormView):
 
     def form_valid(self, form):
         bingo = form.save()
+        create_competition(bingo)
         player = Player.objects.filter(user=self.request.user).get()
         moderator = Moderator(player=player, bingo=bingo)
         moderator.save()
@@ -293,10 +295,15 @@ class UpdatePlayerDetail(LoginRequiredMixin, UserIsModeratorMixin, RedirectView)
         if self.request.POST.get('team_id', False):
             team = Team.objects.filter(id=self.request.POST['team_id']).get()
             if not team.is_full():
+                prev_team = player_detail.team
                 player_detail.team = team
 
         player_detail.account_names = self.request.POST.get('account_names', '')
         player_detail.save()
+        if player_detail.team is not None and player_detail.team.team_name != 'General':
+            if prev_team:
+                update_team(prev_team)
+            update_team(team)
 
         return reverse('bingo:edit_bingo_players', kwargs={'pk': kwargs['pk']})
 
@@ -313,8 +320,12 @@ class ChangeTeam(LoginRequiredMixin, RedirectView):
         player_bingo_details = player.playerbingodetail_set.filter(bingo=bingo).get()
 
         if bingo.max_players_in_team == 0 or bingo.max_players_in_team > team.get_player_count():
+            older_team = player_bingo_details.team
             player_bingo_details.team = team
             player_bingo_details.save()
+
+            update_team(older_team)
+            update_team(team)
 
         return reverse('bingo:bingo_home_page', kwargs={'pk': bingo.id})
 
@@ -342,6 +353,10 @@ class CreateTeam(LoginRequiredMixin, RedirectView):
             player_bingo_detail = player.playerbingodetail_set.filter(bingo=bingo).get()
             player_bingo_detail.team = team
             player_bingo_detail.save()
+
+            # Update WOM
+            print("We got to here")
+            update_team(team)
 
         return reverse('bingo:bingo_home_page', kwargs={'pk': bingo.id})
 
