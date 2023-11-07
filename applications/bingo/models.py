@@ -10,6 +10,7 @@ from django.urls import reverse
 from applications.submission.models import Achievement
 from applications.team.models import Team
 from applications.tile.models import Tile, TeamTile
+from common.wiseoldman.wiseoldman import update_competition
 
 BINGO_TYPES = (
     ('square', 'SQUARE'),
@@ -92,6 +93,7 @@ class Bingo(models.Model):
                         response = requests.post(f'https://api.wiseoldman.net/v2/players/{name}/')
                         if response.status_code != 200:
                             print("We got an error in player " + name)
+                update_competition(self)
         return self.is_started
 
     def get_is_over(self):
