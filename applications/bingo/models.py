@@ -77,6 +77,9 @@ class Bingo(models.Model):
             img = img.resize((270, 200))
             img.save(self.img.path, format='PNG', quality=60, optimize=True)
 
+    def __str__(self):
+        return self.name
+
     # TODO: Actually implement method
     def get_is_started(self):
         if not self.is_started:
