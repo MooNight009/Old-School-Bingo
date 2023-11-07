@@ -115,7 +115,7 @@ class WOMInvo(Invocation):
         #                 for type_name in type_names:
         #                     current_amount += int(response.json()['data']['skills'][type_name]['level']['gained'])
 
-        team_tile.score = update_team_tile(self)
+        team_tile.score = update_team_tile(team_tile, type_names)
         if team_tile.score >= self.amount:
             team_tile.is_complete = True
 

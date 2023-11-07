@@ -159,7 +159,7 @@ class EditBingoDiscord(LoginRequiredMixin, UserIsModeratorMixin, UpdateView):
 class DeleteBoard(LoginRequiredMixin, UserIsModeratorMixin, RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         bingo = Bingo.objects.filter(pk=kwargs['pk']).get()
-        if Moderator.objects.filter(player__user=self.request.user, bingo=bin()).exists():
+        if Moderator.objects.filter(player__user=self.request.user, bingo=bingo).exists():
             delete_competition(bingo)
             bingo.delete()
         return "/"

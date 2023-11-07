@@ -208,6 +208,11 @@
                     <h5 class="modal-title" id="exampleModalLabel">Refreshing might take a couple of seconds.</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
+                <div class="modal-body">
+                    <p>Wise Old Man only allows us to refresh if an account hasn't been updated in an hour. So if
+                        you would like to update before that go to Wise Old Man of your account and refresh there.
+                        Then attempt to refresh here again. (It might take a few minutes for changes to take effect)</p>
+                </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <form action="{% url 'tile:complete_tile' teamtile.id %}" method="post">

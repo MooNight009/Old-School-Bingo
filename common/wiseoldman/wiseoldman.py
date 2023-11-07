@@ -110,9 +110,8 @@ def update_team(team, older_name=None):
     return response_delete, response_create
 
 
-def update_team_tile(team_tile):
+def update_team_tile(team_tile, type_names):
     update_competition(team_tile.team.bingo)
-    type_names = team_tile.names.split(',')
 
     score = 0
     for type_name in type_names:
@@ -121,7 +120,7 @@ def update_team_tile(team_tile):
         }
         response = requests.get(f'https://api.wiseoldman.net/v2/competitions/{team_tile.team.bingo.competition_id}/',
                                 headers=headers, params=params)
-
+        print(response.json())
         players = response.json()['participations']
         for player in players:
             if player['teamName'] == team_tile.team.team_name:
