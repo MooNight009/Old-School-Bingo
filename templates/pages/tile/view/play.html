@@ -127,7 +127,7 @@
             </div>
         </div>
 
-        <form class="d-flex flex-wrap mb-3 py-3 rounded-4 bg-primary-2 justify-content-around" method="post"
+        <form class="d-flex flex-wrap gap-3 mb-3 py-3 rounded-4 bg-primary-2 justify-content-around" method="post"
               enctype="multipart/form-data">
             {% csrf_token %}
             {% for field in form %}
@@ -207,6 +207,11 @@
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Refreshing might take a couple of seconds.</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Wise Old Man only allows us to refresh if an account hasn't been updated in an hour. So if
+                        you would like to update before that go to Wise Old Man of your account and refresh there.
+                        Then attempt to refresh here again. (It might take a few minutes for changes to take effect)</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
