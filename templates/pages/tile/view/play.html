@@ -131,7 +131,7 @@
               enctype="multipart/form-data">
             {% csrf_token %}
             {% for field in form %}
-                <div class="d-flex me-3 align-items-center">
+                <div class="d-flex gap-3 align-items-center">
                     {% include 'layouts/innertemplates/field.html' %}
                 </div>
             {% endfor %}

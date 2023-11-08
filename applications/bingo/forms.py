@@ -17,21 +17,20 @@ class BingoForm(forms.ModelForm):
 
     class Meta:
         model = Bingo
-        fields = ['name', 'description', 'img', 'start_date', 'end_date', 'board_type',
+        fields = ['name', 'description', 'img', 'start_date', 'end_date',
                   'board_size', 'max_players_in_team']
         exclude = ['is_ready', 'max_score', 'is_started', 'is_over', 'is_game_over_on_finish', 'is_row_col_extra',
                    'is_public', 'is_team_public', 'can_players_create_team']
 
         widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control w-25'}),
-            'description': forms.Textarea(attrs={'class': 'form-control w-50'}),
-            'img': forms.FileInput(attrs={'class': 'form-control w-25', 'required': 'required'}),
+            'name': forms.TextInput(attrs={'class': 'form-control w-md-25'}),
+            'description': forms.Textarea(attrs={'class': 'form-control w-md-50'}),
+            'img': forms.FileInput(attrs={'class': 'form-control w-md-25', 'required': 'required'}),
 
-            'start_date': DateTimeWidget(attrs={'class': 'btn-default rounded-3'}),
-            'end_date': DateTimeWidget(attrs={'class': 'btn-default rounded-3'}),
+            'start_date': DateTimeWidget(attrs={'class': 'btn-default w-md-25 rounded-3'}),
+            'end_date': DateTimeWidget(attrs={'class': 'btn-default w-md-25 rounded-3'}),
 
-            'board_size': forms.NumberInput(attrs={'class': 'form-control w-25'}),
-            'board_type': forms.Select(attrs={'class': 'btn-default rounded-3'}),
+            'board_size': forms.NumberInput(attrs={'class': 'form-control w-md-25'}),
             'max_players_in_team': forms.NumberInput(attrs={'class': 'form-control w-25'}),
         }
 
@@ -73,12 +72,12 @@ class EditBingoForm(forms.ModelForm):
                   'max_players_in_team', 'is_public', 'is_team_public', 'is_started', 'is_over']
         exclude = ['is_ready', 'max_score', 'board_size', 'board_type']
         widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control w-25'}),
-            'description': forms.Textarea(attrs={'class': 'form-control w-50'}),
-            'img': forms.FileInput(attrs={'class': 'form-control w-25'}),
+            'name': forms.TextInput(attrs={'class': 'form-control w-md-25'}),
+            'description': forms.Textarea(attrs={'class': 'form-control w-md-50'}),
+            'img': forms.FileInput(attrs={'class': 'form-control w-md-25'}),
 
-            'start_date': DateTimeWidget(attrs={'class': 'btn-default rounded-3'}),
-            'end_date': DateTimeWidget(attrs={'class': 'btn-default rounded-3'}),
+            'start_date': DateTimeWidget(attrs={'class': 'btn-default w-md-25 rounded-3'}),
+            'end_date': DateTimeWidget(attrs={'class': 'btn-default w-md-25 rounded-3'}),
             'is_game_over_on_finish': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
 
             'is_row_col_extra': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
@@ -87,7 +86,7 @@ class EditBingoForm(forms.ModelForm):
             'is_team_public': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
 
             'can_players_create_team': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
-            'max_players_in_team': forms.NumberInput(attrs={'class': 'form-control w-25'}),
+            'max_players_in_team': forms.NumberInput(attrs={'class': 'form-control w-md-25'}),
         }
 
         localized_fields = ['start_date', 'end_date']

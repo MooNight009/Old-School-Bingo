@@ -27,7 +27,7 @@ class Bingo(models.Model):
                             help_text="Image displayed in home page. Recommended size: 270x200px")  # TODO: SET PROPER PATH FOR STORAGE
 
     start_date = models.DateTimeField(help_text="Starting date and time of bingo.")
-    end_date = models.DateTimeField(help_text="Starting date and time of bingo.")
+    end_date = models.DateTimeField(help_text="Ending date and time of bingo.")
     is_game_over_on_finish = models.BooleanField(default=False,
                                                  help_text="Does the game finish when a team reaches maximum points? (Not implemented)")
 
@@ -45,7 +45,7 @@ class Bingo(models.Model):
     can_players_create_team = models.BooleanField(default=True,
                                                   help_text="Can the players create the own teams?")
     max_players_in_team = models.IntegerField(default=10,
-                                              help_text="What is the maximum number of players in a team")
+                                              help_text="Maximum number of players in a team")
 
     board_type = models.CharField(max_length=16, choices=BINGO_TYPES, default='square',
                                   help_text="Board type (Not implemented)")
