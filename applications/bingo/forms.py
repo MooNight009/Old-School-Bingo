@@ -12,15 +12,11 @@ from common.wiseoldman.wiseoldman import get_user
 class BingoForm(forms.ModelForm):
     """
         This form is used when creating a bingo
-        TODO: Update to include minimum required setting
     """
 
     class Meta:
         model = Bingo
-        fields = ['name', 'description', 'img', 'start_date', 'end_date',
-                  'board_size', 'max_players_in_team', 'max_team_count']
-        exclude = ['is_ready', 'max_score', 'is_started', 'is_over', 'is_game_over_on_finish', 'is_row_col_extra',
-                   'is_public', 'is_team_public', 'can_players_create_team']
+        fields = ['name', 'description', 'img', 'start_date', 'end_date']
 
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control w-md-25'}),
@@ -29,11 +25,6 @@ class BingoForm(forms.ModelForm):
 
             'start_date': DateTimeWidget(attrs={'class': 'btn-default w-md-25 rounded-3'}),
             'end_date': DateTimeWidget(attrs={'class': 'btn-default w-md-25 rounded-3'}),
-
-            'board_size': RangeWidget(attrs={'class': 'form-range w-25', 'min': '1', 'max': '9', 'step': '1'}),
-            'max_players_in_team': RangeWidget(attrs={'class': 'form-range w-25', 'min': '1', 'max': '25',
-                                                      'step': '1'}),
-            'max_team_count': RangeWidget(attrs={'class': 'form-range w-25', 'min': '1', 'max': '20', 'step': '1'}),
         }
 
     def clean(self):
@@ -44,10 +35,6 @@ class BingoForm(forms.ModelForm):
             raise forms.ValidationError({'start_date': ['Start date has to be in the future']})
         elif clean['end_date'] <= clean['start_date']:
             raise forms.ValidationError({'end_date': ['How can you end what have not started']})
-
-        # # Ensure is_public isn't off and is_team_public on
-        # if not clean['is_public'] and clean['is_team_public']:
-        #     raise forms.ValidationError({'is_team_public': ['Previous option has to be enabled for this to be on.']})
 
         return clean
 
@@ -60,6 +47,24 @@ class BingoForm(forms.ModelForm):
         description = self.cleaned_data['description']
         validate_string_special_free(description)
         return description
+
+
+class ConfigureBingoForm(forms.ModelForm):
+    """
+        This form is used to configure a bingo
+    """
+
+    class Meta:
+        model = Bingo
+        fields = ['board_size', 'max_players_in_team', 'max_team_count']
+
+        widgets = {
+
+            'board_size': RangeWidget(attrs={'class': 'form-range w-25', 'min': '1', 'max': '9', 'step': '1'}),
+            'max_players_in_team': RangeWidget(attrs={'class': 'form-range w-25', 'min': '5', 'max': '50',
+                                                      'step': '5'}),
+            'max_team_count': RangeWidget(attrs={'class': 'form-range w-25', 'min': '1', 'max': '20', 'step': '1'}),
+        }
 
 
 class EditBingoForm(forms.ModelForm):

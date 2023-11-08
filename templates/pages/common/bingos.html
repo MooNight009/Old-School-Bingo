@@ -22,13 +22,17 @@
                             <h5 class="card-title">{{ bingo.name }}</h5>
                             <p class="card-text bingo-card-text overflow-y-auto">{{ bingo.description }}</p>
                         </div>
-
-                        <div class="card-footer d-flex justify-content-around p-0">
-                            <a href="{% url 'bingo:edit_bingo_board' bingo.id %}"
-                               class="btn-default border flex-fill rounded-start-bottom-3">Edit</a>
-                            <a href="{% url 'bingo:bingo_home_page' bingo.id %}"
-                               class="btn-default border flex-fill rounded-end-bottom-3">Home Page</a>
-                        </div>
+                        {% if bingo.is_paid %}
+                            <div class="card-footer d-flex justify-content-around p-0">
+                                <a href="{% url 'bingo:edit_bingo_board' bingo.id %}"
+                                   class="btn-default border flex-fill rounded-start-bottom-3">Edit</a>
+                                <a href="{% url 'bingo:bingo_home_page' bingo.id %}"
+                                   class="btn-default border flex-fill rounded-end-bottom-3">Home Page</a>
+                            </div>
+                        {% else %}
+                            <a href="{% url 'bingo:configure_bingo' bingo.id %}"
+                               class="btn-default border flex-fill rounded-bottom-3">Configure</a>
+                        {% endif %}
                     </div>
                 </div>
             {% endfor %}

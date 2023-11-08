@@ -6,7 +6,9 @@ app_name = 'bingo'
 
 urlpatterns = [
     path('create_bingo', CreateBingo.as_view(), name='create_bingo'),
-    # path('edit_bingo/<int:pk>', EditBingo.as_view(), name='edit_bingo'),
+    path('configure_bingo/<uuid:pk>', ConfigureBingo.as_view(), name='configure_bingo'),
+    path('checkout_bingo/<uuid:pk>', CheckoutBingo.as_view(), name='checkout_bingo'),
+
     path('edit_bingo_board/<uuid:pk>', EditBingoBoard.as_view(), name='edit_bingo_board'),
     path('edit_bingo_players/<uuid:pk>', EditBingoPlayers.as_view(), name='edit_bingo_players'),
     path('edit_bingo_teams/<uuid:pk>', EditBingoTeams.as_view(), name='edit_bingo_teams'),

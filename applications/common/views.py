@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.views.generic import TemplateView
 
 from applications.bingo.models import Bingo
@@ -20,7 +21,7 @@ class BingosView(TemplateView):
             player = Player.objects.get(user=user)
             bingos = Bingo.objects.all()
 
-            moderating_bingos = bingos.filter(moderator_bingo__player=player)
+            moderating_bingos = bingos.filter(Q(moderator_bingo__player=player)|Q(creator=player))
             joined_bingo = bingos.filter(playerbingodetail__player=player)
             public_bingos = bingos.filter(is_public=True).exclude(pk__in=moderating_bingos).exclude(
                 pk__in=joined_bingo)

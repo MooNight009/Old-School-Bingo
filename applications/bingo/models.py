@@ -7,10 +7,11 @@ from discord import SyncWebhook
 from django.db import models
 from django.urls import reverse
 
+from applications.player.models import Moderator
 from applications.submission.models import Achievement
 from applications.team.models import Team
 from applications.tile.models import Tile, TeamTile
-from common.wiseoldman.wiseoldman import update_competition
+from common.wiseoldman.wiseoldman import update_competition, create_competition
 
 BINGO_TYPES = (
     ('square', 'SQUARE'),
@@ -24,12 +25,12 @@ class Bingo(models.Model):
     name = models.CharField(max_length=64, help_text='Text limit: 64 Characters')
     description = models.TextField(max_length=2048, help_text='Text limit: 2048 Characters')
     img = models.ImageField(null=True, blank=True,
-                            help_text="Image displayed in home page. Recommended size: 270x200px")  # TODO: SET PROPER PATH FOR STORAGE
+                            help_text="Image displayed in home page. Recommended size: 270x200px")
 
     start_date = models.DateTimeField(help_text="Starting date and time of bingo.")
     end_date = models.DateTimeField(help_text="Ending date and time of bingo.")
     is_game_over_on_finish = models.BooleanField(default=False,
-                                                 help_text="Does the game finish when a team reaches maximum points? (Not implemented)")
+                                                 help_text="Does the game finish when a team reaches maximum points?")
 
     is_ready = models.BooleanField(default=False)  # Is the game ready to start
     is_started = models.BooleanField(default=False)  # Has is the game started
@@ -52,7 +53,7 @@ class Bingo(models.Model):
     board_type = models.CharField(max_length=16, choices=BINGO_TYPES, default='square',
                                   help_text="Board type (Not implemented)")
     board_size = models.IntegerField(default=4,
-                                     help_text="Width/Height size of the board. THIS CANNOT BE CHANGED LATER")
+                                     help_text="Width/Height size of the board")
 
     max_score = models.IntegerField(default=-1)
 
@@ -72,6 +73,11 @@ class Bingo(models.Model):
     competition_id = models.CharField(max_length=64, default="")
     competition_verification_code = models.CharField(max_length=64, default="")
 
+    creator = models.ForeignKey('player.Player', on_delete=models.CASCADE, null=True, default=None)
+    is_paid = models.BooleanField(default=False)
+
+    cost = models.IntegerField(default=0)
+
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         if self.img is not None:
@@ -81,6 +87,24 @@ class Bingo(models.Model):
 
     def __str__(self):
         return self.name
+
+    def finish_creation(self):
+        # Create in WOM
+        create_competition(self)
+
+        # Add creator as moderator
+        moderator = Moderator(player=self.creator, bingo=self)
+        moderator.save()
+
+        # Create tiles for the bingo
+        for i in range(1, self.board_size ** 2 + 1):
+            Tile.objects.create(bingo_location=i, score=1, bingo=self)
+
+        # Calculate max score
+        self.calculate_max_score()
+
+        # Create general or summary team
+        Team.objects.create(team_name='General', bingo=self)
 
     # TODO: Actually implement method
     def get_is_started(self):

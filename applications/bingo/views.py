@@ -1,5 +1,6 @@
 # Create your views here.
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.views.generic import FormView, RedirectView, DetailView, ListView, UpdateView
 
@@ -11,27 +12,35 @@ from applications.player.models import Player, Moderator, PlayerBingoDetail
 from applications.submission.models import Achievement, Submission
 from applications.team.forms import TeamFormSet
 from applications.team.models import Team
-from applications.tile.models import Tile, TeamTile
-from common.wiseoldman.wiseoldman import create_competition, update_team, delete_competition
+from applications.tile.models import TeamTile
+from common.wiseoldman.wiseoldman import update_team, delete_competition
 
 
 class CreateBingo(LoginRequiredMixin, FormView):
     template_name = 'pages/bingo/create/create.html'
     form_class = BingoForm
-    success_url = '/main'
+
+    def form_valid(self, form):
+        form.instance.creator = Player.objects.get(user=self.request.user)
+        bingo = form.save()
+        print(self.kwargs)
+        return HttpResponseRedirect(reverse('bingo:configure_bingo', kwargs={'pk': bingo.id}))
+
+
+class ConfigureBingo(LoginRequiredMixin, UpdateView):
+    template_name = 'pages/bingo/create/configure.html'
+    form_class = ConfigureBingoForm
+    model = Bingo
 
     def form_valid(self, form):
         bingo = form.save()
-        create_competition(bingo)
-        player = Player.objects.filter(user=self.request.user).get()
-        moderator = Moderator(player=player, bingo=bingo)
-        moderator.save()
-        for i in range(1, bingo.board_size ** 2 + 1):
-            Tile.objects.create(bingo_location=i, score=1, bingo=bingo)
+        return HttpResponseRedirect(reverse('bingo:checkout_bingo', kwargs={'pk': bingo.id}))
 
-        bingo.calculate_max_score()
-        Team.objects.create(team_name='General', bingo=bingo)
-        return super().form_valid(form)
+
+class CheckoutBingo(LoginRequiredMixin, DetailView):
+    template_name = 'pages/bingo/create/checkout.html'
+    model = Bingo
+
 
 
 class EditBingoBoard(LoginRequiredMixin, UserIsModeratorMixin, DetailView):

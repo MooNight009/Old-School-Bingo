@@ -1,0 +1,77 @@
+{% extends 'layouts/base/base.html' %}
+{% block title %}Configure Bingo - Old School Bingo{% endblock %}
+{% block description %}Configure your dream bingo.{% endblock %}
+
+{% block content %}
+    <div class="d-flex flex-column flex-md-row gap-3">
+        <div class="flex-fill bg-primary-2 rounded-3 mb-3 p-2">
+            <h1>Configure Bingo</h1>
+            <p class="pb-3">You will not be able to change these setting later.</p>
+
+            <form method="POST" action="" onsubmit="back_to_utc()"
+                  enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.non_field_error }}
+                {% for field in form %}
+                    <div class="d-flex flex-column pb-3">
+
+                        {% include 'layouts/innertemplates/fieldwithoutput.html' %}
+                    </div>
+                {% endfor %}
+
+                {##}
+                <div class="d-flex justify-content-center pb-2">
+                    <input class="btn-default rounded-3" type="submit" value="Checkout">
+                </div>
+            </form>
+        </div>
+        <div class="d-flex flex-column bg-primary-2 rounded-3 mb-3 p-2" style="min-width: 250px">
+            <p>This is where the prices will go</p>
+            <p>Board cost: <span id="board_cost_id">0</span>$</p>
+            <p>Player cost: <span id="player_cost_id">0</span>$</p>
+            <p>Team cost: <span id="team_cost_id">0</span>$</p>
+            <p>Total cost: <span id="total_cost_id">0</span>$</p>
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block js %}
+    <script>
+        total_cost = document.getElementById('total_cost_id')
+
+        board_size = document.getElementById('id_board_size')
+        board_cost = document.getElementById('board_cost_id')
+        board_size.addEventListener("change", function (event) {
+            let value = Math.max((event.target.value - 3)*3, 0)
+            board_cost.innerText = value
+            show_total_cost()
+
+        })
+
+        max_players_in_team = document.getElementById('id_max_players_in_team')
+        player_cost = document.getElementById('player_cost_id')
+        max_players_in_team.addEventListener("change", function (event) {
+            let value = Math.max((event.target.value - 10)/5 * 2, 0)
+            player_cost.innerText = value
+            show_total_cost()
+        })
+
+        max_team_count = document.getElementById('id_max_team_count')
+        team_cost = document.getElementById('team_cost_id')
+        max_team_count.addEventListener("change", function (event) {
+            let value = Math.max(event.target.value - 2, 0)
+            team_cost.innerText = value
+            show_total_cost()
+        })
+
+        board_size.dispatchEvent(new Event('change'))
+        max_players_in_team.dispatchEvent(new Event('change'))
+        max_team_count.dispatchEvent(new Event('change'))
+
+        function show_total_cost() {
+            total_cost.innerText = parseInt(board_cost.innerText) + parseInt(player_cost.innerText) + parseInt(team_cost.innerText)
+        }
+    </script>
+{% endblock %}
