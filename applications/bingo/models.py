@@ -13,6 +13,7 @@ from applications.defaults.storage_backends import PublicMediaStorage
 from applications.submission.models import Achievement
 from applications.team.models import Team
 from applications.tile.models import Tile, TeamTile
+from common.wiseoldman.wiseoldman import update_competition
 
 BINGO_TYPES = (
     ('square', 'SQUARE'),
@@ -69,6 +70,9 @@ class Bingo(models.Model):
 
     winner = models.OneToOneField('team.Team', on_delete=models.SET_NULL, null=True, related_name='bingo_winner_team')
 
+    competition_id = models.CharField(max_length=64, default="")
+    competition_verification_code = models.CharField(max_length=64, default="")
+
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         if self.img is not None:
@@ -80,6 +84,9 @@ class Bingo(models.Model):
             imageFile.write(memfile.getvalue())
             imageFile.flush()
             imageFile.close()
+
+    def __str__(self):
+        return self.name
 
     # TODO: Actually implement method
     def get_is_started(self):
@@ -97,6 +104,7 @@ class Bingo(models.Model):
                         response = requests.post(f'https://api.wiseoldman.net/v2/players/{name}/')
                         if response.status_code != 200:
                             print("We got an error in player " + name)
+                update_competition(self)
         return self.is_started
 
     def get_is_over(self):
