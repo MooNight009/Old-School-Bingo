@@ -1,0 +1,13 @@
+{% if not field.is_hidden %}
+    <label for="{{ field.id_for_label }}" class="form-label text-nowrap">{{ field.label }}</label>
+{% endif %}
+{{ field }}
+
+{% if field.field.widget.input_type == 'range' %}
+    <output>{{ field.value }}</output>
+{% endif %}
+
+{% if field.help_text %}
+    <p class="" style="opacity: 50%">{{ field.help_text }}</p>
+{% endif %}
+<label class="color-accent">{{ field.errors }}</label>

@@ -46,10 +46,12 @@ class Bingo(models.Model):
                                                   help_text="Can the players create the own teams?")
     max_players_in_team = models.IntegerField(default=10,
                                               help_text="Maximum number of players in a team")
+    max_team_count = models.IntegerField(default=3,
+                                         help_text="Maximum number of teams in the bingo")
 
     board_type = models.CharField(max_length=16, choices=BINGO_TYPES, default='square',
                                   help_text="Board type (Not implemented)")
-    board_size = models.IntegerField(default=5,
+    board_size = models.IntegerField(default=4,
                                      help_text="Width/Height size of the board. THIS CANNOT BE CHANGED LATER")
 
     max_score = models.IntegerField(default=-1)

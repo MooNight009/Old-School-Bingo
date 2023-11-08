@@ -5,7 +5,7 @@ from django import forms
 
 from applications.bingo.models import Bingo
 from applications.common.validators import validate_string_special_free, validate_discord_link, validate_name_list
-from applications.common.widgets import DateTimeWidget
+from applications.common.widgets import DateTimeWidget, RangeWidget
 from common.wiseoldman.wiseoldman import get_user
 
 
@@ -18,7 +18,7 @@ class BingoForm(forms.ModelForm):
     class Meta:
         model = Bingo
         fields = ['name', 'description', 'img', 'start_date', 'end_date',
-                  'board_size', 'max_players_in_team']
+                  'board_size', 'max_players_in_team', 'max_team_count']
         exclude = ['is_ready', 'max_score', 'is_started', 'is_over', 'is_game_over_on_finish', 'is_row_col_extra',
                    'is_public', 'is_team_public', 'can_players_create_team']
 
@@ -30,8 +30,10 @@ class BingoForm(forms.ModelForm):
             'start_date': DateTimeWidget(attrs={'class': 'btn-default w-md-25 rounded-3'}),
             'end_date': DateTimeWidget(attrs={'class': 'btn-default w-md-25 rounded-3'}),
 
-            'board_size': forms.NumberInput(attrs={'class': 'form-control w-md-25'}),
-            'max_players_in_team': forms.NumberInput(attrs={'class': 'form-control w-25'}),
+            'board_size': RangeWidget(attrs={'class': 'form-range w-25', 'min': '1', 'max': '9', 'step': '1'}),
+            'max_players_in_team': RangeWidget(attrs={'class': 'form-range w-25', 'min': '1', 'max': '25',
+                                                      'step': '1'}),
+            'max_team_count': RangeWidget(attrs={'class': 'form-range w-25', 'min': '1', 'max': '20', 'step': '1'}),
         }
 
     def clean(self):

@@ -13,13 +13,13 @@
             {% for field in form %}
                 <div class="d-flex flex-column pb-3">
 
-                    {% include 'layouts/innertemplates/field.html' %}
+                    {% include 'layouts/innertemplates/fieldwithoutput.html' %}
                 </div>
             {% endfor %}
 
             {##}
             <div class="d-flex justify-content-center pb-2">
-                <input class="btn-default rounded-3" type="submit" value="Create Bingo">
+                <input class="btn-default rounded-3" type="submit" value="Next step">
             </div>
         </form>
     </div>
