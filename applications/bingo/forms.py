@@ -60,7 +60,7 @@ class ConfigureBingoForm(forms.ModelForm):
 
         widgets = {
 
-            'board_size': RangeWidget(attrs={'class': 'form-range w-25', 'min': '1', 'max': '9', 'step': '1'}),
+            'board_size': RangeWidget(attrs={'class': 'form-range w-25', 'min': '2', 'max': '9', 'step': '1'}),
             'max_players_in_team': RangeWidget(attrs={'class': 'form-range w-25', 'min': '5', 'max': '50',
                                                       'step': '5'}),
             'max_team_count': RangeWidget(attrs={'class': 'form-range w-25', 'min': '1', 'max': '20', 'step': '1'}),

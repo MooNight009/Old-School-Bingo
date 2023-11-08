@@ -43,7 +43,7 @@
 
         board_size = document.getElementById('id_board_size')
         board_cost = document.getElementById('board_cost_id')
-        board_size.addEventListener("change", function (event) {
+        board_size.addEventListener("input", function (event) {
             let value = Math.max((event.target.value - 3)*3, 0)
             board_cost.innerText = value
             show_total_cost()
@@ -52,7 +52,7 @@
 
         max_players_in_team = document.getElementById('id_max_players_in_team')
         player_cost = document.getElementById('player_cost_id')
-        max_players_in_team.addEventListener("change", function (event) {
+        max_players_in_team.addEventListener("input", function (event) {
             let value = Math.max((event.target.value - 10)/5 * 2, 0)
             player_cost.innerText = value
             show_total_cost()
@@ -60,15 +60,15 @@
 
         max_team_count = document.getElementById('id_max_team_count')
         team_cost = document.getElementById('team_cost_id')
-        max_team_count.addEventListener("change", function (event) {
+        max_team_count.addEventListener("input", function (event) {
             let value = Math.max(event.target.value - 2, 0)
             team_cost.innerText = value
             show_total_cost()
         })
 
-        board_size.dispatchEvent(new Event('change'))
-        max_players_in_team.dispatchEvent(new Event('change'))
-        max_team_count.dispatchEvent(new Event('change'))
+        board_size.dispatchEvent(new Event('input'))
+        max_players_in_team.dispatchEvent(new Event('input'))
+        max_team_count.dispatchEvent(new Event('input   '))
 
         function show_total_cost() {
             total_cost.innerText = parseInt(board_cost.innerText) + parseInt(player_cost.innerText) + parseInt(team_cost.innerText)
