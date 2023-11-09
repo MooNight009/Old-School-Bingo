@@ -191,7 +191,7 @@ class ModeratorForm(forms.Form):
 class JoinBingoForm(forms.Form):
     account_names = forms.CharField(
         max_length=128, validators=[validate_name_list], required=False,
-        widget=forms.TextInput(attrs={'class': 'form-control w-50'}),
+        widget=forms.TextInput(attrs={'class': 'form-control w-md-50'}),
         help_text="For multiple accounts separate them by a ',"
                   "' (comma). This information will be used for tiles that get data from WiseOldMan.")
 

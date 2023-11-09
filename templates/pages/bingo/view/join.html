@@ -24,7 +24,7 @@
                 Page</a>
         {% else %}
             <form method="post"
-                  class="d-flex flex-row justify-content-center align-items-center">
+                  class="d-flex flex-column align-items-center gap-3">
                 {% csrf_token %}
                 {% for field in form %}
                     {% include 'layouts/innertemplates/field.html' %}
