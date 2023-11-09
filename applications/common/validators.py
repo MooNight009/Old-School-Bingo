@@ -4,7 +4,7 @@ from django.core.exceptions import ValidationError
 
 
 def validate_string_special_free(value):
-    regex = r"^[\w\s. @ +, -]+$"
+    regex = r"^[\w\s. @ +, \-()!]+$"
     if not re.match(regex, value):
         raise ValidationError(
             "This field may only contain letters, numbers, and the characters '@', '.', '+', '-', or '_'"
