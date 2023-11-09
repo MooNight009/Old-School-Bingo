@@ -90,9 +90,9 @@ class Bingo(models.Model):
 
     def calculate_price(self):
         cost = 0
-        cost += max((self.board_size - 3) * 3, 0)
+        cost += max((self.board_size - 4) * 3, 0)
         cost += max((self.max_players_in_team - 10) / 5 * 2, 0)
-        cost += max((self.max_team_count - 2), 0)
+        cost += max((self.max_team_count - 3), 0)
         self.cost = cost
         self.save()
         return self.cost

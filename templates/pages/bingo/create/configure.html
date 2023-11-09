@@ -44,7 +44,7 @@
         board_size = document.getElementById('id_board_size')
         board_cost = document.getElementById('board_cost_id')
         board_size.addEventListener("input", function (event) {
-            let value = Math.max((event.target.value - 3)*3, 0)
+            let value = Math.max((event.target.value - 4)*3, 0)
             board_cost.innerText = value
             show_total_cost()
 
