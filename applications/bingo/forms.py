@@ -111,8 +111,6 @@ class EditBingoForm(forms.ModelForm):
     def clean(self):
         clean = super(EditBingoForm, self).clean()
 
-        print(clean['start_date'])
-        print(type(clean['start_date']))
 
         # Disable changing start date if it's started
         # TODO: Disable the option to begin with
@@ -128,8 +126,8 @@ class EditBingoForm(forms.ModelForm):
 
 
         # Ensure is_public isn't off and is_team_public on
-        if not clean['is_public'] and clean['is_team_public']:
-            raise forms.ValidationError({'is_team_public': ['Previous option has to be enabled for this to be on.']})
+        # if not clean['is_public'] and clean['is_team_public']:
+        #     raise forms.ValidationError({'is_team_public': ['Previous option has to be enabled for this to be on.']})
 
         return clean
 
