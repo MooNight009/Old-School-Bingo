@@ -27,19 +27,32 @@ class CreateBingo(LoginRequiredMixin, FormView):
         return HttpResponseRedirect(reverse('bingo:configure_bingo', kwargs={'pk': bingo.id}))
 
 
-class ConfigureBingo(LoginRequiredMixin, UpdateView):
+class ConfigureBingo(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     template_name = 'pages/bingo/create/configure.html'
     form_class = ConfigureBingoForm
     model = Bingo
 
+    def test_func(self):
+        return not Bingo.objects.get(id=self.kwargs['pk']).is_paid
+
     def form_valid(self, form):
         bingo = form.save()
+        new_cost = bingo.calculate_price()
+        if new_cost == 0:
+            bingo.is_paid = True
+            bingo.save()
+            bingo.finish_creation()
+            return HttpResponseRedirect(reverse('bingo:edit_bingo_board', kwargs={'pk': bingo.id}))
+
         return HttpResponseRedirect(reverse('bingo:checkout_bingo', kwargs={'pk': bingo.id}))
 
 
 class CheckoutBingo(LoginRequiredMixin, DetailView):
     template_name = 'pages/bingo/create/checkout.html'
     model = Bingo
+
+    def test_func(self):
+        return not Bingo.objects.get(id=self.kwargs['pk']).is_paid
 
 
 

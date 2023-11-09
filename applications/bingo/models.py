@@ -88,6 +88,15 @@ class Bingo(models.Model):
     def __str__(self):
         return self.name
 
+    def calculate_price(self):
+        cost = 0
+        cost += max((self.board_size - 3) * 3, 0)
+        cost += max((self.max_players_in_team - 10) / 5 * 2, 0)
+        cost += max((self.max_team_count - 2), 0)
+        self.cost = cost
+        self.save()
+        return self.cost
+
     def finish_creation(self):
         # Create in WOM
         create_competition(self)
