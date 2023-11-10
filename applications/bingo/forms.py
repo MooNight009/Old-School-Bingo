@@ -42,7 +42,7 @@ class BingoForm(forms.ModelForm):
             raise forms.ValidationError({'start_date': ['Start date has to be in the future']})
         elif clean['end_date'] <= clean['start_date']:
             raise forms.ValidationError({'end_date': ['How can you end what have not started']})
-        elif (clean['end_date'] - clean['start_date']).days > 30:
+        elif (clean['end_date'] - clean['start_date']).days > 60:
             raise forms.ValidationError({'end_date': ['Duration of the bingo has to be less than 30 days']})
 
         # # Ensure is_public isn't off and is_team_public on
@@ -121,7 +121,7 @@ class EditBingoForm(forms.ModelForm):
             raise forms.ValidationError({'start_date': ['Start date has to be in the future']})
         elif clean['end_date'] <= clean['start_date']:
             raise forms.ValidationError({'end_date': ['How can you end what have not started']})
-        elif (clean['end_date'] - clean['start_date']).days > 30:
+        elif (clean['end_date'] - clean['start_date']).days > 60:
             raise forms.ValidationError({'end_date': ['Duration of the bingo has to be less than 30 days']})
 
 
