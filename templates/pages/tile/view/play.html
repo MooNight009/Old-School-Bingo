@@ -136,7 +136,7 @@
                 </div>
             {% endfor %}
 
-            <input type="submit" class="btn-default rounded" value="Submit">
+            <input type="submit" onclick="this.disabled=true,this.form.submit()" class="btn-default rounded" value="Submit">
         </form>
 
         <div class="d-flex flex-wrap gap-3 justify-content-around">
@@ -217,7 +217,7 @@
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <form action="{% url 'tile:complete_tile' teamtile.id %}" method="post">
                         {% csrf_token %}
-                        <input type="submit" class="btn-default rounded-3" value="Refresh"/>
+                        <input type="submit" onclick="this.disabled=true,this.form.submit()" class="btn-default rounded-3" value="Refresh"/>
                     </form>
 
                 </div>
@@ -251,7 +251,7 @@
         let achievements = document.querySelectorAll('[name ="achievement_date"]')
         for (let i = 0; i < achievements.length; i++) {
             let start_date = (new Date(achievements[i].innerText))
-            achievements[i].innerText = get_formatted_date(start_date)
+            achievements[i].innerText = get_formatted_date(start_date).replace('T', ' ')
         }
 
         function expand_image(e) {

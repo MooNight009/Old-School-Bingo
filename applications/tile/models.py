@@ -62,6 +62,9 @@ class Tile(models.Model):
             self.invocation.tile = self
             self.invocation.save()
 
+    def __str__(self):
+        return f'Tile {self.name} in {self.bingo}'
+
     def get_ready_color(self):
         if self.is_ready:
             return 'bg-success-subtle'
@@ -114,6 +117,9 @@ class TeamTile(models.Model):
     tile = models.ForeignKey('tile.Tile', on_delete=models.CASCADE)
 
     score = models.IntegerField(default=0)
+
+    def __str__(self):
+        return f'{self.tile} for team {self.team}'
 
     def is_complete_fc(self):
         return 'checked' if self.is_complete else ''
