@@ -1,120 +1,164 @@
-{% extends 'layouts/base/base.html' %}
 {% load static %}
 {% load bingo_extras %}
-{% block title %}Old School Bingo{% endblock %}
-{% block description %}Run a bingo not a discord brothel with Old School Bingo. Make an engaging bingo with very little effort because we're here.{% endblock %}
 
-{% block content %}
-    <div class="">
-        <div class="d-flex flex-column border border-3 border-secondary-1 align-items-center rounded-top-pill p-3 pb-0">
-            <h1 class="underline-accent fw-bold p-3 mb-5">Bingo in one place</h1>
-            <div class="">
-                <div class="d-none d-lg-flex absolute-center-lg">
-                    <div class="fs-4 btn-homepage rounded-start-lg-3 pb-3 p-2 px-5">
-                        <a href="#bingo_id" class="color-secondary-1 text-decoration-none">Hosting</a>
-                    </div>
-                    <div class="fs-4 btn-homepage pb-3 p-2 px-5">
-                        <a href="#leaderboard_id" class="color-secondary-1 text-decoration-none">Leaderboard</a>
-                    </div>
-                    <div class="fs-4 btn-homepage pb-3 p-2 px-5">
-                        <a href="#wom_id" class="color-secondary-1 text-decoration-none">WiseOldMan</a>
-                    </div>
-                    <div class="fs-4 btn-homepage rounded-end-lg-3 pb-3 p-2 px-5"><a
-                            href="#tile_id" class="color-secondary-1 text-decoration-none">Tiles</a>
-                    </div>
+
+<!DOCTYPE html>
+{% load static %}
+<html lang="en" class="">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description"
+              content="Escape the discord chaos and enjoy seamless bingo fun with Old School Bingo. We're here to make your bingo experience effortlessly engaging!">
+        <link rel="shortcut icon" href="{% static 'favicon/favicon-16x16.png' %}" type="image/x-icon">
+        <title>Old School Bingo</title>
+
+        {% include 'layouts/includes/css.html' %}
+    </head>
+
+    <body class="d-flex flex-column" style="background-image: url('{% static 'background.png' %}')">
+        {% include 'layouts/base/header.html' %}
+
+
+        <div class="container d-flex flex-column flex-md-row me-0 mt-3 mb-10 gap-3">
+            <div class="text-center align-self-center mb-3 mb-md-0">
+                <h1 class="fw-bold underline-accent">Bingo in one place</h1>
+                <p class="color-secondary-3 pb-3">Craft an effortlessly engaging bingo experience right from the
+                    forefront. Tailor your board and tiles to suit your preferences with ease.</p>
+                {% if request.user.is_anonymous %}
+                    <a href="{% url 'player:register' %}" style="min-width: 175px"
+                       class="btn-default-inverse bg-secondary-1 color-primary-2 border-3 fs-4 py-3 px-4 rounded-3">Join
+                        now!</a>
+                {% else %}
+                    <a href="{% url 'common:main' %}" style="min-width: 175px"
+                       class="btn-default-inverse bg-secondary-1 color-primary-2 border-3 fs-4 py-3 px-4 rounded-3">Play
+                        now!</a>
+                {% endif %}
+            </div>
+            <div>
+                <img src="{% static 'homepage media/main.png' %}" alt="" class="img-fluid opacity-75">
+            </div>
+        </div>
+
+        <div class="container d-flex flex-column flex-md-row ms-0 mb-10 gap-3">
+            <div class="d-none d-md-block order-1 p-2">
+                <img src="{% static 'homepage media/board.png' %}" alt="" class="img-fluid opacity-75">
+            </div>
+            <div class="d-flex flex-column flex-grow-1 order-2 text-center justify-content-center">
+                <h2 class="fw-bold mb-2">Board</h2>
+                <p class="color-secondary-3">Tailor the board to meet your specific needs, adjusting visibility settings to control who can view it. Effortlessly manage players and teams with ease.</p>
+            </div>
+        </div>
+
+        <div class="container d-flex flex-column flex-md-row me-0 mb-10 gap-3">
+            <div class="d-none d-md-block order-2 p-2">
+                <img src="{% static 'homepage media/tile.png' %}" alt="" class="img-fluid opacity-75">
+            </div>
+            <div class="d-flex flex-column flex-grow-1 order-1 text-center justify-content-center">
+                <h2 class="fw-bold mb-2">Tile</h2>
+                <p class="color-secondary-3">Personalize the specifics of each tile, including the scoring system. Empower users to fulfill a tile, while granting moderators the authority to approve it seamlessly.</p>
+            </div>
+        </div>
+
+        <div class="container d-flex flex-column flex-md-row ms-0 mb-10 gap-3">
+            <div class="d-none d-md-block order-1 p-2">
+                <img src="{% static 'homepage media/submission.png' %}" alt="" class="img-fluid opacity-75">
+            </div>
+            <div class="d-flex flex-column flex-grow-1 order-2 text-center justify-content-center">
+                <h2 class="fw-bold mb-2">Submission</h2>
+                <p class="color-secondary-3">Submit image proofs seamlessly. Gain insights into the submission details, including the contributor's identity and the timestamp.</p>
+            </div>
+        </div>
+
+        <div class="container d-flex flex-column text-center mb-10">
+            <h2 class="fw-bold mb-3">Integration</h2>
+            <div class="d-flex flex-column flex-md-row gap-3">
+                <div class="border border-3 p-3 rounded-3 w-md-50">
+                    <h3>Discord</h3>
+                    <p class="color-secondary-3">Get Discord notifications for the entire bingo or specific teams, customizing alerts based on available options.</p>
+                    <img src="{% static 'homepage media/Discord.png' %}" alt="" class="img-fluid opacity-75">
+                </div>
+                <div class="border border-3 p-3 rounded-3 w-md-50">
+                    <h3>Wise Old Man</h3>
+                    <p class="color-secondary-3">Automatically generate Wise Old Man competitions to meticulously monitor kills and XP progress.</p>
+                    <img src="{% static 'homepage media/WOM.png' %}" alt="" class="img-fluid opacity-75">
                 </div>
             </div>
         </div>
 
-
-        <div id="bingo_id" class="d-flex flex-wrap border-accent py-5 justify-content-around">
+        <div id="bingo_id" class="d-flex flex-wrap border-accent justify-content-around gap-5 mb-10">
             <a href="{% url 'bingo:create_bingo' %}" style="min-width: 175px"
                class="btn-default-inverse bg-secondary-1 color-primary-2 border-3 fs-4 py-3 px-4 rounded-3">Create
                 bingo</a>
             <a href="{% url 'common:main' %}" style="min-width: 175px"
                class="btn-default-inverse bg-secondary-1 color-primary-2 border-3 fs-4 py-3 px-4 rounded-3">Play now</a>
-            <a href="#" style="min-width: 175px"
-               class="btn-default-inverse bg-secondary-1 color-primary-2 border-3 fs-4 py-3 px-4 rounded-3">FAQ(soon)
-            </a>
-
-        </div>
-
-        <div class="d-flex flex-column flex-md-row border border-3 rounded-3 mb-5">
-            <div class="d-flex flex-column flex-fill rounded-3 p-3 ps-5 me-0 me-md-3 mb-3 mb-md-0">
-                <h2 class="fw-bold mb-3">Hosting</h2>
-                <div class="d-flex flex-column flex-grow-1 justify-content-between">
-                    <div class="mb-2"><i class="fa-solid fa-check color-accent pe-2"></i>Edit details of bingo</div>
-                    <div class="mb-2"><i class="fa-solid fa-check color-accent pe-2"></i>Customize every tile</div>
-                    <div class="mb-2"><i class="fa-solid fa-check color-accent pe-2"></i>Get notified on <span
-                            class="color-accent">discord</span> when someone finishes a
-                        tile
-                    </div>
-                    <div class="mb-2"><i class="fa-solid fa-check color-accent pe-2"></i>Select <span
-                            class="color-accent">scoring methods</span> and how bingo is
-                        finished
-                    </div>
-                    <div class="mb-2"><i class="fa-solid fa-check color-accent pe-2"></i>Option to manage teams
-                        or <span class="color-accent">let players create them</span>
-                    </div>
-                </div>
-            </div>
-            <div class="d-none d-lg-block bg-secondary-1 p-2 w-md-50">
-                <img src="{% static 'homepage media/Bingo edit board.png' %}" alt="" class="img-fluid">
-            </div>
         </div>
 
 
-        <div class="d-flex flex-column flex-md-row gap-5 mb-5">
-            <div id="leaderboard_id"
-                 class="flex-fill w-md-50 border border-3 rounded-3 text-center p-3 me-0 me-md-2 mb-md-0">
-                <h2 class="fw-bold mb-4">Leaderboard</h2>
-                <div class="d-flex flex-column gap-3 justify-content-between">
-                    <div class="mb-2"><i class="fa-solid fa-check color-accent pe-2"></i>View team rankings <span
-                            class="color-accent">(If enabled in bingo)</span></div>
-                    <div class="mb-2"><i class="fa-solid fa-check color-accent pe-2"></i>See who has completed which
-                        tiles
-                    </div>
-                    <div class="mb-2"><i class="fa-solid fa-check color-accent pe-2"></i>View submissions of different
-                        people
-                    </div>
-                </div>
-            </div>
-            <div id="wom_id" class="flex-fill w-md-50 border border-3 rounded-3 text-center p-3 ms-0 ms-md-2">
-                <h2 class="fw-bold mb-4">WiseOldMan</h2>
-                <div class="d-flex flex-column gap-3 justify-content-between">
-                    <div class="mb-2"><i class="fa-solid fa-check color-accent pe-2"></i>Update on demand</div>
-                    <div class="mb-2"><i class="fa-solid fa-check color-accent pe-2"></i>Custom tiles that track
-                        WiseOldMan progress
-                    </div>
-                    <div class="mb-2"><i class="fa-solid fa-check color-accent pe-2"></i>Track multiple <span
-                            class="color-accent">bosses</span> or <span
-                            class="color-accent">skills</span> at one time
-                    </div>
-                </div>
-            </div>
+        <div class="container d-flex flex-column mb-10">
+            <h2 class="text-center mb-3">FAQ</h2>
+            <a class="btn-default rounded-top text-start" data-bs-toggle="collapse" href="#q1"
+               role="button" aria-expanded="false" aria-controls="q1">What is Old School Bingo?</a>
+            <p class="collapse indent-first-line border border-3 border-top-0 p-3" id="q1">
+                Old School Bingo is a side project born out of the realization of the considerable effort involved in organizing a clan bingo. My goal was to streamline the process by automating cumbersome tasks, and in doing so, I introduced additional features that would otherwise be laborious to incorporate.
+            </p>
+
+            <a class="btn-default text-start mt-3" data-bs-toggle="collapse" href="#q2"
+               role="button" aria-expanded="false" aria-controls="q2">How do i create a bingo?</a>
+            <p class="collapse indent-first-line border border-3 border-top-0 p-3" id="q2">
+                To create a bingo, navigate to the <a href="{% url 'bingo:create_bingo' %}">designated page</a> where
+                you'll be prompted to input details. Once submitted, you'll be redirected to the edit page. Here, you
+                can tailor individual tiles, manage teams and players, fine-tune bingo settings, and incorporate
+                Discord notifications to enhance your bingo experience.
+            </p>
+
+            <a class="btn-default text-start mt-3" data-bs-toggle="collapse" href="#q3"
+               role="button" aria-expanded="false" aria-controls="q3">How do i join a bingo?</a>
+            <p class="collapse indent-first-line border border-3 border-top-0 p-3" id="q3">
+                To join a bingo, simply explore <a href="{% url 'common:main' %}">public bingos</a> or utilize the
+                invitation link provided by the bingo moderator. On the bingo's homepage, enter your Old School
+                RuneScape account name if required, and then choose to join an existing team or create a new one.
+            </p>
+
+            <a class="btn-default text-start mt-3" data-bs-toggle="collapse" href="#q4"
+               role="button" aria-expanded="false" aria-controls="q4">How do i play in a bingo?</a>
+            <p class="collapse indent-first-line border border-3 border-top-0 p-3" id="q4">
+                After joining a bingo, once it commences, locate the link to your board on the bingo's homepage.
+                Click on any tile to access its description and submit images accordingly. If the bingo is public,
+                you can choose other teams' boards or view a summary from the dropdown menu on the right side of your
+                board page.
+            </p>
+
+            <a class="btn-default text-start mt-3" data-bs-toggle="collapse" href="#q5"
+               role="button" aria-expanded="false" aria-controls="q5">Is Old School Bingo free?</a>
+            <p class="collapse indent-first-line border border-3 border-top-0 p-3" id="q5">
+                Absolutely, running a bingo in Old School Bingo is open source and entirely free. Our aim is to provide
+                essential features without any cost, ensuring accessibility for everyone.
+            </p>
+
+            <a class="btn-default text-start mt-3" data-bs-toggle="collapse" href="#q6"
+               role="button" aria-expanded="false" aria-controls="q6">What are the future plans for Old School
+                Bingo?</a>
+            <p class="collapse indent-first-line border border-3 border-top-0 p-3" id="q6">
+                Upon achieving a seamless user experience and ensuring a bug-free product, the future plans for Old
+                School Bingo involve the gradual rollout of new features based on user feedback. Key upcoming
+                initiatives include the introduction of tile packs to simplify image design for each tile, completing
+                the Runelite plugin for direct in-game tracking, and unveiling a fresh style of bingo.
+            </p>
+
+            <a class="btn-default text-start mt-3" data-bs-toggle="collapse" href="#q7"
+               role="button" aria-expanded="false" aria-controls="q7">I have a question or would like to help?</a>
+            <p class="collapse indent-first-line border border-3 border-top-0 rounded-bottom-3 p-3" id="q7">
+                If you have any questions or would like to contribute, feel free to join the
+                <a href="https://discord.gg/fpKeEWMHjE">Discord server</a>. The website is open source, and everyone
+                is welcome to contribute. As I'm relatively new to Discord servers and open-source projects, there
+                might be some features missing, but I am open to suggestions and feedback.
+            </p>
+
         </div>
 
 
-        <div id="tile_id" class="d-flex flex-column flex-md-row border border-3 rounded-3  mb-5">
-            <div class="bg-secondary-1 p-2 w-md-50 d-none d-lg-block">
-                <img src="{% static 'homepage media/play tile.png' %}" alt="" class="img-fluid">
-            </div>
-            <div class="d-flex flex-column flex-fill rounded-3 p-3 ps-5 ms-0 ms-md-3 mt-3 mt-md-0">
-                <h2 class="fw-bold mb-3">Tile</h2>
-                <div class="d-flex flex-column flex-grow-1 justify-content-between">
-                    <div class="mb-2"><i class="fa-solid fa-check color-accent pe-2"></i>View tile details</div>
-                    <div class="mb-2"><i class="fa-solid fa-check color-accent pe-2"></i>Send an image showing your
-                        contribution to the tile
-                    </div>
-                    <div class="mb-2"><i class="fa-solid fa-check color-accent pe-2"></i>Complete a tile as a player or
-                        approve it as a mod
-                    </div>
-                    <div class="mb-2"><i class="fa-solid fa-check color-accent pe-2"></i>View <span
-                            class="color-accent">submissions</span> images and descriptions for a
-                        tile
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-{% endblock %}
+        {% include 'layouts/includes/js.html' %}
+    </body>
+</html>
