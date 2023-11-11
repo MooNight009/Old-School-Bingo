@@ -38,6 +38,9 @@ class Submission(models.Model):
             imageFile.flush()
             imageFile.close()
 
+    def __str__(self):
+        return f'Submission tile {self.team_tile} by {self.player}'
+
 
 # class Reaction(models.Model):
 #     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

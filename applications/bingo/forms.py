@@ -62,7 +62,7 @@ class BingoForm(forms.ModelForm):
 
     def clean_board_size(self):
         board_size = self.cleaned_data['board_size']
-        if board_size> 5:
+        if board_size > 7:
             raise forms.ValidationError('The current max size for board is 7x7. If you like to host a bigger board '
                                         'let me know via discord (https://discord.gg/fpKeEWMHjE) and I will what I can do.')
         return board_size
