@@ -40,6 +40,9 @@ class Team(models.Model):
             print("We changed name")
             update_team(self, older_name=pre_save.team_name)
 
+    def __str__(self):
+        return f'Team {self.team_name} in {self.bingo}'
+
     def delete(self, *args, **kwargs):
         if self.team_name == 'General':
             return ''

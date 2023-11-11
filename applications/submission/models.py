@@ -25,6 +25,9 @@ class Submission(models.Model):
             img.thumbnail((1000, 1000))
             img.save(self.img.path, format='PNG', quality=60, optimize=True)
 
+    def __str__(self):
+        return f'Submission tile {self.team_tile} by {self.player}'
+
 
 # class Reaction(models.Model):
 #     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
