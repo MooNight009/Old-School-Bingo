@@ -17,8 +17,7 @@ class BingoForm(forms.ModelForm):
 
     class Meta:
         model = Bingo
-        fields = ['name', 'description', 'img', 'start_date', 'end_date',
-                  'board_size', 'max_players_in_team']
+        fields = ['name', 'description', 'img', 'start_date', 'end_date', 'board_size']
         exclude = ['is_ready', 'max_score', 'is_started', 'is_over', 'is_game_over_on_finish', 'is_row_col_extra',
                    'is_public', 'is_team_public', 'can_players_create_team']
 
@@ -42,7 +41,7 @@ class BingoForm(forms.ModelForm):
             raise forms.ValidationError({'start_date': ['Start date has to be in the future']})
         elif clean['end_date'] <= clean['start_date']:
             raise forms.ValidationError({'end_date': ['How can you end what have not started']})
-        elif (clean['end_date'] - clean['start_date']).days > 60:
+        elif (clean['end_date'] - clean['start_date']).days > 30:
             raise forms.ValidationError({'end_date': ['Duration of the bingo has to be less than 30 days']})
 
         # # Ensure is_public isn't off and is_team_public on
@@ -60,6 +59,13 @@ class BingoForm(forms.ModelForm):
         description = self.cleaned_data['description']
         validate_string_special_free(description)
         return description
+
+    def clean_board_size(self):
+        board_size = self.cleaned_data['board_size']
+        if board_size> 5:
+            raise forms.ValidationError('The current max size for board is 7x7. If you like to host a bigger board '
+                                        'let me know via discord (https://discord.gg/fpKeEWMHjE) and I will what I can do.')
+        return board_size
 
 
 class EditBingoForm(forms.ModelForm):
@@ -121,7 +127,7 @@ class EditBingoForm(forms.ModelForm):
             raise forms.ValidationError({'start_date': ['Start date has to be in the future']})
         elif clean['end_date'] <= clean['start_date']:
             raise forms.ValidationError({'end_date': ['How can you end what have not started']})
-        elif (clean['end_date'] - clean['start_date']).days > 60:
+        elif (clean['end_date'] - clean['start_date']).days > 30:
             raise forms.ValidationError({'end_date': ['Duration of the bingo has to be less than 30 days']})
 
 
@@ -138,9 +144,7 @@ class EditBingoForm(forms.ModelForm):
 
     def clean_description(self):
         description = self.cleaned_data['description']
-        print("We here")
         validate_string_special_free(description)
-        print("But not here")
         return description
 
 
