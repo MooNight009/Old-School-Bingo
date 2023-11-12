@@ -6,11 +6,13 @@ from django.views.generic import FormView, RedirectView, DetailView, ListView, U
 from applications.bingo.forms import *
 from applications.bingo.models import Bingo
 from applications.common.mixins import UserIsModeratorMixin, PlayerAccessMixin
+from applications.common.validators import check_string_special_free
 from applications.player.models import Player, Moderator, PlayerBingoDetail
 from applications.submission.models import Achievement, Submission
 from applications.team.forms import TeamFormSet
 from applications.team.models import Team
 from applications.tile.models import Tile, TeamTile
+from common.wiseoldman.wiseoldman import create_competition, update_team, delete_competition
 
 
 class CreateBingo(LoginRequiredMixin, FormView):
@@ -20,11 +22,14 @@ class CreateBingo(LoginRequiredMixin, FormView):
 
     def form_valid(self, form):
         bingo = form.save()
+        create_competition(bingo)
         player = Player.objects.filter(user=self.request.user).get()
         moderator = Moderator(player=player, bingo=bingo)
         moderator.save()
         for i in range(1, bingo.board_size ** 2 + 1):
-            tile = Tile.objects.create(bingo_location=i, score=1, bingo=bingo)
+            Tile.objects.create(bingo_location=i, score=1, bingo=bingo)
+
+        bingo.calculate_max_score()
         Team.objects.create(team_name='General', bingo=bingo)
         return super().form_valid(form)
 
@@ -81,7 +86,7 @@ class EditBingoPlayers(LoginRequiredMixin, UserIsModeratorMixin, ListView):
     template_name = 'pages/bingo/edit/players.html'
 
     def get_queryset(self):
-        players = Player.objects.filter(bingos__in=Bingo.objects.filter(pk=self.kwargs['pk']))
+        players = Player.objects.filter(playerbingodetail__bingo_id=self.kwargs['pk'])
         return players
 
     def get_context_data(self, *args, object_list=None, **kwargs):
@@ -154,8 +159,9 @@ class EditBingoDiscord(LoginRequiredMixin, UserIsModeratorMixin, UpdateView):
 class DeleteBoard(LoginRequiredMixin, UserIsModeratorMixin, RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         bingo = Bingo.objects.filter(pk=kwargs['pk']).get()
-        bingo.delete()
-        print("Deleting board disabled")
+        if Moderator.objects.filter(player__user=self.request.user, bingo=bingo).exists():
+            delete_competition(bingo)
+            bingo.delete()
         return "/"
 
 
@@ -168,26 +174,82 @@ class DeleteTeam(LoginRequiredMixin, UserIsModeratorMixin, RedirectView):
         return url
 
 
-class JoinBingo(DetailView):
-    model = Bingo
+class JoinBingo(FormView):
+    form_class = JoinBingoForm
     template_name = 'pages/bingo/view/join.html'
+
+    def get_success_url(self):
+        return reverse('bingo:bingo_home_page', kwargs={'pk': self.kwargs['pk']})
+
+    def form_valid(self, form):
+        bingo = Bingo.objects.filter(pk=self.kwargs['pk']).get()
+        player = Player.objects.filter(user=self.request.user).get()
+        player_details = PlayerBingoDetail.objects.get_or_create(player=player, bingo=bingo)
+
+        if player_details[1]:
+            player_details = player_details[0]
+            player_details.account_names = self.request.POST['account_names']
+
+            if 'team_id' in self.request.POST and len(self.request.POST['team_id']) > 0 and Team.objects.filter(
+                    pk=self.request.POST['team_id']).exists():
+                team = Team.objects.get(pk=self.request.POST['team_id'])
+                if bingo.team_set.contains(team.get()) and not team.is_full():
+                    player_details.team = team.get()
+                else:
+                    player_details.team = bingo.team_set.get(team_name='General')
+            else:
+                player_details.team = bingo.team_set.get(team_name='General')
+
+            player_details.save()
+        return super(JoinBingo, self).form_valid(form)
 
     def get_context_data(self, **kwargs):
         context = super(JoinBingo, self).get_context_data(**kwargs)
-        teams = Team.objects.filter(bingo=self.object).exclude(team_name='General')
+        bingo = Bingo.objects.get(id=self.kwargs['pk'])
+        teams = Team.objects.filter(bingo=bingo).exclude(team_name='General')
+        context['bingo'] = bingo
         context['teams'] = teams
 
         user = self.request.user
         if not user.is_anonymous:
             player = Player.objects.get(user=user)
-            context['is_in_bingo'] = player.bingos.contains(self.object)
+            context['is_in_bingo'] = player.playerbingodetail_set.filter(bingo=bingo).exists()
         else:
             context['is_in_bingo'] = False
 
         return context
 
 
-class BingoHomePage(LoginRequiredMixin, DetailView):
+# TODO : Delete method
+class ActuallyJoinBingo(LoginRequiredMixin, RedirectView):
+    def get_redirect_url(self, *args, **kwargs):
+        bingo = Bingo.objects.filter(pk=kwargs['pk']).get()
+        player = Player.objects.filter(user=self.request.user).get()
+        player_details = PlayerBingoDetail.objects.get_or_create(player=player, bingo=bingo)
+
+        if player_details[1]:
+            if not check_string_special_free(self.request.POST['account_names']):
+                return reverse("bingo:bingo_home_page", kwargs={'pk': bingo.id})
+            player_details = player_details[0]
+            player_details.account_names = self.request.POST['account_names']
+
+            if 'team_id' in self.request.POST and len(self.request.POST['team_id']) > 0 and Team.objects.filter(
+                    pk=self.request.POST['team_id']).exists():
+                team = Team.objects.filter(pk=self.request.POST['team_id'])
+                if bingo.team_set.contains(team.get()):
+                    player_details.team = team.get()
+                else:
+                    player_details.team = bingo.team_set.get(team_name='General')
+            else:
+                player_details.team = bingo.team_set.get(team_name='General')
+
+            player_details.save()
+
+        url = reverse("bingo:bingo_home_page", kwargs={'pk': bingo.id})
+        return url
+
+
+class BingoHomePage(DetailView):
     model = Bingo
     template_name_field = 'bingo'
     template_name = 'pages/bingo/view/homepage.html'
@@ -199,40 +261,11 @@ class BingoHomePage(LoginRequiredMixin, DetailView):
             teams = teams.order_by('-score')
         else:
             teams = teams.order_by('team_name')
+
         context['teams'] = teams
 
-        user = self.request.user
-        player = Player.objects.get(user=user)
-        context['is_in_bingo'] = player.bingos.contains(self.object)
-
-        context['players'] = Player.objects.filter(bingos__in=[self.object])
+        context['players'] = Player.objects.filter(playerbingodetail__bingo=self.object)
         return context
-
-
-class ActuallyJoinBingo(LoginRequiredMixin, RedirectView):
-    def get_redirect_url(self, *args, **kwargs):
-        bingo = Bingo.objects.filter(pk=kwargs['pk']).get()
-        user = self.request.user
-        player = Player.objects.filter(user=user).get()
-        if not player.bingos.contains(bingo):
-            player.bingos.add(bingo)
-            player_details = PlayerBingoDetail.objects.get_or_create(player=player, bingo=bingo)[0]
-            player_details.account_names = self.request.POST['account_names']
-            if 'team_id' in self.request.POST and len(self.request.POST['team_id']) > 0 and Team.objects.filter(pk=self.request.POST['team_id']).exists():
-                team = Team.objects.filter(pk=self.request.POST['team_id'])
-                if bingo.team_set.contains(team.get()):
-                    player_details.team = team.get()
-                else:
-                    player_details.team = bingo.team_set.get(team_name='General')
-            else:
-                player_details.team = bingo.team_set.get(team_name='General')
-
-        player_details.save()
-
-        player.teams.add(player_details.team)
-
-        url = reverse("bingo:bingo_home_page", kwargs={'pk': bingo.id})
-        return url
 
 
 class KickPlayer(LoginRequiredMixin, UserIsModeratorMixin, RedirectView):
@@ -243,9 +276,7 @@ class KickPlayer(LoginRequiredMixin, UserIsModeratorMixin, RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         player = Player.objects.get(pk=self.kwargs['player_pk'])
         bingo = Bingo.objects.get(pk=self.kwargs['pk'])
-        player.bingos.remove(bingo)
-        player.teams.remove(*Team.objects.filter(bingo=bingo))
-        PlayerBingoDetail.objects.filter(player=player, bingo=bingo).delete()
+        print(PlayerBingoDetail.objects.filter(player=player, bingo=bingo).delete())
 
         return reverse('bingo:edit_bingo_players', kwargs={'pk': self.kwargs['pk']})
 
@@ -257,20 +288,22 @@ class UpdatePlayerDetail(LoginRequiredMixin, UserIsModeratorMixin, RedirectView)
         player = Player.objects.get(pk=kwargs['player_pk'])
         player_detail = PlayerBingoDetail.objects.get(player=player, bingo=bingo)
 
+        if validate_name_list(self.request.POST['account_names']) is not None:
+            return reverse('bingo:edit_bingo_players', kwargs={'pk': kwargs['pk']})
+
         # Make sure a team is selected and not empty
         if self.request.POST.get('team_id', False):
-            team = Team.objects.filter(pk=self.request.POST['team_id']).get()
+            team = Team.objects.filter(id=self.request.POST['team_id']).get()
+            if not team.is_full():
+                prev_team = player_detail.team
+                player_detail.team = team
 
-            # TODO: Older methods, remove later on
-            joined_teams = player.teams.filter(bingo=bingo)
-            for joined_team in joined_teams:
-                player.teams.remove(joined_team)
-            player.teams.add(team)
-            # New method
-            player_detail.team = team
-
-        player_detail.account_names = self.request.POST.get('account_names', player.user.username)
+        player_detail.account_names = self.request.POST.get('account_names', '')
         player_detail.save()
+        if player_detail.team is not None and player_detail.team.team_name != 'General':
+            if prev_team:
+                update_team(prev_team)
+            update_team(team)
 
         return reverse('bingo:edit_bingo_players', kwargs={'pk': kwargs['pk']})
 
@@ -279,18 +312,20 @@ class UpdatePlayerDetail(LoginRequiredMixin, UserIsModeratorMixin, RedirectView)
 class ChangeTeam(LoginRequiredMixin, RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         bingo = Bingo.objects.get(pk=kwargs['pk'])
-        if bingo.get_is_started():
+        if bingo.get_is_started() or not bingo.can_players_create_team:
             return reverse('bingo:bingo_home_page', kwargs={'pk': bingo.id})
         team = Team.objects.get(pk=self.request.POST['selected_team_id'])
 
         player = Player.objects.get(user=self.request.user)
-        joined_teams = player.teams.filter(bingo=bingo)
-        players_in_team_count = Player.objects.filter(teams__in=[team]).count()
-        # TODO: Make sure this works as intended
-        if bingo.max_players_in_team == 0 or bingo.max_players_in_team > players_in_team_count:
-            for joined_team in joined_teams:
-                player.teams.remove(joined_team)
-            player.teams.add(team)
+        player_bingo_details = player.playerbingodetail_set.filter(bingo=bingo).get()
+
+        if bingo.max_players_in_team == 0 or bingo.max_players_in_team > team.get_player_count():
+            older_team = player_bingo_details.team
+            player_bingo_details.team = team
+            player_bingo_details.save()
+
+            update_team(older_team)
+            update_team(team)
 
         return reverse('bingo:bingo_home_page', kwargs={'pk': bingo.id})
 
@@ -300,7 +335,11 @@ class CreateTeam(LoginRequiredMixin, RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         bingo = Bingo.objects.filter(pk=kwargs['pk']).get()
         new_team_name = self.request.POST['new_team_name']
-        if bingo.get_is_started():
+
+        if not check_string_special_free(new_team_name):
+            return reverse('bingo:bingo_home_page', kwargs={'pk': bingo.id})
+
+        if bingo.get_is_started() or not bingo.can_players_create_team:
             return reverse('bingo:bingo_home_page', kwargs={'pk': bingo.id})
 
         if not Team.objects.filter(bingo=bingo, team_name=new_team_name).exists():
@@ -311,8 +350,13 @@ class CreateTeam(LoginRequiredMixin, RedirectView):
             # Add user to team
             user = self.request.user
             player = Player.objects.filter(user=user).get()
-            player.teams.remove(player.teams.get(bingo=bingo))
-            player.teams.add(team)
+            player_bingo_detail = player.playerbingodetail_set.filter(bingo=bingo).get()
+            player_bingo_detail.team = team
+            player_bingo_detail.save()
+
+            # Update WOM
+            print("We got to here")
+            update_team(team)
 
         return reverse('bingo:bingo_home_page', kwargs={'pk': bingo.id})
 
@@ -347,7 +391,7 @@ class PlayBingoGeneral(LoginRequiredMixin, UserPassesTestMixin, DetailView):
 
         return Moderator.objects.filter(player__user=self.request.user,
                                         bingo_id=self.kwargs['pk']).exists() or (
-                       bingo.is_team_public and bingo.is_started)
+                       bingo.is_team_public and bingo.is_started) or (bingo.is_public and bingo.is_over)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

@@ -10,6 +10,7 @@
     --primary-2-color: #333533;
     --secondary-1-color: #E8EDDF;
     --secondary-2-color: #CFDBD5;
+    --secondary-3-color: #B3B5B0;
     --accent-color: #FCA311;
 }
 
@@ -110,6 +111,10 @@
     color: var(--secondary-2-color) !important;
 }
 
+.color-secondary-3 {
+    color: var(--secondary-3-color) !important;
+}
+
 .color-primary-2 {
     color: var(--primary-2-color) !important;
 }
@@ -128,6 +133,15 @@
     border-bottom-right-radius: var(--bs-border-radius-lg) !important
 }
 
+/*MARGINS AND PADDING*/
+.mb-10 {
+    margin-bottom: 10rem;
+}
+
+.indent-first-line {
+    text-indent: 1.5em; /* Adjust the value as needed */
+}
+
 
 /*Changing some default values of bootstrap*/
 .dropdown-item {
@@ -137,6 +151,11 @@
 
 .dropdown-item:hover {
     background-color: var(--accent-color) !important;
+}
+
+.dropdown-item:disabled, .dropdown-item.disabled {
+    /*color: var(--cal-poly-green-color) !important;*/
+    opacity: 50%;
 }
 
 .table > :not(caption) > * > * {
@@ -190,9 +209,9 @@
         width: 50% !important;
     }
 
-    /*.scale-tile-checkmark {*/
-    /*    scale: 15;*/
-    /*}*/
+    .w-md-25 {
+        width: 25% !important;
+    }
 }
 
 /*Large media*/
@@ -216,6 +235,10 @@
     .rounded-end-lg-3 {
         border-bottom-right-radius: 0.5rem !important;
         border-top-right-radius: 0.5rem !important;
+    }
+
+    .w-lg-50 {
+        width: 50% !important;
     }
 }
 

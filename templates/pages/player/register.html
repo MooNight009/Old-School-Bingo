@@ -1,5 +1,6 @@
 {% extends 'layouts/base/base.html' %}
-{#{% load static %}#}
+{% block title %}Register - Old School Bingo{% endblock %}
+{% block description %}Create an account in Old School Bingo{% endblock %}
 
 {% block content %}
     <div class="d-flex">
@@ -7,7 +8,8 @@
             <div class="h3">Register</div>
 
             <form method="post" action="">
-            {% csrf_token %}
+                {% csrf_token %}
+                {% include 'layouts/innertemplates/formerrors.html' %}
                 {% for field in form %}
                     <div class="pb-2">
                         {% include 'layouts/innertemplates/field.html' %}
@@ -19,15 +21,10 @@
                 </div>
             </form>
 
-                <div class="d-flex mt-3">
-                    <a href="{% url 'player:forgot_password' %}" class="btn-default rounded-3 w-100 mt-3">Forgot password</a>
-                </div>
+            <div class="d-flex mt-3">
+                <a href="{% url 'player:forgot_password' %}" class="btn-default rounded-3 w-100 mt-3">Forgot
+                    password</a>
+            </div>
         </div>
     </div>
-{% endblock %}
-
-{% block js %}
-    <script>
-        document.querySelector('meta[name="description"]').setAttribute("content", "Create an account in Old School Bingo")
-    </script>
 {% endblock %}

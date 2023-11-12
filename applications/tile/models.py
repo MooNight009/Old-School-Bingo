@@ -1,4 +1,5 @@
 from io import BytesIO
+import uuid
 
 from PIL import Image
 from django.contrib.contenttypes.fields import GenericForeignKey
@@ -11,6 +12,7 @@ from applications.invocation.models import SubmissionInvo
 
 
 class Tile(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     bingo = models.ForeignKey('bingo.Bingo', on_delete=models.CASCADE)
 
     name = models.CharField(max_length=64, default="Tile Name",
@@ -31,7 +33,7 @@ class Tile(models.Model):
     invocation_type = models.CharField(max_length=3, default='SBM', choices=INVOCATION_TYPES)
 
     content_type = models.ForeignKey(ContentType, on_delete=models.SET_NULL, null=True)
-    object_id = models.PositiveIntegerField()
+    object_id = models.UUIDField()
     invocation = GenericForeignKey('content_type', 'object_id')
 
     def save(self, *args, **kwargs):
@@ -43,7 +45,7 @@ class Tile(models.Model):
         if self.img is not None and self.img.name is not None and len(self.img.name) != 0:
             memfile = BytesIO()
             img = Image.open(self.img)
-            img.thumbnail((270, 200))
+            img = img.resize((270, 200))
             img.save(memfile, format='PNG', quality=60, optimize=True)
             imageFile = default_storage.open(self.img.name, 'wb')
             imageFile.write(memfile.getvalue())
@@ -59,6 +61,9 @@ class Tile(models.Model):
         if is_new:
             self.invocation.tile = self
             self.invocation.save()
+
+    def __str__(self):
+        return f'Tile {self.name} in {self.bingo}'
 
     def get_ready_color(self):
         if self.is_ready:
@@ -98,6 +103,7 @@ class Tile(models.Model):
 
 
 class TeamTile(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     is_current = models.BooleanField(default=True)
     is_skipped = models.BooleanField(default=False)
 
@@ -111,6 +117,9 @@ class TeamTile(models.Model):
     tile = models.ForeignKey('tile.Tile', on_delete=models.CASCADE)
 
     score = models.IntegerField(default=0)
+
+    def __str__(self):
+        return f'{self.tile} for team {self.team}'
 
     def is_complete_fc(self):
         return 'checked' if self.is_complete else ''
@@ -152,6 +161,6 @@ class TeamTile(models.Model):
             return ''
 
 
-class SpecialTile(models.Model):
-    # action
-    pass
+# class SpecialTile(models.Model):
+#     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+#     pass

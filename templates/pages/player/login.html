@@ -1,5 +1,6 @@
 {% extends 'layouts/base/base.html' %}
-{#{% load static %}#}
+{% block title %}Login - Old School Bingo{% endblock %}
+{% block description %}Login to Old School Bingo{% endblock %}
 
 {% block content %}
     <div class="d-flex">
@@ -8,11 +9,10 @@
 
             <form method="post" action="" class="mb-5">
                 {% csrf_token %}
+                {% include 'layouts/innertemplates/formerrors.html' %}
                 {% for field in form %}
-                    <div class="pb-2">
-                        {{ field.errors }}
-                        <label for="" class="form-label pe-2">{{ field.label }}</label>
-                        {{ field }}
+                    <div class="">
+                            {% include 'layouts/innertemplates/field.html' %}
                     </div>
                 {% endfor %}
 
@@ -31,10 +31,4 @@
     {% for message in messages %}
         <p>{{ message }}</p>
     {% endfor %}
-{% endblock %}
-
-{% block js %}
-    <script>
-        document.querySelector('meta[name="description"]').setAttribute("content", "Login to Old School Bingo")
-    </script>
 {% endblock %}

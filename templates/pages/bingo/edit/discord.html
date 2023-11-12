@@ -1,5 +1,5 @@
 {% extends 'layouts/base/base.html' %}
-{#{% load static %}#}
+{% block title %}Edit {{ bingo.name }} Discord - Old School Bingo{% endblock %}
 
 {#Prevent page from being indexed#}
 {% block head_extras %}
@@ -18,7 +18,7 @@
                 {% csrf_token %}
                 {{ form.non_field_errors }}
                 {% for field in form %}
-                    <div class="d-flex pb-3 gap-3">
+                    <div class="d-flex flex-column pb-3">
                         {% include 'layouts/innertemplates/field.html' %}
                     </div>
                 {% endfor %}
@@ -37,5 +37,6 @@
         show_back_button("{% url 'common:main' %}");
 
         set_edit_bingo_active_tab('discord_id');
+        show_header_name("{{ bingo.name }}")
     </script>
 {% endblock %}

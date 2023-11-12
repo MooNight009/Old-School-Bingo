@@ -1,33 +1,36 @@
 {% extends 'layouts/base/base.html' %}
 {#{% load static %}#}
 {% load bingo_extras %}
+{% block title %}Join {{ bingo.name }} - Old School Bingo{% endblock %}
 
 {#Prevent page from being indexed#}
 {% block head_extras %}
     <meta name="robots" content="noindex">{% endblock %}
 
 {% block content %}
+    <div class="d-flex flex-column flex-md-row mb-3 gap-3">
+        <div class="flex-fill bg-primary-2 rounded-3 p-2">
+            <h1 class="mb-2 pb-4">{{ bingo.name }}</h1>
+            <div class="fs-1 mb-2 text-center" id="time_left"></div>
+        </div>
+        <div class="d-flex justify-content-center bg-primary-2 rounded-3 p-2">
+            <img src="{{ bingo.get_img_url }}" alt="">
+        </div>
+    </div>
+
     <div class="d-flex flex-column bg-primary-2 rounded-3 p-2 pb-3">
-        <div class="h1 mb-2">{{ object.name }}</div>
-        <div class="fs-1 mb-3 text-center" id="status"></div>
-        <div class="fs-1 mb-3 text-center" id="time_left"></div>
-        <p class="mb-3">{{ object.description|linebreaks }}</p>
-        {% if is_in_bingo %}
-            <a href="{% url 'bingo:bingo_home_page' object.pk %}" class="btn-default rounded-3 mx-auto">Bingo Home
+        {% if is_in_bingo or bingo.is_over %}
+            <a href="{% url 'bingo:bingo_home_page' bingo.id %}" class="btn-default rounded-3 mx-auto">Bingo Home
                 Page</a>
         {% else %}
-            <form action="{% url 'bingo:actually_join_bingo' object.pk %}" method="post"
-                  class="d-flex flex-row justify-content-center align-items-center">
+            <form method="post"
+                  class="d-flex flex-column align-items-center gap-3">
                 {% csrf_token %}
-                <label for="account_names_id" class="form-label text-nowrap me-3">OSRS account names</label>
-                <input type="text" name="account_names" id="account_names_id" class="form-control w-25 me-2"
-                       value="{{ request.user.username }}">
-                <i class="fa-solid fa-circle-exclamation color-accent align-self-center me-3"
-                   data-bs-toggle="tooltip" data-bs-placement="top"
-                   data-bs-title="For multiple accounts separate them by a ',' (comma). This information will be used for tiles that get data from WiseOldMan."></i>
-                </button>
+                {% for field in form %}
+                    {% include 'layouts/innertemplates/field.html' %}
+                {% endfor %}
                 <input type="text" hidden value="{{ request.GET.team_id }}" name="team_id" id="team_id_id">
-                <button type="submit" class="btn-default rounded-3 px-4">Join</button>
+                <button type="submit" class="btn-default rounded-3 px-4 ms-2">Join</button>
             </form>
         {% endif %}
     </div>
@@ -67,7 +70,6 @@
                 document.getElementById('time_left').innerHTML = ''
                 return clearInterval(interval)
             }
-            console.log("Did we continue")
 
             let days = Math.floor(time_left / 86400);
             let hours = Math.floor((time_left - (days * 86400)) / 3600);
@@ -93,6 +95,5 @@
 
         {#Set Details on header#}
         show_back_button("{% url 'common:main' %}");
-
     </script>
 {% endblock %}

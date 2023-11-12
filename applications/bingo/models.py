@@ -1,4 +1,5 @@
 import datetime
+import uuid
 
 from io import BytesIO
 import requests
@@ -12,6 +13,7 @@ from applications.defaults.storage_backends import PublicMediaStorage
 from applications.submission.models import Achievement
 from applications.team.models import Team
 from applications.tile.models import Tile, TeamTile
+from common.wiseoldman.wiseoldman import update_competition
 
 BINGO_TYPES = (
     ('square', 'SQUARE'),
@@ -21,13 +23,14 @@ BINGO_TYPES = (
 
 
 class Bingo(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=64, help_text='Text limit: 64 Characters')
     img = models.ImageField(null=True, blank=True, storage=PublicMediaStorage(),
                             help_text="Image displayed in home page. Recommended size: 270x200px") # TODO: SET PROPER PATH FOR STORAGE
     description = models.TextField(max_length=2048, help_text='Text limit: 2048 Characters')
 
-    start_date = models.DateTimeField(help_text="Starting date and time of bingo. UTC not local timezone")
-    end_date = models.DateTimeField(help_text="Starting date and time of bingo. UTC not local timezone")
+    start_date = models.DateTimeField(help_text="Starting date and time of bingo.")
+    end_date = models.DateTimeField(help_text="Ending date and time of bingo.")
     is_game_over_on_finish = models.BooleanField(default=False,
                                                  help_text="Does the game finish when a team reaches maximum points? (Not implemented)")
 
@@ -36,16 +39,16 @@ class Bingo(models.Model):
     is_over = models.BooleanField(default=False)  # Is the game over
 
     is_public = models.BooleanField(default=False,
-                                    help_text="Can someone who hasn't joined the bingo see it? (Not implemented)")  # Is the game public
+                                    help_text="Make the bingo visible from main page")  # Is the game public
     is_team_public = models.BooleanField(default=False,
-                                         help_text="Can a player view other teams' boards? (Not fully tested)")  # Status of team public
+                                         help_text="Can players view other teams' boards?")  # Status of team public
     is_row_col_extra = models.BooleanField(default=True,
                                            help_text="Do teams get extra points for completing a row or column?")  # Whether players get extra point for finishing a full row/column
 
     can_players_create_team = models.BooleanField(default=True,
                                                   help_text="Can the players create the own teams?")
-    max_players_in_team = models.IntegerField(default=0,
-                                              help_text="If players can create their teams what is the maximum team size? (0 Means no limit)")
+    max_players_in_team = models.IntegerField(default=10,
+                                              help_text="Maximum number of players in a team")
 
     board_type = models.CharField(max_length=16, choices=BINGO_TYPES, default='square',
                                   help_text="Board type (Not implemented)")
@@ -67,17 +70,23 @@ class Bingo(models.Model):
 
     winner = models.OneToOneField('team.Team', on_delete=models.SET_NULL, null=True, related_name='bingo_winner_team')
 
+    competition_id = models.CharField(max_length=64, default="")
+    competition_verification_code = models.CharField(max_length=64, default="")
+
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         if self.img is not None:
             memfile = BytesIO()
             img = Image.open(self.img)
-            img.thumbnail((270, 200))
+            img = img.resize((270, 200))
             img.save(memfile, format='PNG', quality=60, optimize=True)
             imageFile = default_storage.open(self.img.name, 'wb')
             imageFile.write(memfile.getvalue())
             imageFile.flush()
             imageFile.close()
+
+    def __str__(self):
+        return self.name
 
     # TODO: Actually implement method
     def get_is_started(self):
@@ -93,8 +102,9 @@ class Bingo(models.Model):
                     names = players_detail.account_names.split(',')
                     for name in names:
                         response = requests.post(f'https://api.wiseoldman.net/v2/players/{name}/')
-                        if response.status_code!= 200:
-                            print("We got an error in player "+ name)
+                        if response.status_code != 200:
+                            print("We got an error in player " + name)
+                update_competition(self)
         return self.is_started
 
     def get_is_over(self):
@@ -140,6 +150,8 @@ class Bingo(models.Model):
                     first_team = team
 
             self.winner = first_team
+        elif top_teams.count() == 0:
+            top_teams = self.team_set.filter(team_name='General')
 
         self.winner = top_teams.first()
         self.save()
@@ -158,7 +170,7 @@ class Bingo(models.Model):
             max_score += tile.score
 
         if self.is_row_col_extra:
-            max_score += (self.board_size * 2) + 1
+            max_score += (self.board_size * 2)
 
         self.max_score = max_score
         self.save()

@@ -4,7 +4,7 @@ asgiref==3.6.0
 async-timeout==4.0.3
 attrs==23.1.0
 awsebcli==3.20.9;sys_platform == "Windows"
-backports.zoneinfo==0.2.1
+backports.zoneinfo==0.2.1;python_version<"3.9"
 boto3==1.28.40
 botocore==1.31.40
 cement==2.8.2
@@ -12,7 +12,7 @@ certifi==2023.7.22
 charset-normalizer==3.2.0
 colorama==0.4.3
 discord.py==2.3.2
-Django==4.1.7
+Django==4.2.7
 django-health-check==3.17.0
 django-ses==3.5.0
 django-storages==1.13.2

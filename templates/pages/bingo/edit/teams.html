@@ -1,5 +1,5 @@
 {% extends 'layouts/base/base.html' %}
-{#{% load static %}#}
+{% block title %}Edit {{ bingo.name }} Teams - Old School Bingo{% endblock %}
 
 {#Prevent page from being indexed#}
 {% block head_extras %}
@@ -16,16 +16,19 @@
             {{ form.non_form_errors }}
             {% for team_form in form %}
                 {{ team_form.non_field_errors }}
-                <div class="mb-1">
-                    {% if 'General' not in team_form %}
+{#                {{ team_form }}#}
+                <div class="d-flex flex-wrap align-items-baseline mb-1 gap-2">
+                    {% if team_form.team_name.value != 'General' %}
                         {% for field in team_form %}
-                            {% include 'layouts/innertemplates/field.html' %}
+                            {% include 'layouts/innertemplates/fieldwithhelphidden.html' %}
                         {% endfor %}
                         {% if team_form.id.value != None%}
-                            <input type="button" class="bg-accent color-secondary-1 text-center rounded-3 py-1"
+                            <input type="button" class="btn-default rounded-3 ms-2 py-1"
                                    onclick="copy_link('https://oldschoolbingo.com{{ bingo.get_join_link }}?team_id={{ team_form.id.value }}')"
                                     value="Copy invite link">
                         {% endif %}
+                    {% else %}
+                        <div class="" style="display: none">{{ team_form }}</div>
                     {% endif %}
                 </div>
             {% endfor %}
@@ -41,5 +44,6 @@
         show_back_button("{% url 'common:main' %}");
 
         set_edit_bingo_active_tab('teams_id')
+        show_header_name("{{ bingo.name }}")
     </script>
 {% endblock %}

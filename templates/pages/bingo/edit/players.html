@@ -1,6 +1,6 @@
 {% extends 'layouts/base/base.html' %}
-{#{% load static %}#}
 {% load bingo_extras %}
+{% block title %}Edit {{ bingo.name }} Players - Old School Bingo{% endblock %}
 
 {#Prevent page from being indexed#}
 {% block head_extras %}
@@ -10,7 +10,7 @@
     <div class="flex-column">
         {% include 'pages/bingo/edit/innertemplates/menu.html' %}
 
-        <table class="table">
+        <table class="table" id="players_table">
             <thead>
             <tr>
                 <th scope="col">Player Name</th>
@@ -25,14 +25,19 @@
                 {% with player|get_player_bingo_detail:bingo as player_detail %}
                     <tr class="align-middle">
                         <form action="{% url 'bingo:update_player_detail' view.kwargs.pk player.id %}" method="post"
-                              class="d-flex" nams="{{ player|get_player_bingo_team:bingo }}" id="player_{{ player.id }}_id">
+                              class="d-flex" nams="{{ player|get_player_bingo_team:bingo }}"
+                              id="player_{{ player.id }}_id">
                             {% csrf_token %}
                             <td>{{ player.user.username }}</td>
                             <td>
                                 <select name="team_id" id="" class="form-select" form="player_{{ player.id }}_id">
-                                    {% if player.user|get_user_bingo_team:bingo == -1 %}
-                                        <option value="-1" disabled selected>No Team Selected</option>
-                                    {% endif %}
+                                    {% for team in teams %}
+                                        {% if team.team_name == 'General' %}
+                                            <option value="{{ team.id }}" {{ player|is_player_in_team:team }}>No Team
+                                            </option>
+                                        {% endif %}
+                                    {% endfor %}
+
                                     {% for team in teams %}
                                         {% if team.team_name != 'General' %}
                                             <option value="{{ team.id }}" {{ player|is_player_in_team:team }}>{{ team.team_name }}</option>
@@ -41,7 +46,9 @@
                                 </select>
                             </td>
                             <td>
-                                <input type="text" name="account_names" class="form-control" value="{{ player_detail.account_names }}">
+                                <input type="text" name="account_names" pattern="^[A-Za-z0-9\s,\-]+$"
+                                       class="form-control" value="{{ player_detail.account_names }}"
+                                       title="Only letters, numbers, ., @, +, and - are allowed">
                             </td>
                             <td>
                                 <input type="submit" class="btn-default rounded-3 ms-3" value="Update">
@@ -62,9 +69,18 @@
 
 {% block js %}
     <script>
+        new DataTable('#players_table', {
+
+            columnDefs: [
+                {orderable: false, targets: [1, 2, 3, 4]},
+                {searchable: false, targets: [3, 4]}
+            ],
+        })
+
         {#    Set the back button   #}
         show_back_button("{% url 'common:main' %}");
 
         set_edit_bingo_active_tab('players_id');
+        show_header_name("{{ bingo.name }}")
     </script>
 {% endblock %}

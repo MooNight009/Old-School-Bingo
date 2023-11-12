@@ -3,8 +3,10 @@ from django.views.generic import TemplateView
 from applications.bingo.models import Bingo
 from applications.player.models import Player
 
+
 class HomePageView(TemplateView):
     template_name = 'pages/common/homepage.html'
+
 
 class BingosView(TemplateView):
     template_name = 'pages/common/bingos.html'
@@ -21,7 +23,7 @@ class BingosView(TemplateView):
             bingos = Bingo.objects.all()
 
             moderating_bingos = bingos.filter(moderator_bingo__player=player)
-            joined_bingo = bingos.filter(player=player)
+            joined_bingo = bingos.filter(playerbingodetail__player=player)
             public_bingos = bingos.filter(is_public=True).exclude(pk__in=moderating_bingos).exclude(
                 pk__in=joined_bingo)
 
@@ -30,6 +32,7 @@ class BingosView(TemplateView):
             context['public_bingos'] = public_bingos
         return context
 
+
 class handle404(TemplateView):
     template_name = 'pages/common/404.html'
 
@@ -37,6 +40,7 @@ class handle404(TemplateView):
         response = super(handle404, self).render_to_response(context, **response_kwargs)
         response.status_code = 404
         return response
+
 
 class HandleNoPermission(TemplateView):
     template_name = 'pages/common/403.html'

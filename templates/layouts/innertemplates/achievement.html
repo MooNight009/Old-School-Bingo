@@ -1,3 +1,4 @@
-<p class=""><small class="text-secondary" style="font-size: 9px">{{ achievement.date }}</small>
+<p class=""><small class="text-secondary" style="font-size: 9px"
+                   name="achievement_date">{{ achievement.date|date:'c' }}</small>
     : <span class="fw-bold">{{ achievement.team_tile.team.team_name }}</span> finished tile <span
             class="fw-bold">{{ achievement.team_tile.tile.name }}</span></p>

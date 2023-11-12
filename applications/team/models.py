@@ -1,3 +1,5 @@
+import uuid
+
 from discord import SyncWebhook
 from django.db import models
 
@@ -5,9 +7,11 @@ from applications.tile.models import TeamTile
 
 
 # from applications.player.models import Player
+from common.wiseoldman.wiseoldman import update_team, remove_team
 
 
 class Team(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     team_name = models.CharField(max_length=64)
     score = models.IntegerField(default=0)
     ranking = models.IntegerField(default=1)
@@ -18,26 +22,36 @@ class Team(models.Model):
     bingo = models.ForeignKey('bingo.Bingo', on_delete=models.CASCADE)
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
-        is_new = False
-        if not self.pk:
-            is_new = True
+        is_new = self._state.adding
+        if is_new:
             if Team.objects.filter(bingo=self.bingo).order_by('-ranking').exists():
                 self.ranking = Team.objects.filter(bingo=self.bingo).order_by('-ranking').first().ranking + 1
-        super().save(force_insert=force_insert, force_update=force_update, using=using, update_fields=update_fields)
+            pre_save = None
+        else:
+            pre_save = Team.objects.get(id=self.id)
 
+        super().save(force_insert=force_insert, force_update=force_update, using=using, update_fields=update_fields)
         if is_new:
             for tile in self.bingo.get_tiles():
                 team_tile = TeamTile(team=self, tile=tile)
                 team_tile.save()
 
+        if pre_save is not None and pre_save.team_name != self.team_name:
+            print("We changed name")
+            update_team(self, older_name=pre_save.team_name)
+
+    def __str__(self):
+        return f'Team {self.team_name} in {self.bingo}'
+
     def delete(self, *args, **kwargs):
         if self.team_name == 'General':
             return ''
 
-        for player in self.player_set.all():
-            player.teams.remove(self)
-            player.teams.add(Team.objects.get(bingo=self.bingo, team_name='General'))
-            player.save()
+        for player_bingo_detail in self.playerbingodetail_set.all():
+            player_bingo_detail.team = Team.objects.get(bingo=self.bingo, team_name='General')
+            player_bingo_detail.save()
+
+        remove_team(self)
         return super().delete(*args, **kwargs)
 
     def get_ranking(self):
@@ -89,3 +103,9 @@ class Team(models.Model):
                 webhook.send(message)
         except ValueError:
             print("Sending discord message failed")  # TODO: Better error logging method
+
+    def get_player_count(self):
+        return self.playerbingodetail_set.all().count()
+
+    def is_full(self):
+        return self.get_player_count() >= self.bingo.max_players_in_team and self.bingo.max_players_in_team != 0

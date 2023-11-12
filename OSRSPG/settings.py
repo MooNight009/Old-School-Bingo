@@ -22,12 +22,8 @@ DEBUG = False
 
 # TODO: Remove any unnecessary hosts
 ALLOWED_HOSTS = [
-    'oldschoolbingo-test.eu-central-1.elasticbeanstalk.com',
-    'ec2-3-74-227-28.eu-central-1.compute.amazonaws.com',
-    '172.31.3.70',
     'oldschoolbingo.com',
     'www.oldschoolbingo.com',
-    '192.168.0.158'
 ]
 
 # Application definition
@@ -187,7 +183,6 @@ LOGIN_REDIRECT_URL = '/'
 
 # Email details
 EMAIL_BACKEND = 'django_ses.SESBackend'
-
 
 # Upload limit
 DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880  # 5 MB
