@@ -363,7 +363,7 @@ class CreateTeam(LoginRequiredMixin, RedirectView):
 
 # View to see the actual bingo game
 # TODO: Fix team selection
-class PlayBingo(LoginRequiredMixin, PlayerAccessMixin, DetailView):
+class PlayBingo(PlayerAccessMixin, DetailView):
     model = Bingo
     access_object = 'bingo'
     template_name_field = 'bingo'
@@ -381,7 +381,7 @@ class PlayBingo(LoginRequiredMixin, PlayerAccessMixin, DetailView):
         return context
 
 
-class PlayBingoGeneral(LoginRequiredMixin, UserPassesTestMixin, DetailView):
+class PlayBingoGeneral(UserPassesTestMixin, DetailView):
     model = Bingo
     template_name_field = 'bingo'
     template_name = 'pages/bingo/view/general.html'
@@ -389,9 +389,9 @@ class PlayBingoGeneral(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     def test_func(self):
         bingo = Bingo.objects.get(pk=self.kwargs['pk'])
 
-        return Moderator.objects.filter(player__user=self.request.user,
-                                        bingo_id=self.kwargs['pk']).exists() or (
-                       bingo.is_team_public and bingo.is_started) or (bingo.is_public and bingo.is_over)
+        return (bingo.is_team_public and bingo.is_started) or (
+                    bingo.is_public and bingo.is_over) or Moderator.objects.filter(player__user=self.request.user,
+                                                                                   bingo_id=self.kwargs['pk']).exists()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
