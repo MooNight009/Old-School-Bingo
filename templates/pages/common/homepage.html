@@ -26,15 +26,15 @@
                 <h1 class="fw-bold underline-accent">Bingo in one place</h1>
                 <p class="color-secondary-3 pb-3">Craft an effortlessly engaging bingo experience right from the
                     forefront. Tailor your board and tiles to suit your preferences with ease.</p>
-{#                {% if request.user.is_anonymous %}#}
-{#                    <a href="{% url 'player:register' %}" style="min-width: 175px"#}
-{#                       class="btn-default-inverse bg-secondary-1 color-primary-2 border-3 fs-4 py-3 px-4 rounded-3">Join#}
-{#                        now!</a>#}
-{#                {% else %}#}
-                    <a href="{% url 'common:main' %}" style="min-width: 175px"
-                       class="btn-default-inverse bg-secondary-1 color-primary-2 border-3 fs-4 py-3 px-4 rounded-3">Play
-                        now!</a>
-{#                {% endif %}#}
+                {#                {% if request.user.is_anonymous %}#}
+                {#                    <a href="{% url 'player:register' %}" style="min-width: 175px"#}
+                {#                       class="btn-default-inverse bg-secondary-1 color-primary-2 border-3 fs-4 py-3 px-4 rounded-3">Join#}
+                {#                        now!</a>#}
+                {#                {% else %}#}
+                <a href="{% url 'common:main' %}" style="min-width: 175px"
+                   class="btn-default-inverse bg-secondary-1 color-primary-2 border-3 fs-4 py-3 px-4 rounded-3">Play
+                    now!</a>
+                {#                {% endif %}#}
             </div>
             <div>
                 <img src="{% static 'homepage media/main.png' %}" alt="" class="img-fluid opacity-75">
@@ -145,6 +145,16 @@
                 School Bingo involve the gradual rollout of new features based on user feedback. Key upcoming
                 initiatives include the introduction of tile packs to simplify image design for each tile, completing
                 the Runelite plugin for direct in-game tracking, and unveiling a fresh style of bingo.
+            </p>
+
+            <a class="btn-default text-start mt-3" data-bs-toggle="collapse" href="#q8"
+               role="button" aria-expanded="false" aria-controls="q8">Why do I need to create an account?</a>
+            <p class="collapse indent-first-line border border-3 border-top-0 p-3" id="q8">
+                Creating an account is essential to monitor your progress and prevent spam. Your email will only be
+                used for account activation. Initially, I thought about requiring an account solely for creating a
+                bingo and assigning a unique keycode to each player. However, managing keycodes for every player in
+                each bingo proved to be cumbersome. If you have a more convenient alternative to accounts, I'm open
+                to suggestions.
             </p>
 
             <a class="btn-default text-start mt-3" data-bs-toggle="collapse" href="#q7"
