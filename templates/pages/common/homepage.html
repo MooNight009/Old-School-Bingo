@@ -26,15 +26,15 @@
                 <h1 class="fw-bold underline-accent">Bingo in one place</h1>
                 <p class="color-secondary-3 pb-3">Craft an effortlessly engaging bingo experience right from the
                     forefront. Tailor your board and tiles to suit your preferences with ease.</p>
-                {% if request.user.is_anonymous %}
-                    <a href="{% url 'player:register' %}" style="min-width: 175px"
-                       class="btn-default-inverse bg-secondary-1 color-primary-2 border-3 fs-4 py-3 px-4 rounded-3">Join
-                        now!</a>
-                {% else %}
+{#                {% if request.user.is_anonymous %}#}
+{#                    <a href="{% url 'player:register' %}" style="min-width: 175px"#}
+{#                       class="btn-default-inverse bg-secondary-1 color-primary-2 border-3 fs-4 py-3 px-4 rounded-3">Join#}
+{#                        now!</a>#}
+{#                {% else %}#}
                     <a href="{% url 'common:main' %}" style="min-width: 175px"
                        class="btn-default-inverse bg-secondary-1 color-primary-2 border-3 fs-4 py-3 px-4 rounded-3">Play
                         now!</a>
-                {% endif %}
+{#                {% endif %}#}
             </div>
             <div>
                 <img src="{% static 'homepage media/main.png' %}" alt="" class="img-fluid opacity-75">
