@@ -65,7 +65,7 @@ class EditInvocation(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         return reverse('tile:edit_invocation', kwargs={'pk': self.object.tile.id})
 
 
-class PlayTile(LoginRequiredMixin, PlayerAccessMixin, CreateView):
+class PlayTile(PlayerAccessMixin, CreateView):
     """
 
     """
