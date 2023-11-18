@@ -31,7 +31,7 @@ class Submission(models.Model):
         if self.img is not None:
             memfile = BytesIO()
             img = Image.open(self.img)
-            img.thumbnail((1000, 1000))
+            img.resize((1000, 1000))
             img.save(memfile, format='PNG', quality=60, optimize=True)
             imageFile = default_storage.open(self.img.name, 'wb')
             imageFile.write(memfile.getvalue())

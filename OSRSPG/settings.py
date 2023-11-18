@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'health_check.cache',
     'health_check.storage',
 
+    'rest_framework',
+
     'applications.bingo',
     'applications.invocation',
     'applications.player',

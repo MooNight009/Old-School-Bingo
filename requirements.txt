@@ -4,7 +4,6 @@ asgiref==3.6.0
 async-timeout==4.0.3
 attrs==23.1.0
 awsebcli==3.20.9;sys_platform == "Windows"
-backports.zoneinfo==0.2.1;python_version<"3.9"
 boto3==1.28.40
 botocore==1.31.40
 cement==2.8.2
@@ -16,12 +15,13 @@ Django==4.2.7
 django-health-check==3.17.0
 django-ses==3.5.0
 django-storages==1.13.2
+djangorestframework==3.14.0
 frozenlist==1.4.0
 idna==3.4
 jmespath==1.0.1
 multidict==6.0.4
 pathspec==0.10.1
-Pillow==9.4.0
+Pillow==10.1.0
 psycopg2==2.9.7
 pypiwin32==223;sys_platform == "Windows"
 python-dateutil==2.8.2
