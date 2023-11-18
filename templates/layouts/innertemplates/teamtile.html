@@ -4,7 +4,7 @@
        href={% url 'tile:play_tile' team_tile.id %}>
         <div class="fs-4 overflow-hidden bg-primary-2 text-center text-ellipsis text-nowrap px-2 pb-2">{{ team_tile.tile.name }}</div>
         <div class="d-flex h-100 bg-alabaster"
-             style=" background: url('{{ team_tile.get_url }}') no-repeat center;">
+             style=" background: url('{{ team_tile.get_url }}') no-repeat center; background-size: cover">
             {% if team_tile.is_complete or team_tile.is_mod_approved %}
                 <i class="{{ team_tile.get_check_mark_color }} fa-check fa-solid absolute top-60 left-50 scale-tile-checkmark"></i>
             {% endif %}
