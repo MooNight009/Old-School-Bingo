@@ -53,7 +53,6 @@ class Tile(models.Model):
 
         if self.__original_pack_img != self.pack_image:
             self.img = self.pack_image.img
-            print('we are in here')
         super().save(*args, **kwargs)
 
         # Make board ready if all tiles are ready

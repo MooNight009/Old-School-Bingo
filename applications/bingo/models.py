@@ -70,9 +70,13 @@ class Bingo(models.Model):
     competition_id = models.CharField(max_length=64, default="")
     competition_verification_code = models.CharField(max_length=64, default="")
 
+    def __init__(self, *args, **kwargs):
+        super(Tile, self).__init__(*args, **kwargs)
+        self.__original_img = self.img
+
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        if self.img is not None:
+        if self.__original_img != self.img and self.img is not None:
             img = Image.open(self.img.path)
             img = img.resize((270, 200))
             img.save(self.img.path, format='PNG', quality=60, optimize=True)

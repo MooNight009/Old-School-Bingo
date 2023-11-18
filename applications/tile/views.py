@@ -44,7 +44,6 @@ class EditTile(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
                 # if form.instance.pack_image != tile_image:
                 #     form.instance.img = tile_image.img
                 form.instance.pack_image = tile_image
-        print(form.instance.pack_image)
 
         return super(EditTile, self).form_valid(form)
 
