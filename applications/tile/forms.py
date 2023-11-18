@@ -6,7 +6,6 @@ from applications.tile.models import Tile, TileImage
 
 class EditTileForm(forms.ModelForm):
     pack_image_name = forms.ChoiceField(
-        choices=tuple((x, x) for x in (list(TileImage.objects.all().values_list('name', flat=True)) + [''])),
         widget=forms.Select(attrs={'class': 'btn-default rounded-3 w-md-25'}),
         help_text='Select one of the available tile images instead of uploading. All images are taken from the wiki '
                   'and you can view them at (TO BE IMPLEMENTED)',
@@ -35,6 +34,9 @@ class EditTileForm(forms.ModelForm):
             self.fields['score'].disabled = True
             self.fields['invocation_type'].disabled = True
             self.fields['pack_image_name'].disabled = True
+        else:
+            self.fields['pack_image_name'].choices = tuple(
+                (x, x) for x in (list(TileImage.objects.all().values_list('name', flat=True)) + ['']))
 
     def clean_name(self):
         name = self.cleaned_data['name']
