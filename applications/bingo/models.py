@@ -71,7 +71,7 @@ class Bingo(models.Model):
     competition_verification_code = models.CharField(max_length=64, default="")
 
     def __init__(self, *args, **kwargs):
-        super(Tile, self).__init__(*args, **kwargs)
+        super(Bingo, self).__init__(*args, **kwargs)
         self.__original_img = self.img
 
     def save(self, *args, **kwargs):

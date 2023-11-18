@@ -14,7 +14,7 @@ urlpatterns = [
     path('approve_tile/<uuid:pk>', ApproveTile.as_view(), name='approve_tile')
 ]
 
-router = DefaultRouter()
-router.register(r'tileimage', TileImageViewSet, basename='tileimage')
-
-urlpatterns += router.urls
+# router = DefaultRouter()
+# router.register(r'tileimage', TileImageViewSet, basename='tileimage')
+#
+# urlpatterns += router.urls
