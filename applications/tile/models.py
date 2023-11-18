@@ -18,6 +18,8 @@ class Tile(models.Model):
     img = models.ImageField(null=True, blank=True,
                             help_text="Image associated with Tile. Recommended size: 270x200px")  # TODO: SET PROPER PATH FOR STORAGE
 
+    pack_image = models.ForeignKey('tile.TileImage', on_delete=models.SET_NULL, null=True, default=None)
+
     bingo_location = models.IntegerField()
     score = models.IntegerField(default=1)
     is_ready = models.BooleanField(default=False)
@@ -33,16 +35,26 @@ class Tile(models.Model):
     object_id = models.UUIDField()
     invocation = GenericForeignKey('content_type', 'object_id')
 
+    def __init__(self, *args, **kwargs):
+        super(Tile, self).__init__(*args, **kwargs)
+        self.__original_img = self.img
+        self.__original_pack_img = self.pack_image
+
     def save(self, *args, **kwargs):
         is_new = self._state.adding
         if is_new:
             invocation = SubmissionInvo.objects.create()
             self.invocation = invocation
-        super().save(*args, **kwargs)
-        if self.img is not None and self.img.name is not None and len(self.img.name) != 0:
+        if self.__original_img != self.img and self.img is not None and self.img.name is not None and len(
+                self.img.name) != 0:
             img = Image.open(self.img.path)
             img = img.resize((270, 200))
             img.save(self.img.path, format='PNG', quality=60, optimize=True)
+
+        if self.__original_pack_img != self.pack_image:
+            self.img = self.pack_image.img
+            print('we are in here')
+        super().save(*args, **kwargs)
 
         # Make board ready if all tiles are ready
         # TODO: Add better way of checking whether everything is set
@@ -153,6 +165,15 @@ class TeamTile(models.Model):
             return ''
 
 
-# class SpecialTile(models.Model):
-#     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-#     pass
+class TileImage(models.Model):
+    BG = [
+        ('_', 'Transparent')
+    ]
+    STYLE = [
+        ('_', 'Wiki')
+    ]
+
+    name = models.CharField(max_length=64)
+    background = models.CharField(max_length=64, choices=BG, default='_')
+    style = models.CharField(max_length=64, choices=STYLE, default='_')
+    img = models.ImageField()
