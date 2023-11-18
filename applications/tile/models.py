@@ -52,13 +52,15 @@ class Tile(models.Model):
         super().save(*args, **kwargs)
         if self.__original_img != self.img and self.img is not None and self.img.name is not None and len(
                 self.img.name) != 0:
+            self.pack_image = None
+            super(Tile, self).save()
             img = Image.open(self.img.path)
             img = img.resize((270, 200))
             img.save(self.img.path, format='PNG', quality=60, optimize=True)
 
-        if self.__original_pack_img != self.pack_image:
-            self.img = self.pack_image.img
-            super().save(*args, **kwargs)
+        # if self.__original_pack_img != self.pack_image:
+        #     self.img = self.pack_image.img
+        #     super().save(*args, **kwargs)
 
         # Make board ready if all tiles are ready
         # TODO: Add better way of checking whether everything is set
@@ -104,7 +106,9 @@ class Tile(models.Model):
         return color
 
     def get_url(self):
-        if self.img:
+        if self.pack_image:
+            return self.pack_image.img.url
+        elif self.img:
             return self.img.url
         else:
             return ''
@@ -163,10 +167,7 @@ class TeamTile(models.Model):
         return color
 
     def get_url(self):
-        if self.tile.img:
-            return self.tile.img.url
-        else:
-            return ''
+        return self.tile.get_url()
 
 
 class TileImage(models.Model):

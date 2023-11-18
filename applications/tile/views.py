@@ -41,8 +41,6 @@ class EditTile(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             tile_image = TileImage.objects.filter(name=form.cleaned_data['pack_image_name'])
             if tile_image.exists():
                 tile_image = tile_image.get()
-                # if form.instance.pack_image != tile_image:
-                #     form.instance.img = tile_image.img
                 form.instance.pack_image = tile_image
 
         return super(EditTile, self).form_valid(form)
