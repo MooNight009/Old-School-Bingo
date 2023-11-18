@@ -10,7 +10,7 @@
         {% include 'pages/bingo/edit/innertemplates/menu.html' %}
 
         <div class="d-flex flex-column bg-primary-2 pt-2">
-{#            <h5 class="p-2">{{ bingo.name }}</h5>#}
+            {#            <h5 class="p-2">{{ bingo.name }}</h5>#}
             <div class="overflow-auto">
                 <div class="row h-100 p-0 m-0" style="min-width: {{ bingo.get_div_width }}px;">
                     {% for tile in bingo.get_tiles %}
@@ -20,7 +20,8 @@
                                href={% url 'tile:edit_tile' tile.id %}>
                                 <div class="fs-4 bg-primary-2 overflow-hidden text-center text-ellipsis text-nowrap px-2 pb-2">{{ tile.name }}</div>
                                 <div class="d-flex h-100"
-                                     style=" background-image: url('{{ tile.get_url }}'); background-size: cover">
+                                     style="background: url('{{ tile.get_url }}') no-repeat center;
+                                             background-size:cover">
                                 </div>
                             </a>
                         </div>
