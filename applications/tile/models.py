@@ -3,6 +3,7 @@ import uuid
 from PIL import Image
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
 from applications.invocation.models import SubmissionInvo
@@ -19,6 +20,9 @@ class Tile(models.Model):
                             help_text="Image associated with Tile. Recommended size: 270x200px")  # TODO: SET PROPER PATH FOR STORAGE
 
     pack_image = models.ForeignKey('tile.TileImage', on_delete=models.SET_NULL, null=True, default=None)
+
+    drop_count = models.IntegerField(default=1, validators=[MinValueValidator(1), MaxValueValidator(99)],
+                                     help_text="Number of drops, ignore if using WOM tracker")
 
     bingo_location = models.IntegerField()
     score = models.IntegerField(default=1)

@@ -372,3 +372,11 @@ body {
     text-decoration-style: inherit;
     text-decoration-color: var(--accent-color);
 }
+
+.tile-count {
+    position: absolute;
+    right: 0.25rem;
+    bottom: 0.00rem;
+    color: var(--accent-color);
+    scale: 1;
+}

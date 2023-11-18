@@ -15,12 +15,13 @@ class EditTileForm(forms.ModelForm):
 
     class Meta:
         model = Tile
-        fields = ['name', 'description', 'pack_image_name', 'img', 'score', 'invocation_type']
+        fields = ['name', 'description', 'pack_image_name', 'img', 'drop_count', 'score', 'invocation_type']
 
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control w-md-25'}),
             'description': forms.Textarea(attrs={'class': 'form-control w-md-50'}),
             'img': forms.FileInput(attrs={'class': 'form-control w-md-25'}),
+            'drop_count': forms.NumberInput(attrs={'class': 'form-control w-md-25'}),
             'score': forms.NumberInput(attrs={'class': 'form-control w-md-25'}),
             'invocation_type': forms.Select(attrs={'class': 'btn-default rounded-3 w-md-25'})
         }
