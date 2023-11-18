@@ -6,7 +6,7 @@ from applications.tile.models import Tile, TileImage
 
 class EditTileForm(forms.ModelForm):
     pack_image_name = forms.ChoiceField(
-        # choices=tuple((x, x) for x in (list(TileImage.objects.all().values_list('name', flat=True)) + [''])),
+        choices=tuple((x, x) for x in (list(TileImage.objects.all().values_list('name', flat=True)) + [''])),
         widget=forms.Select(attrs={'class': 'btn-default rounded-3 w-md-25'}),
         help_text='Select one of the available tile images instead of uploading. All images are taken from the wiki '
                   'and you can view them at (TO BE IMPLEMENTED)',
