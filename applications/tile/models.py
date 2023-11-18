@@ -49,6 +49,7 @@ class Tile(models.Model):
         if is_new:
             invocation = SubmissionInvo.objects.create()
             self.invocation = invocation
+        super().save(*args, **kwargs)
         if self.__original_img != self.img and self.img is not None and self.img.name is not None and len(
                 self.img.name) != 0:
             img = Image.open(self.img.path)
@@ -57,7 +58,7 @@ class Tile(models.Model):
 
         if self.__original_pack_img != self.pack_image:
             self.img = self.pack_image.img
-        super().save(*args, **kwargs)
+            super().save(*args, **kwargs)
 
         # Make board ready if all tiles are ready
         # TODO: Add better way of checking whether everything is set
