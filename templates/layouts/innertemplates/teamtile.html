@@ -8,6 +8,9 @@
             {% if team_tile.is_complete or team_tile.is_mod_approved %}
                 <i class="{{ team_tile.get_check_mark_color }} fa-check fa-solid absolute top-60 left-50 scale-tile-checkmark"></i>
             {% endif %}
+            {% if team_tile.tile.drop_count != 1 %}
+                <strong class="tile-count">x{{ team_tile.tile.drop_count }}</strong>
+            {% endif %}
         </div>
     </a>
 </div>

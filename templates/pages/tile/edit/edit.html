@@ -14,7 +14,7 @@
                     {% csrf_token %}
                     {{ form.non_field_errors }}
                     {% for field in form %}
-                        <div class="d-flex pb-2">
+                        <div class="d-flex flex-column pb-2">
                             {% include 'layouts/innertemplates/field.html' %}
                         </div>
                     {% endfor %}
