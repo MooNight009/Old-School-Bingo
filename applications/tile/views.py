@@ -2,6 +2,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse
 from django.views.generic import UpdateView, RedirectView, CreateView
+from rest_framework.viewsets import ModelViewSet
 
 from applications.common.mixins import PlayerAccessMixin
 from applications.invocation.forms import EditWOSInvoForm
@@ -10,7 +11,8 @@ from applications.player.models import Player, Moderator
 from applications.submission.forms import SubmissionForm
 from applications.submission.models import Submission
 from applications.tile.forms import EditTileForm
-from applications.tile.models import Tile, TeamTile
+from applications.tile.models import Tile, TeamTile, TileImage
+from applications.tile.serializers import TileImageSerializer
 
 
 class EditTile(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
@@ -35,11 +37,22 @@ class EditTile(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             elif form.cleaned_data['invocation_type'] == 'WOM':
                 self.object.invocation = WOMInvo.objects.create(tile=self.object)
 
+        if form.cleaned_data['pack_image_name'] != '':
+            tile_image = TileImage.objects.filter(name=form.cleaned_data['pack_image_name'])
+            if tile_image.exists():
+                tile_image = tile_image.get()
+                form.instance.pack_image = tile_image
+
         return super(EditTile, self).form_valid(form)
 
     def get_success_url(self):
         return reverse('tile:edit_tile', kwargs={'pk': self.object.id})
 
+
+class TileImageViewSet(ModelViewSet):
+    queryset = TileImage.objects.all()
+    serializer_class = TileImageSerializer
+    http_method_names = ['get']
 
 class EditInvocation(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     template_name = 'pages/tile/edit/invocation.html'
@@ -65,7 +78,7 @@ class EditInvocation(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         return reverse('tile:edit_invocation', kwargs={'pk': self.object.tile.id})
 
 
-class PlayTile(LoginRequiredMixin, PlayerAccessMixin, CreateView):
+class PlayTile(PlayerAccessMixin, CreateView):
     """
 
     """

@@ -1,4 +1,5 @@
 from django.urls import path
+from rest_framework.routers import DefaultRouter
 
 from applications.tile.views import *
 
@@ -12,3 +13,8 @@ urlpatterns = [
     path('complete_tile/<uuid:pk>', CompleteTile.as_view(), name='complete_tile'),
     path('approve_tile/<uuid:pk>', ApproveTile.as_view(), name='approve_tile')
 ]
+
+# router = DefaultRouter()
+# router.register(r'tileimage', TileImageViewSet, basename='tileimage')
+#
+# urlpatterns += router.urls
